@@ -1,13 +1,13 @@
-import { updateCharacterStats } from "../core/character";
 import characterSkills from "../core/schemas/characterSkills-schema";
 import characterStats from "../core/schemas/characterStats-schema";
 import hpStats from "../core/schemas/hpStats-schema";
 import otherCharacterStats from "../core/schemas/otherCharacterStats-schema";
+import { _putCharacterStats } from "./routers/put-character-stats";
 
 export const putCharacterStats = async (req: any, res: any) => {
   const { character, ...stats } = req.body;
   try {
-    await updateCharacterStats(character, stats);
+    await _putCharacterStats(character, stats);
     res.status(200).send("Stats updated correctly.");
   } catch (error) {
     console.error("Error while trying to update the character stats.");
