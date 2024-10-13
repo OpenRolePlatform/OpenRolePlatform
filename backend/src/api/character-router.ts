@@ -1,7 +1,7 @@
 import characterSkills from "../core/schemas/characterSkills-schema";
-import characterStats from "../core/schemas/characterStats-schema";
 import hpStats from "../core/schemas/hpStats-schema";
 import otherCharacterStats from "../core/schemas/otherCharacterStats-schema";
+import { _getCharacterStats } from "./routers/get-character-stats";
 import { _putCharacterStats } from "./routers/put-character-stats";
 
 export const putCharacterStats = async (req: any, res: any) => {
@@ -20,12 +20,10 @@ export const putCharacterStats = async (req: any, res: any) => {
 };
 
 export const getCharacterStats = async (req: any, res: any) => {
-  const { character } = req.body;
+  const { character } = req.query;
   try {
-    const stats = await characterStats.findOne({
-      character: character,
-    });
-    if (stats) {
+    const stats = await _getCharacterStats(character);
+    if (stats !== undefined && stats !== null) {
       return res.status(200).json({
         character: stats.character,
         strength: stats.strength,
