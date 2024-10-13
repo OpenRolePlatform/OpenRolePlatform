@@ -1,8 +1,8 @@
-import { updateCharacterStats } from "./core/character";
-import characterSkills from "./core/schemas/characterSkills-schema";
-import characterStats from "./core/schemas/characterStats-schema";
-import hpStats from "./core/schemas/hpStats-schema";
-import otherCharacterStats from "./core/schemas/otherCharacterStats-schema";
+import { updateCharacterStats } from "../core/character";
+import characterSkills from "../core/schemas/characterSkills-schema";
+import characterStats from "../core/schemas/characterStats-schema";
+import hpStats from "../core/schemas/hpStats-schema";
+import otherCharacterStats from "../core/schemas/otherCharacterStats-schema";
 
 export const putCharacterStats = async (req: any, res: any) => {
   const { character, ...stats } = req.body;
