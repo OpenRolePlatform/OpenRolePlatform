@@ -5,9 +5,8 @@ import { _getCharacterStats } from "./routers/get-character-stats";
 import { _putCharacterStats } from "./routers/put-character-stats";
 
 export const putCharacterStats = async (req: any, res: any) => {
-  const { character, ...stats } = req.body;
   try {
-    await _putCharacterStats(character, stats);
+    await _putCharacterStats(req.params.characterID, req.body);
     res.status(200).send("Stats updated correctly.");
   } catch (error) {
     console.error("Error while trying to update the character stats.");
@@ -20,21 +19,12 @@ export const putCharacterStats = async (req: any, res: any) => {
 };
 
 export const getCharacterStats = async (req: any, res: any) => {
-  const { character } = req.query;
   try {
-    const stats = await _getCharacterStats(character);
-    if (stats !== undefined && stats !== null) {
-      return res.status(200).json({
-        character: stats.character,
-        strength: stats.strength,
-        dexterity: stats.dexterity,
-        constitution: stats.constitution,
-        intelligence: stats.intelligence,
-        wisdom: stats.wisdom,
-        charisma: stats.charisma,
-      });
+    const stats = await _getCharacterStats(req.params.characterID);
+    if (stats) {
+      return res.status(200).json(stats);
     } else {
-      return res.status(204).send("Character not found.");
+      return res.status(404).send("Character not found.");
     }
   } catch (error) {
     console.error("Error while trying to update the character stats.");
