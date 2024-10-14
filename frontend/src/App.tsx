@@ -1,22 +1,21 @@
-import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-/* import './App.css'; */
 import LayoutWrap from './components/Layout';
 import Character from './pages/character';
 import LandingPage from './pages/landing-page';
+import Test from './pages/test';
+import './styles/layout.scss';
 
 function App() {
   return (
-    <ErrorBoundary>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<LayoutWrap />}>
-            <Route path="/" element={<LandingPage />}></Route>
-            <Route path="/character" element={<Character />}></Route>
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </ErrorBoundary>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<LayoutWrap />}>
+          <Route path="/test" element={<Test></Test>}></Route>
+          <Route path="/" element={<LandingPage />}></Route>
+          <Route path="/character" element={<Character />}></Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
