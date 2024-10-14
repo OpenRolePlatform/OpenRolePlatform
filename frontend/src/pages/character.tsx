@@ -1,15 +1,13 @@
 //react imports
 import { useEffect, useRef, useState } from 'react';
 //@mui imports
-import { Button, PaletteMode, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { createTheme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 //@mui icons imports
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 //components imports
-import getLPTheme from '../components/getLPTheme.tsx';
 import SkillsMenu from '../components/skillsMenu.tsx';
 
 const backendUrl = 'http://localhost:3001';
@@ -61,14 +59,6 @@ const ais_img = [
 const skills_img = ['img/skills.png'];
 
 export default function Character() {
-  const start_mode =
-    localStorage.getItem('mode') === null
-      ? 'dark'
-      : localStorage.getItem('mode');
-  //@ts-ignore
-  const [mode, setMode] = useState<PaletteMode>(start_mode);
-  const LPtheme = createTheme(getLPTheme(mode));
-
   let character_name = '';
 
   const [hp, setHp] = useState({ hp: 10, hpTemp: 5, hpPool: 0 });
@@ -215,12 +205,6 @@ export default function Character() {
     }
   }
   init_values();
-
-  /* theme color mode switch */
-  const toggleColorMode = () => {
-    setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
-    localStorage.setItem('mode', mode === 'light' ? 'dark' : 'light');
-  };
 
   /* first database info getter */
   useEffect(() => {
@@ -418,6 +402,7 @@ export default function Character() {
     fetchHpStats();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
   /* character stats updater { str | dex | con | int | wis | cha } */
   useEffect(() => {
     if (characterStatsSwitch && characterReStatsSwitch) {
