@@ -10,25 +10,23 @@ import {
   putSkillsStats,
 } from "./api/character-router";
 
-const delay = 5000;
-
 export function routes(app: Express) {
-  app.use(function (req, res, next) {
-    setTimeout(next, delay);
-  });
-
+  //main get at root path
   app.get("/", (req, res) => {
     res
       .status(200)
       .json({ message: "OpenRolePlatform database loaded successfully" });
   });
 
-  app.put("/api/characterStats/:characterID", putCharacterStats);
+  //get methods
   app.get("/api/characterStats/:characterID", getCharacterStats);
-  app.put("/putOtherCharacterStats", putOtherCharacterStats);
-  app.get("/getOtherCharacterStats", getOtherCharacterStats);
-  app.put("/putHpStats", putHpStats);
-  app.get("/getHpStats", getHpStats);
-  app.put("/putSkillsStats", putSkillsStats);
-  app.get("/getSkillsStats", getSkillsStats);
+  app.get("/api/otherCharacterStats/:characterID", getOtherCharacterStats);
+  app.get("/api/hpStats/:characterID", getHpStats);
+  app.get("/api/skillsStats/:characterID", getSkillsStats);
+
+  //put methods
+  app.put("/api/characterStats/:characterID", putCharacterStats);
+  app.put("/api/otherCharacterStats/:characterID", putOtherCharacterStats);
+  app.put("/api/hpStats/:characterID", putHpStats);
+  app.put("/api/skillsStats/:characterID", putSkillsStats);
 }

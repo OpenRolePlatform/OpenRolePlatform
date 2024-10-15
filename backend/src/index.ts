@@ -7,6 +7,7 @@ import { routes } from "./router-controller";
 // initialize express app
 const PORT = process.env.PORT || 3001;
 const app = express();
+const delay = 5000;
 
 db;
 
@@ -20,6 +21,9 @@ function setCorsHeaders(req: any, res: any, next: () => void) {
   next();
 }
 
+app.use(function (req, res, next) {
+  setTimeout(next, delay);
+});
 app.use(cors()); // enable `CORS` for all routes
 app.use(express.json()); // enable parsing of json request body
 app.use(express.urlencoded({ extended: true }));
