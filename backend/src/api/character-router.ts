@@ -3,7 +3,9 @@ import characterSkills from "../core/schemas/characterSkills-schema";
 import hpStats from "../core/schemas/hpStats-schema";
 import otherCharacterStats from "../core/schemas/otherCharacterStats-schema";
 import { _getCharacterStats } from "./routers/get-character-stats";
+import { _getHpStats } from "./routers/get-hp-stats";
 import { _getOtherCharacterStats } from "./routers/get-other-character-stats";
+import { _getSkillsStats } from "./routers/get-skills-stats";
 import { _putCharacterStats } from "./routers/put-character-stats";
 
 //get methods
@@ -49,11 +51,8 @@ export const getOtherCharacterStats = async (req: any, res: any) => {
 };
 
 export const getHpStats = async (req: any, res: any) => {
-  const { character } = req.body;
   try {
-    const stats = await hpStats.findOne({
-      character: character,
-    });
+    const stats = await _getHpStats(req.params.characterID);
     if (stats) {
       return res.status(StatusCodes.OK).json({
         character: stats.character,
@@ -75,11 +74,8 @@ export const getHpStats = async (req: any, res: any) => {
 };
 
 export const getSkillsStats = async (req: any, res: any) => {
-  const { character } = req.body;
   try {
-    const stats = await characterSkills.findOne({
-      character: character,
-    });
+    const stats = await _getSkillsStats(req.params.characterID);
     if (stats) {
       return res.status(StatusCodes.OK).json({
         character: stats.character,
