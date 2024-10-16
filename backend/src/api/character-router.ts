@@ -1,19 +1,19 @@
 import { StatusCodes } from "http-status-codes";
-import characterSkills from "../core/schemas/characterSkills-schema";
-import hpStats from "../core/schemas/hpStats-schema";
-import otherCharacterStats from "../core/schemas/otherCharacterStats-schema";
 import { _getCharacterStats } from "./routers/get-character-stats";
 import { _getHpStats } from "./routers/get-hp-stats";
 import { _getOtherCharacterStats } from "./routers/get-other-character-stats";
 import { _getSkillsStats } from "./routers/get-skills-stats";
 import { _putCharacterStats } from "./routers/put-character-stats";
+import { _putHpStats } from "./routers/put-hp-stats";
+import { _putOtherCharacterStats } from "./routers/put-other-character-stats";
+import { _putSkillsStats } from "./routers/put-skills-stats";
 
 //get methods
 export const getCharacterStats = async (req: any, res: any) => {
   try {
     const stats = await _getCharacterStats(req.params.characterID);
     if (stats) {
-      return res.status(StatusCodes.OK).json(stats);
+      return res.status(StatusCodes.OK).send(stats);
     } else {
       return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
     }
@@ -31,12 +31,7 @@ export const getOtherCharacterStats = async (req: any, res: any) => {
   try {
     const stats = await _getOtherCharacterStats(req.params.characterID);
     if (stats) {
-      return res.status(StatusCodes.OK).json({
-        character: stats.character,
-        ac: stats.ac,
-        movement: stats.movement,
-        bonus: stats.bonus,
-      });
+      return res.status(StatusCodes.OK).send(stats);
     } else {
       return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
     }
@@ -54,12 +49,7 @@ export const getHpStats = async (req: any, res: any) => {
   try {
     const stats = await _getHpStats(req.params.characterID);
     if (stats) {
-      return res.status(StatusCodes.OK).json({
-        character: stats.character,
-        hp: stats.hp,
-        hpTemp: stats.hpTemp,
-        hpPool: stats.hpPool,
-      });
+      return res.status(StatusCodes.OK).send(stats);
     } else {
       return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
     }
@@ -77,33 +67,7 @@ export const getSkillsStats = async (req: any, res: any) => {
   try {
     const stats = await _getSkillsStats(req.params.characterID);
     if (stats) {
-      return res.status(StatusCodes.OK).json({
-        character: stats.character,
-        strength: stats.strength,
-        dexterity: stats.dexterity,
-        constitution: stats.constitution,
-        intelligence: stats.intelligence,
-        wisdom: stats.wisdom,
-        charisma: stats.charisma,
-        acrobatics: stats.acrobatics,
-        animal: stats.animal,
-        arcana: stats.arcana,
-        athletics: stats.athletics,
-        deception: stats.deception,
-        history: stats.history,
-        insight: stats.insight,
-        intimidation: stats.intimidation,
-        investigation: stats.investigation,
-        medicine: stats.medicine,
-        nature: stats.nature,
-        perception: stats.perception,
-        performance: stats.performance,
-        persuasion: stats.persuasion,
-        religion: stats.religion,
-        hand: stats.hand,
-        stealth: stats.stealth,
-        survival: stats.survival,
-      });
+      return res.status(StatusCodes.OK).send(stats);
     } else {
       return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
     }
@@ -133,23 +97,8 @@ export const putCharacterStats = async (req: any, res: any) => {
 };
 
 export const putOtherCharacterStats = async (req: any, res: any) => {
-  const { character, ac, movement, bonus } = req.body;
   try {
-    await otherCharacterStats.findOneAndUpdate(
-      {
-        character: character,
-      },
-      {
-        character: character,
-        ac: ac,
-        movement: movement,
-        bonus: bonus,
-      },
-      {
-        upsert: true,
-        new: true,
-      }
-    );
+    await _putOtherCharacterStats(req.params.characterID, req.body);
     res.status(StatusCodes.OK).send("Other stats updated correctly.");
   } catch (error) {
     console.error("Error while trying to update the character other stats.");
@@ -163,22 +112,8 @@ export const putOtherCharacterStats = async (req: any, res: any) => {
 };
 
 export const putHpStats = async (req: any, res: any) => {
-  const { character, hp, hpTemp, hpPool } = req.body;
   try {
-    await hpStats.findOneAndUpdate(
-      {
-        character: character,
-      },
-      {
-        hp: hp,
-        hpTemp: hpTemp,
-        hpPool: hpPool,
-      },
-      {
-        upsert: true,
-        new: true,
-      }
-    );
+    await _putHpStats(req.params.characterID, req.body);
     res.status(StatusCodes.OK).send("HP updated correctly.");
   } catch (error) {
     console.error("Error while trying to update the HP.");
@@ -189,69 +124,8 @@ export const putHpStats = async (req: any, res: any) => {
 };
 
 export const putSkillsStats = async (req: any, res: any) => {
-  const {
-    character,
-    strength,
-    dexterity,
-    constitution,
-    intelligence,
-    wisdom,
-    charisma,
-    acrobatics,
-    animal,
-    arcana,
-    athletics,
-    deception,
-    history,
-    insight,
-    intimidation,
-    investigation,
-    medicine,
-    nature,
-    perception,
-    performance,
-    persuasion,
-    religion,
-    hand,
-    stealth,
-    survival,
-  } = req.body;
   try {
-    await characterSkills.findOneAndUpdate(
-      {
-        character: character,
-      },
-      {
-        strength,
-        dexterity,
-        constitution,
-        intelligence,
-        wisdom,
-        charisma,
-        acrobatics,
-        animal,
-        arcana,
-        athletics,
-        deception,
-        history,
-        insight,
-        intimidation,
-        investigation,
-        medicine,
-        nature,
-        perception,
-        performance,
-        persuasion,
-        religion,
-        hand,
-        stealth,
-        survival,
-      },
-      {
-        upsert: true,
-        new: true,
-      }
-    );
+    await _putSkillsStats(req.params.characterID, req.body);
     res.status(StatusCodes.OK).send("Skills updated correctly.");
   } catch (error) {
     console.error("Error while trying to update the skills.");
