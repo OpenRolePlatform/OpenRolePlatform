@@ -18,6 +18,7 @@ export function routes(app: Express) {
       .json({ message: "OpenRolePlatform database loaded successfully" });
   });
 
+  //character router
   //get methods
   app.get("/api/characterStats/:characterID", getCharacterStats);
   app.get("/api/otherCharacterStats/:characterID", getOtherCharacterStats);
