@@ -1,4 +1,4 @@
-import { Stats } from "../../core/models/character";
+import { Stats } from "../../core/models/stats";
 import characterStats from "../../core/schemas/characterStats-schema";
 
 export async function _putCharacterStats(character: string, stats: Stats) {
@@ -7,7 +7,6 @@ export async function _putCharacterStats(character: string, stats: Stats) {
       character: character,
     },
     {
-      character: character,
       ...stats,
     },
     {
