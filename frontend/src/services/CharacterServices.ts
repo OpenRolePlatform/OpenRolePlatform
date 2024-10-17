@@ -1,197 +1,168 @@
-import { useState } from 'react';
-import { useGetSetState, useMount } from 'react-use';
+import { HpStats, OtherStats, Skills, Stats } from '../models/CharacterModels';
 
-export interface Stats {
-  strength: number;
-  dexterity: number;
-  constitution: number;
-  intelligence: number;
-  wisdom: number;
-  charisma: number;
+export async function getCharacterStats(name: string) {
+  try {
+    const response = await fetch(`/api/characterStats/${name}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      if (response.status === 200) return await response.json();
+    } else {
+      console.error('Error at character stats.');
+      throw new Error(response.statusText);
+    }
+  } catch (error) {
+    console.error('Error at character stats.' + error);
+    throw error;
+  }
 }
 
-const initStats: Stats = {
-  strength: 0,
-  dexterity: 0,
-  constitution: 0,
-  intelligence: 0,
-  wisdom: 0,
-  charisma: 0,
-};
-
-export const useCharacter = (name: string) => {
-  const [stats, setStats] = useGetSetState(initStats);
-  const [loading, setLoading] = useState(false);
-
-  const getCharacterStats = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/characterStats/${name}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (response.ok) {
-        if (response.status === 200) return await response.json();
-      } else console.error('Error at character stats.');
-    } catch (error) {
-      console.error('Error at character stats.' + error);
+export async function updateCharacterStats(name: string, newStats: Stats) {
+  try {
+    const response = await fetch(`/api/characterStats/${name}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newStats),
+    });
+    if (response.ok) {
+      if (response.status === 200) return;
+    } else {
+      console.error('Error at character stats.');
+      throw new Error(response.statusText);
     }
-    setLoading(false);
-  };
+  } catch (error) {
+    console.error('Error at character stats.' + error);
+    throw error;
+  }
+}
 
-  const updateCharacterStats = async (newStats: Stats) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/characterStats/${name}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newStats),
-      });
-      if (response.ok) {
-        if (response.status === 200) setStats(newStats);
-      } else console.error('Error at character stats.');
-    } catch (error) {
-      console.error('Error at character stats.' + error);
+export async function getCharacterSkills(name: string) {
+  try {
+    const response = await fetch(`/api/skillsStats/${name}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      if (response.status === 200) return await response.json();
+    } else {
+      console.error('Error at character skills.');
+      throw new Error(response.statusText);
     }
-    setLoading(false);
-  };
+  } catch (error) {
+    console.error('Error at character skills.' + error);
+    throw error;
+  }
+}
 
-  useMount(async () => {
-    const stats = await getCharacterStats();
-    setStats(stats);
-  });
-
-  /*  const fetchOtherCharacterStats = async () => {
-    try {
-      const userData = {
-        character: localStorage.getItem('character'),
-      };
-      const response = await fetch(`${backendUrl}/getOtherCharacterStats`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-      if (response.ok) {
-        if (response.status === 200) {
-          const data = await response.json();
-          const auxStats = otherCharacterStats;
-          auxStats.ac = data.ac;
-          auxStats.mov = data.movement;
-          auxStats.bonus = data.bonus;
-          setOtherCharacterStats(auxStats);
-          setOtherCharacterStatsSwitch(true);
-        } else {
-          const updateOtherCharacterStats = async () => {
-            try {
-              const userData = {
-                character: localStorage.getItem('character'),
-                ac: 10,
-                movement: 30,
-                bonus: 0,
-              };
-              const response = await fetch(
-                `${backendUrl}/putOtherCharacterStats`,
-                {
-                  method: 'PUT',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(userData),
-                },
-              );
-              if (!response.ok) {
-                console.error(
-                  'An unexpected error ocurred while trying to update your stats',
-                );
-              }
-            } catch (error) {
-              console.error('Error at character stats.' + error);
-              alert(
-                'An unexpected error ocurred while trying to update your stats',
-              );
-            }
-          };
-          updateOtherCharacterStats();
-        }
-      } else {
-        console.error('Error at character stats.');
-      }
-    } catch (error) {
-      console.error('Error at character stats.' + error);
-      alert('An unexpected error ocurred while trying to load your stats');
+export async function updateCharacterSkills(name: string, newSkills: Skills) {
+  try {
+    const response = await fetch(`/api/skillsStats/${name}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newSkills),
+    });
+    if (response.ok) {
+      if (response.status === 200) return;
+    } else {
+      console.error('Error at character skills.');
+      throw new Error(response.statusText);
     }
-  };
-  fetchOtherCharacterStats();
-  const fetchHpStats = async () => {
-    try {
-      const userData = {
-        character: localStorage.getItem('character'),
-      };
-      const response = await fetch(`${backendUrl}/getHpStats`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-      if (response.ok) {
-        if (response.status === 200) {
-          const data = await response.json();
-          const auxStats = hp;
-          auxStats.hp = data.hp;
-          auxStats.hpTemp = data.hpTemp;
-          auxStats.hpPool = data.hpPool;
-          setHp(auxStats);
-          setHpStatsSwitch(true);
-        } else {
-          const updateHpStats = async () => {
-            try {
-              const userData = {
-                character: localStorage.getItem('character'),
-                hp: 10,
-                hpTemp: 5,
-                hpPool: 0,
-              };
-              const response = await fetch(`${backendUrl}/putHpStats`, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-              });
-              if (!response.ok) {
-                console.error(
-                  'An unexpected error ocurred while trying to update your hp',
-                );
-              }
-            } catch (error) {
-              console.error('Error at character hp.' + error);
-              alert(
-                'An unexpected error ocurred while trying to update your hp',
-              );
-            }
-          };
-          updateHpStats();
-        }
-      } else {
-        console.error('Error at character hp.');
-      }
-    } catch (error) {
-      console.error('Error at character hp.' + error);
-      alert('An unexpected error ocurred while trying to load your hp');
-    }
-  };
-  fetchHpStats(); */
+  } catch (error) {
+    console.error('Error at character skills.' + error);
+    throw error;
+  }
+}
 
-  return {
-    stats,
-    loading,
-    updateCharacter: updateCharacterStats,
-  };
-};
+export async function getCharacterHp(name: string) {
+  try {
+    const response = await fetch(`/api/hpStats/${name}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      if (response.status === 200) return response.json();
+    } else {
+      console.error('Error at character hp.');
+      throw new Error(response.statusText);
+    }
+  } catch (error) {
+    console.error('Error at character hp.' + error);
+    throw error;
+  }
+}
+
+export async function updateCharacterHp(name: string, newHp: HpStats) {
+  try {
+    const response = await fetch(`/api/hpStats/${name}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newHp),
+    });
+    if (response.ok) {
+      if (response.status === 200) return;
+    } else {
+      console.error('Error at character hp.');
+      throw new Error(response.statusText);
+    }
+  } catch (error) {
+    console.error('Error at character hp.' + error);
+    throw error;
+  }
+}
+
+export async function getCharacterOtherStats(name: string) {
+  try {
+    const response = await fetch(`/api/otherCharacterStats/${name}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      if (response.status === 200) return await response.json();
+    } else {
+      console.error('Error at character other stats.');
+      throw new Error(response.statusText);
+    }
+  } catch (error) {
+    console.error('Error at character other stats.' + error);
+    throw error;
+  }
+}
+
+export async function updateCharacterOtherStats(
+  name: string,
+  newOtherStats: OtherStats,
+) {
+  try {
+    const response = await fetch(`/api/otherCharacterStats/${name}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newOtherStats),
+    });
+    if (response.ok) {
+      if (response.status === 200) return;
+    } else {
+      console.error('Error at character other stats.');
+      throw new Error(response.statusText);
+    }
+  } catch (error) {
+    console.error('Error at character other stats.' + error);
+    throw error;
+  }
+}
