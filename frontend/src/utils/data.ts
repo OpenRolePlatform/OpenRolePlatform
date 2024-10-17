@@ -1,3 +1,5 @@
+import { Stat, Stats } from '../models/CharacterModels';
+
 export function getBonusValue(value?: number) {
   switch (value) {
     case 0:
@@ -45,4 +47,13 @@ export function getBonusValue(value?: number) {
     default:
       return '-';
   }
+}
+
+export function getAllBonus(stats: Stats) {
+  const statsBonus: { [key in Stat]?: string } = {};
+  Object.keys(stats).forEach((key: string) => {
+    statsBonus[key as Stat] = getBonusValue(stats[key as Stat]);
+    getBonusValue();
+  });
+  return statsBonus;
 }

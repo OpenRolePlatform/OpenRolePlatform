@@ -7,7 +7,7 @@ import { routes } from "./router-controller";
 // initialize express app
 const PORT = process.env.PORT || 3001;
 const app = express();
-const delay = 5000;
+const delay = 0;
 
 db;
 

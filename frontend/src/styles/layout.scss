@@ -12,3 +12,11 @@
   align-self: center;
   font-size: 7vw;
 }
+
+.stat-field {
+  position: absolute;
+  transform: translate(5px, 9.5vw);
+  align-self: center;
+  font-size: 3.5vw;
+  width: 60px;
+}

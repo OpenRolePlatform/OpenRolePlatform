@@ -15,6 +15,10 @@ export interface Stats {
   charisma?: number;
 }
 
+export type StatsBonus = {
+  [key in Stat]?: string;
+};
+
 export const StatsList = [
   'strength',
   'dexterity',

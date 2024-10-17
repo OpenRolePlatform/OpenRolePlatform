@@ -726,7 +726,7 @@ export default function Character() {
         {/* center column */}
         <GeneralStats character={character} handleUpdate={handleUpdate} />
         {/* right stats column */}
-        <RightStats character={character} handleUpdate={handleUpdate} />
+        <RightStats character={character} />
       </Stack>
 
       {/* character name and border */}

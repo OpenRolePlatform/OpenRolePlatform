@@ -1,5 +1,6 @@
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { InputNumber } from 'antd';
+import { ChangeEvent, useMemo, useState } from 'react';
 import {
   ais_img,
   life_img_border,
@@ -9,7 +10,7 @@ import {
   stats_img,
 } from '../../assets/Images';
 import { CharacterService } from '../../services/useCharacter';
-import { getBonusValue } from '../../utils/data';
+import { getAllBonus, getBonusValue } from '../../utils/data';
 
 const stats_img_style = {
   height: '100%',
@@ -169,6 +170,9 @@ export function LeftStats(props: {
   handleUpdate: (event: ChangeEvent<HTMLInputElement>) => void;
 }) {
   const { character, handleUpdate } = props;
+
+  const statsBonus = useMemo(() => getAllBonus(character.stats()), [character]);
+
   return (
     <>
       <Stack
@@ -184,29 +188,15 @@ export function LeftStats(props: {
           justifyContent="center"
         >
           <img src={stats_img[0]} style={stats_img_style} alt="strenght" />
-          <p className="bonus">{character.stats().strength}</p>
-          <TextField
-            variant="standard"
-            slotProps={{
-              htmlInput: {
-                min: 0,
-                max: 20,
-                style: {
-                  textAlign: 'center',
-                  color: 'black',
-                  fontSize: '3.5vw',
-                },
-              },
-            }}
-            sx={{
-              position: 'absolute',
-              width: '5%',
-              alignSelf: 'center',
-              transform: 'translate(0px,9.5vw)',
-            }}
+          <p className="bonus">{statsBonus.strength}</p>
+          <InputNumber
+            variant="borderless"
             name="strength"
-            onChange={handleUpdate}
             value={character.stats().strength}
+            onChange={(value) =>
+              character.updateStats({ strength: value ?? 0 })
+            }
+            className="stat-field"
           />
         </Box>
         {/* dexterity */}
@@ -218,28 +208,14 @@ export function LeftStats(props: {
         >
           <img src={stats_img[1]} style={stats_img_style} alt="dexterity" />
           <p className="bonus">{getBonusValue(character.stats().dexterity)}</p>
-          <TextField
-            variant="standard"
-            slotProps={{
-              htmlInput: {
-                min: 0,
-                max: 20,
-                style: {
-                  textAlign: 'center',
-                  color: 'black',
-                  fontSize: '3.5vw',
-                },
-              },
-            }}
-            sx={{
-              position: 'absolute',
-              width: '5%',
-              alignSelf: 'center',
-              transform: 'translate(0px,9.5vw)',
-            }}
+          <InputNumber
+            variant="borderless"
             name="dexterity"
-            onChange={handleUpdate}
             value={character.stats().dexterity}
+            onChange={(value) =>
+              character.updateStats({ dexterity: value ?? 0 })
+            }
+            className="stat-field"
           />
         </Box>
         {/* constitution */}
@@ -253,28 +229,14 @@ export function LeftStats(props: {
           <p className="bonus">
             {getBonusValue(character.stats().constitution)}
           </p>
-          <TextField
-            variant="standard"
-            slotProps={{
-              htmlInput: {
-                min: 0,
-                max: 20,
-                style: {
-                  textAlign: 'center',
-                  color: 'black',
-                  fontSize: '3.5vw',
-                },
-              },
-            }}
-            sx={{
-              position: 'absolute',
-              width: '5%',
-              alignSelf: 'center',
-              transform: 'translate(0px,9.5vw)',
-            }}
+          <InputNumber
+            variant="borderless"
             name="constitution"
-            onChange={handleUpdate}
             value={character.stats().constitution}
+            onChange={(value) =>
+              character.updateStats({ constitution: value ?? 0 })
+            }
+            className="stat-field"
           />
         </Box>
         {/* proficiency bonus */}
@@ -321,11 +283,8 @@ export function LeftStats(props: {
   );
 }
 
-export function RightStats(props: {
-  character: CharacterService;
-  handleUpdate: (event: ChangeEvent<HTMLInputElement>) => void;
-}) {
-  const { character, handleUpdate } = props;
+export function RightStats(props: { character: CharacterService }) {
+  const { character } = props;
 
   return (
     <>
@@ -346,28 +305,14 @@ export function RightStats(props: {
           <p className="bonus">
             {getBonusValue(character.stats().intelligence)}
           </p>
-          <TextField
-            variant="standard"
-            slotProps={{
-              htmlInput: {
-                min: 0,
-                max: 20,
-                style: {
-                  textAlign: 'center',
-                  color: 'black',
-                  fontSize: '3.5vw',
-                },
-              },
-            }}
-            sx={{
-              position: 'absolute',
-              width: '5%',
-              alignSelf: 'center',
-              transform: 'translate(0px,9.5vw)',
-            }}
+          <InputNumber
+            variant="borderless"
             name="intelligence"
-            onChange={handleUpdate}
             value={character.stats().intelligence}
+            onChange={(value) =>
+              character.updateStats({ intelligence: value ?? 0 })
+            }
+            className="stat-field"
           />
         </Box>
         {/* wisdom */}
@@ -379,28 +324,12 @@ export function RightStats(props: {
         >
           <img src={stats_img[4]} style={stats_img_style} alt="wisdom" />
           <p className="bonus">{getBonusValue(character.stats().wisdom)}</p>
-          <TextField
-            variant="standard"
-            slotProps={{
-              htmlInput: {
-                min: 0,
-                max: 20,
-                style: {
-                  textAlign: 'center',
-                  color: 'black',
-                  fontSize: '3.5vw',
-                },
-              },
-            }}
-            sx={{
-              position: 'absolute',
-              width: '5%',
-              alignSelf: 'center',
-              transform: 'translate(0px,9.5vw)',
-            }}
+          <InputNumber
+            variant="borderless"
             name="wisdom"
-            onChange={handleUpdate}
             value={character.stats().wisdom}
+            onChange={(value) => character.updateStats({ wisdom: value ?? 0 })}
+            className="stat-field"
           />
         </Box>
         {/* charisma */}
@@ -412,28 +341,14 @@ export function RightStats(props: {
         >
           <img src={stats_img[5]} style={stats_img_style} alt="charisma" />
           <p className="bonus">{getBonusValue(character.stats().charisma)}</p>
-          <TextField
-            variant="standard"
-            slotProps={{
-              htmlInput: {
-                min: 0,
-                max: 20,
-                style: {
-                  textAlign: 'center',
-                  color: 'black',
-                  fontSize: '3.5vw',
-                },
-              },
-            }}
-            sx={{
-              position: 'absolute',
-              width: '5%',
-              alignSelf: 'center',
-              transform: 'translate(0px,9.5vw)',
-            }}
+          <InputNumber
+            variant="borderless"
             name="charisma"
-            onChange={handleUpdate}
             value={character.stats().charisma}
+            onChange={(value) =>
+              character.updateStats({ charisma: value ?? 0 })
+            }
+            className="stat-field"
           />
         </Box>
         {/* skills menu buton */}
