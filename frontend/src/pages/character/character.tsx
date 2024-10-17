@@ -1,85 +1,58 @@
 //react imports
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
+
 //@mui imports
-import { Button, Typography } from '@mui/material';
+import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 //@mui icons imports
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-//components imports
-import SkillsMenu from '../components/skillsMenu.tsx';
 
-const backendUrl = 'http://localhost:3001';
+//components imports
+import { useNavigate, useParams } from 'react-router-dom';
+import { name_img } from '../../assets/Images.ts';
+import { useCharacter } from '../../services/useCharacter.ts';
+import { GeneralStats, LeftStats, RightStats } from './stats.tsx';
+
 const wsUrl = 'ws://localhost:3002';
 
-const stats_img = [
-  'img/stats_str2.png',
-  'img/stats_dex2.png',
-  'img/stats_con2.png',
-  'img/stats_int2.png',
-  'img/stats_wis2.png',
-  'img/stats_cha2.png',
-];
-
-const stats_img_style = {
-  height: '100%',
-  width: '100%',
-};
-
-const player_img = [
-  'img/raven.jpeg',
-  'img/border2.png',
-  'img/border2_dark.png',
-];
-
-const name_img = [
-  //'img/name_dark.png',
-  'img/name2.png',
-];
-
-const life_mod_img_border = ['img/life_mod_border2.png'];
-
-const life_img_border = [
-  'img/life_border2.png',
-  'img/life_border2_selected.png',
-  'img/life_temp_border2.png',
-  'img/life_temp_border2_selected.png',
-  'img/life_pool_border2.png',
-  'img/life_pool_border2_selected.png',
-];
-
-const ais_img = [
-  'img/armor_class.png',
-  'img/initiative.png',
-  'img/speed.png',
-  'img/bonus_border.png',
-];
-
-const skills_img = ['img/skills.png'];
-
 export default function Character() {
-  let character_name = '';
+  const navigate = useNavigate();
+  const { characterID } = useParams();
+  const character = useCharacter(characterID ?? 'default');
+
+  function handleUpdate(event: ChangeEvent<HTMLInputElement>) {
+    const name = event.target.name;
+    const value = event.target.value;
+    if (Object.keys(character.stats()).includes(name)) {
+      character.updateStats({
+        [name]: value,
+      });
+    } else if (Object.keys(character.skillsStats()).includes(name)) {
+      character.updateSkills({
+        [name]: value,
+      });
+    } else if (Object.keys(character.otherStats()).includes(name)) {
+      character.updateOther({
+        [name]: value,
+      });
+    } else if (Object.keys(character.hpStats()).includes(name)) {
+      character.updateHp({
+        [name]: value,
+      });
+    }
+  }
 
   const [hp, setHp] = useState({ hp: 10, hpTemp: 5, hpPool: 0 });
   const [idHp, setIdHp] = useState(0);
-  const [life_img, setLifeImg] = useState(life_img_border[0]);
-  const [life_temp_img, setLifeTempImg] = useState(life_img_border[2]);
-  const [life_pool_img, setLifePoolImg] = useState(life_img_border[4]);
 
-  const [characterStats, setCharacterStats] = useState({
-    str: 10,
-    dex: 10,
-    con: 10,
-    int: 10,
-    wis: 10,
-    cha: 10,
-  });
   const [otherCharacterStats, setOtherCharacterStats] = useState({
     ac: 10,
     mov: 30,
     bonus: 0,
   });
+
+  // Switches
   const [characterStatsSwitch, setCharacterStatsSwitch] = useState(false);
   const [characterReStatsSwitch, setCharacterReStatsSwitch] = useState(false);
   const [otherCharacterStatsSwitch, setOtherCharacterStatsSwitch] =
@@ -88,12 +61,11 @@ export default function Character() {
     useState(false);
   const [hpStatsSwitch, setHpStatsSwitch] = useState(false);
   const [hpReStatsSwitch, setHpReStatsSwitch] = useState(false);
-
   const [showSkillsSwitch, setShowSkillsSwitch] = useState(false);
 
+  // WebSockets
   const [ws, setWs] = useState(null);
   const message = useRef({});
-
   /* web socket connection management */
   useEffect(() => {
     const websocket = new WebSocket(wsUrl);
@@ -125,7 +97,6 @@ export default function Character() {
       console.log('WebSocket is closed');
     };
 
-    //@ts-ignore
     setWs(websocket);
 
     return () => {
@@ -137,7 +108,6 @@ export default function Character() {
   /* web socket send message */
   const sendMessage = () => {
     if (ws) {
-      //@ts-ignore
       ws.send(
         JSON.stringify({
           type: 'message',
@@ -150,16 +120,17 @@ export default function Character() {
 
   /* web socket return stats updater */
   function handleStatsChange(data) {
-    const auxStats = characterStats;
+    const auxStats = {};
     auxStats.str = data.strength;
     auxStats.dex = data.dexterity;
     auxStats.con = data.constitution;
     auxStats.int = data.intelligence;
     auxStats.wis = data.wisdom;
     auxStats.cha = data.charisma;
-    setCharacterStats({ ...auxStats });
+    //setCharacterStats({ ...auxStats });
     setCharacterReStatsSwitch(false);
   }
+
   /* web socket return other stats updater */
   function handleOtherStatsChange(data) {
     const auxStats = otherCharacterStats;
@@ -169,6 +140,7 @@ export default function Character() {
     setOtherCharacterStats({ ...auxStats });
     setOtherCharacterReStatsSwitch(false);
   }
+
   /* web socket return hp updater */
   function handleHpStatsChange(data) {
     const auxStats = hp;
@@ -179,35 +151,8 @@ export default function Character() {
     setHpReStatsSwitch(false);
   }
 
-  /* initializer function */
-  function init_values() {
-    switch (localStorage.getItem('character')) {
-      case 'raven':
-        character_name = 'Ravenhall Storm';
-        player_img[0] = 'img/raven.jpeg';
-        break;
-      case 'amadeus':
-        character_name = 'Amadeus Guideon More';
-        player_img[0] = 'img/amadeus.jpeg';
-        break;
-      case 'aalis':
-        character_name = 'Aalis';
-        player_img[0] = 'img/aalis.jpeg';
-        break;
-      case 'ozymandias':
-        character_name = 'Ozymandias';
-        player_img[0] = 'img/ozymandias.png';
-        break;
-      default:
-        //@ts-ignore
-        window.location = '/';
-        break;
-    }
-  }
-  init_values();
-
   /* first database info getter */
-  useEffect(() => {
+  /* useEffect(() => {
     const fetchCharacterStats = async () => {
       try {
         const userData = {
@@ -400,11 +345,10 @@ export default function Character() {
       }
     };
     fetchHpStats();
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
+  }, []); */
 
   /* character stats updater { str | dex | con | int | wis | cha } */
-  useEffect(() => {
+  /* useEffect(() => {
     if (characterStatsSwitch && characterReStatsSwitch) {
       message.current = {
         route: '/putCharacterStats',
@@ -420,10 +364,10 @@ export default function Character() {
       };
       sendMessage();
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [characterStats, characterStatsSwitch, characterReStatsSwitch]);
+ */
   /* character other stats updater { ac | movement-speed} */
-  useEffect(() => {
+  /* useEffect(() => {
     if (otherCharacterStatsSwitch && otherCharacterReStatsSwitch) {
       message.current = {
         route: '/putOtherCharacterStats',
@@ -436,14 +380,13 @@ export default function Character() {
       };
       sendMessage();
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [
     otherCharacterStats,
     otherCharacterStatsSwitch,
     otherCharacterReStatsSwitch,
-  ]);
+  ]); */
   /* character hp */
-  useEffect(() => {
+  /*  useEffect(() => {
     if (hpStatsSwitch && hpReStatsSwitch) {
       message.current = {
         route: '/putHpStats',
@@ -456,9 +399,9 @@ export default function Character() {
       };
       sendMessage();
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [hp, hpStatsSwitch, hpReStatsSwitch]);
-
+ */
+  /*
   function handleHpUpdate(mod: number) {
     const auxStats = hp;
     switch (idHp) {
@@ -500,53 +443,6 @@ export default function Character() {
     }
   }
 
-  function getBonusValue(value: number) {
-    switch (value) {
-      case 0:
-        return '-5';
-      case 1:
-        return '-5';
-      case 2:
-        return '-4';
-      case 3:
-        return '-4';
-      case 4:
-        return '-3';
-      case 5:
-        return '-3';
-      case 6:
-        return '-2';
-      case 7:
-        return '-2';
-      case 8:
-        return '-1';
-      case 9:
-        return '-1';
-      case 10:
-        return '+0';
-      case 11:
-        return '+0';
-      case 12:
-        return '+1';
-      case 13:
-        return '+1';
-      case 14:
-        return '+2';
-      case 15:
-        return '+2';
-      case 16:
-        return '+3';
-      case 17:
-        return '+3';
-      case 18:
-        return '+4';
-      case 19:
-        return '+4';
-      case 20:
-        return '+5';
-    }
-  }
-
   function handleStrChange(e) {
     setCharacterReStatsSwitch(true);
     const auxStats = characterStats;
@@ -554,6 +450,7 @@ export default function Character() {
     else auxStats.str = Number(e.target.value);
     setCharacterStats({ ...auxStats });
   }
+
   function handleDexChange(e) {
     setCharacterReStatsSwitch(true);
     const auxStats = characterStats;
@@ -636,14 +533,13 @@ export default function Character() {
 
   function handleShowSkillsChange() {
     setShowSkillsSwitch(!showSkillsSwitch);
-  }
+  }*/
 
   /* extra life counter */
-  function checkIfLifePoolNeeded() {
+  /*  function checkIfLifePoolNeeded() {
     if (localStorage.getItem('character') === 'amadeus') {
       return (
         <Box width="100%" justifyContent="center" marginTop="0px">
-          {/* hp */}
           <Box display="flex" justifyContent="center">
             <Button
               style={{
@@ -669,9 +565,7 @@ export default function Character() {
               value={hp.hp}
             />
           </Box>
-          {/* HpTemp & HpPool */}
           <Box display="flex" justifyContent="center">
-            {/* hp temp */}
             <Box display="flex" justifyContent="center" alignSelf="center">
               <Button
                 style={{
@@ -700,9 +594,7 @@ export default function Character() {
                 value={hp.hpTemp}
               />
             </Box>
-            {/* helper separation box */}
             <Box margin="-10px" />
-            {/* HpPool */}
             <Box display="flex" justifyContent="center" alignSelf="center">
               <Button
                 style={{
@@ -737,7 +629,6 @@ export default function Character() {
     } else {
       return (
         <Box width="100%" justifyContent="center" marginTop="0px">
-          {/* hp */}
           <Box display="flex" justifyContent="center" alignSelf="center">
             <Button
               style={{
@@ -763,7 +654,6 @@ export default function Character() {
               value={hp.hp}
             />
           </Box>
-          {/* hp temp */}
           <Box display="flex" justifyContent="center" alignSelf="center">
             <Button
               style={{
@@ -796,10 +686,10 @@ export default function Character() {
         </Box>
       );
     }
-  }
+  } */
 
   /* show skills menu */
-  function checkIfShowSkills() {
+  /* function checkIfShowSkills() {
     if (showSkillsSwitch) {
       return (
         <SkillsMenu
@@ -809,17 +699,17 @@ export default function Character() {
         />
       );
     } else return <></>;
-  }
+  } */
 
   return (
     <>
+      {/*   <CharacterCard name={character.name} /> */}
       {/* go back button */}
       <div style={{ position: 'absolute', left: '0', width: '5px' }}>
         <Button
           size="small"
           sx={{ minWidth: '32px', height: '32px', p: '4px' }}
-          //@ts-ignore
-          onClick={() => (window.location = '/')}
+          onClick={() => navigate('/')}
         >
           <ArrowBackIcon />
         </Button>
@@ -832,568 +722,19 @@ export default function Character() {
         marginBottom="-0px"
       >
         {/* left stats column */}
-        <Stack
-          direction="column"
-          marginTop="3vh"
-          sx={{ width: '25%', height: '100%' }}
-        >
-          {/* strength */}
-          <Box
-            marginBottom="1vh"
-            sx={{ height: '30%' }}
-            display="flex"
-            justifyContent="center"
-          >
-            <img src={stats_img[0]} style={stats_img_style} alt="strenght" />
-            <p
-              style={{
-                position: 'absolute',
-                color: 'black',
-                alignSelf: 'center',
-                transform: 'translate(0px,1vh)',
-                fontSize: '7vw',
-              }}
-            >
-              {getBonusValue(characterStats['str'])}
-            </p>
-            <TextField
-              variant="standard"
-              inputProps={{
-                min: 0,
-                max: 20,
-                style: {
-                  textAlign: 'center',
-                  color: 'black',
-                  fontSize: '3.5vw',
-                },
-              }}
-              sx={{
-                position: 'absolute',
-                width: '5%',
-                alignSelf: 'center',
-                transform: 'translate(0px,8vw)',
-              }}
-              onChange={handleStrChange}
-              value={characterStats.str}
-            />
-          </Box>
-          {/* dexterity */}
-          <Box
-            marginBottom="1vh"
-            sx={{ height: '30%' }}
-            display="flex"
-            justifyContent="center"
-          >
-            <img src={stats_img[1]} style={stats_img_style} alt="dexterity" />
-            <p
-              style={{
-                position: 'absolute',
-                color: 'black',
-                alignSelf: 'center',
-                transform: 'translate(0px,0vh)',
-                fontSize: '7vw',
-              }}
-            >
-              {getBonusValue(characterStats['dex'])}
-            </p>
-            <TextField
-              variant="standard"
-              inputProps={{
-                min: 0,
-                max: 20,
-                style: {
-                  textAlign: 'center',
-                  color: 'black',
-                  fontSize: '3.5vw',
-                },
-              }}
-              sx={{
-                position: 'absolute',
-                width: '5%',
-                alignSelf: 'center',
-                transform: 'translate(0px,5.5vw)',
-              }}
-              onChange={handleDexChange}
-              value={characterStats.dex}
-            />
-          </Box>
-          {/* constitution */}
-          <Box
-            marginBottom="1vh"
-            sx={{ height: '30%' }}
-            display="flex"
-            justifyContent="center"
-          >
-            <img
-              src={stats_img[2]}
-              style={stats_img_style}
-              alt="constitution"
-            />
-            <p
-              style={{
-                position: 'absolute',
-                color: 'black',
-                alignSelf: 'center',
-                transform: 'translate(0px,0px)',
-                fontSize: '7vw',
-              }}
-            >
-              {getBonusValue(characterStats['con'])}
-            </p>
-            <TextField
-              variant="standard"
-              inputProps={{
-                min: 0,
-                max: 20,
-                style: {
-                  textAlign: 'center',
-                  color: 'black',
-                  fontSize: '3.5vw',
-                },
-              }}
-              sx={{
-                position: 'absolute',
-                width: '5%',
-                alignSelf: 'center',
-                transform: 'translate(0px,6vw)',
-              }}
-              onChange={handleConChange}
-              value={characterStats.con}
-            />
-          </Box>
-          {/* proficiency bonus */}
-          <Box
-            marginTop="3vw"
-            marginBottom="1vw"
-            sx={{ height: '10%' }}
-            display="flex"
-            justifyContent="center"
-            alignContent="center"
-          >
-            <img
-              src={ais_img[3]}
-              style={{ height: '10%', width: '50%' }}
-              alt="proficiency bonus"
-            />
-            <Box
-              position="absolute"
-              alignSelf="center"
-              justifyContent="center"
-              display="flex"
-              width="60%"
-            >
-              <p style={{ alignSelf: 'center', fontSize: '4vw' }}>+</p>
-              <TextField
-                variant="standard"
-                inputProps={{ style: { textAlign: 'center', fontSize: '4vw' } }}
-                sx={{ width: '10%', alignSelf: 'center' }}
-                onChange={handleBonusChange}
-                value={otherCharacterStats.bonus}
-              />
-            </Box>
-          </Box>
-        </Stack>
+        <LeftStats character={character} handleUpdate={handleUpdate} />
         {/* center column */}
-        <Stack
-          display="flex"
-          direction="column"
-          marginTop="1vh"
-          sx={{ width: '50%', height: '100%' }}
-        >
-          {/* character image and border */}
-          <Box
-            sx={{ height: '50%' }}
-            position="relative"
-            display="flex"
-            justifyContent="center"
-          >
-            <img
-              src={player_img[0]}
-              style={{ width: '90%', height: '90%', marginTop: '5%' }}
-              alt="character"
-            />
-            <img
-              src={player_img[1]}
-              style={{ position: 'absolute', width: '100%', left: 0 }}
-              alt="character"
-            />
-          </Box>
-          {/* 3 other and hp stats */}
-          <Stack direction="row" marginTop="-0vw" height="50%" display="flex">
-            {/* left column initiative and minus operation */}
-            <Stack
-              display="flex"
-              direction="column"
-              marginTop="0vh"
-              sx={{ width: '30%' }}
-              height="100%"
-              alignItems="center"
-              justifyContent="center"
-            >
-              {/* initiative */}
-              <Box
-                sx={{ width: '100%' }}
-                display="flex"
-                justifyContent="center"
-              >
-                <img
-                  src={ais_img[1]}
-                  style={{ width: '100%', zIndex: 1 }}
-                  alt="initiative"
-                />
-                <Typography
-                  sx={{
-                    width: '15%',
-                    position: 'absolute',
-                    alignSelf: 'center',
-                    textAlign: 'center',
-                    fontSize: '6vw',
-                    transform: 'translate(0px,2vw)',
-                    color: 'white',
-                    zIndex: 2,
-                  }}
-                >
-                  {getBonusValue(characterStats.dex)}
-                </Typography>
-              </Box>
-              {/* -5 */}
-              <Button
-                sx={{ marginBottom: '-1.5vh', height: '100%' }}
-                onClick={() => handleHpUpdate(-5)}
-              >
-                <img
-                  src={life_mod_img_border[0]}
-                  style={{ width: '80%' }}
-                  alt="-5"
-                />
-                <p style={{ position: 'absolute', fontSize: '4vw' }}>-5</p>
-              </Button>
-              {/* -1 */}
-              <Button
-                sx={{ marginBottom: '-1.5vh', height: '100%' }}
-                onClick={() => handleHpUpdate(-1)}
-              >
-                <img
-                  src={life_mod_img_border[0]}
-                  style={{ width: '100%' }}
-                  alt="-1"
-                />
-                <p style={{ position: 'absolute', fontSize: '5vw' }}>-1</p>
-              </Button>
-              {/* -10 */}
-              <Button
-                sx={{ marginBottom: '-1.5vh', height: '100%' }}
-                onClick={() => handleHpUpdate(-10)}
-              >
-                <img
-                  src={life_mod_img_border[0]}
-                  style={{ width: '80%' }}
-                  alt="-10"
-                />
-                <p style={{ position: 'absolute', fontSize: '4vw' }}>-10</p>
-              </Button>
-            </Stack>
-            {/* middle column AC and hp numbers */}
-            <Stack
-              display="flex"
-              direction="column"
-              marginTop="-1vh"
-              width="40%"
-              maxWidth="40%"
-              alignSelf="center"
-              height="100%"
-              justifyContent="center"
-            >
-              {/* AC */}
-              <Box
-                sx={{ width: '100%' }}
-                height="100%"
-                display="flex"
-                alignContent="center"
-                justifyContent="center"
-              >
-                <img
-                  src={ais_img[0]}
-                  style={{ width: '70%', zIndex: 1 }}
-                  alt="AC"
-                />
-                <TextField
-                  variant="standard"
-                  inputProps={{
-                    min: 0,
-                    max: 20,
-                    style: {
-                      textAlign: 'center',
-                      color: 'white',
-                      fontSize: '6.5vw',
-                    },
-                  }}
-                  sx={{
-                    position: 'absolute',
-                    width: '10%',
-                    alignSelf: 'center',
-                    zIndex: 2,
-                  }}
-                  onChange={handleACChange}
-                  value={otherCharacterStats.ac}
-                />
-              </Box>
-              {/* life score dials */}
-              {checkIfLifePoolNeeded()}
-            </Stack>
-            {/* right column movement and plus operations */}
-            <Stack
-              display="flex"
-              direction="column"
-              marginTop="0vh"
-              sx={{ width: '30%' }}
-              height="100%"
-              alignItems="center"
-              justifyContent="center"
-            >
-              {/* movement */}
-              <Box
-                sx={{ width: '100%' }}
-                display="flex"
-                justifyContent="center"
-                marginBottom="1vw"
-              >
-                <img
-                  src={ais_img[2]}
-                  style={{ width: '100%', zIndex: 1 }}
-                  alt="speed"
-                />
-                <TextField
-                  variant="standard"
-                  inputProps={{
-                    style: {
-                      textAlign: 'center',
-                      color: 'white',
-                      fontSize: '6vw',
-                    },
-                  }}
-                  sx={{
-                    position: 'absolute',
-                    width: '10%',
-                    alignSelf: 'center',
-                    zIndex: 2,
-                  }}
-                  onChange={handleMovChange}
-                  value={otherCharacterStats.mov}
-                />
-              </Box>
-              {/* +5 */}
-              <Button
-                sx={{ marginBottom: '-1.5vh', height: '100%' }}
-                onClick={() => handleHpUpdate(+5)}
-              >
-                <img
-                  src={life_mod_img_border[0]}
-                  style={{ width: '80%' }}
-                  alt="+5"
-                />
-                <p style={{ position: 'absolute', fontSize: '4vw' }}>+5</p>
-              </Button>
-              {/* +1 */}
-              <Button
-                sx={{ marginBottom: '-1.5vh', height: '100%' }}
-                onClick={() => handleHpUpdate(+1)}
-              >
-                <img
-                  src={life_mod_img_border[0]}
-                  style={{ width: '100%' }}
-                  alt="+1"
-                />
-                <p style={{ position: 'absolute', fontSize: '5vw' }}>+1</p>
-              </Button>
-              {/* +10 */}
-              <Button
-                sx={{ marginBottom: '-1.5vh', height: '100%' }}
-                onClick={() => handleHpUpdate(+10)}
-              >
-                <img
-                  src={life_mod_img_border[0]}
-                  style={{ width: '80%' }}
-                  alt="+10"
-                />
-                <p style={{ position: 'absolute', fontSize: '4vw' }}>+10</p>
-              </Button>
-            </Stack>
-          </Stack>
-        </Stack>
+        <GeneralStats character={character} handleUpdate={handleUpdate} />
         {/* right stats column */}
-        <Stack
-          right="0"
-          direction="column"
-          marginTop="3vh"
-          sx={{ width: '25%', height: '100%' }}
-        >
-          {/* intelligence */}
-          <Box
-            marginBottom="1vh"
-            sx={{ height: '30%' }}
-            display="flex"
-            justifyContent="center"
-          >
-            <img
-              src={stats_img[3]}
-              style={stats_img_style}
-              alt="intelligence"
-            />
-            <p
-              style={{
-                position: 'absolute',
-                color: 'black',
-                alignSelf: 'center',
-                transform: 'translate(0px,0px)',
-                fontSize: '7vw',
-              }}
-            >
-              {getBonusValue(characterStats['int'])}
-            </p>
-            <TextField
-              variant="standard"
-              inputProps={{
-                min: 0,
-                max: 20,
-                style: {
-                  textAlign: 'center',
-                  color: 'black',
-                  fontSize: '3.5vw',
-                },
-              }}
-              sx={{
-                position: 'absolute',
-                width: '5%',
-                alignSelf: 'center',
-                transform: 'translate(0px,6vw)',
-              }}
-              onChange={handleIntChange}
-              value={characterStats.int}
-            />
-          </Box>
-          {/* wisdom */}
-          <Box
-            marginBottom="1vh"
-            sx={{ height: '30%' }}
-            display="flex"
-            justifyContent="center"
-          >
-            <img src={stats_img[4]} style={stats_img_style} alt="wisdom" />
-            <p
-              style={{
-                position: 'absolute',
-                color: 'black',
-                alignSelf: 'center',
-                transform: 'translate(0px,0.5vh)',
-                fontSize: '7vw',
-              }}
-            >
-              {getBonusValue(characterStats['wis'])}
-            </p>
-            <TextField
-              variant="standard"
-              inputProps={{
-                min: 0,
-                max: 20,
-                style: {
-                  textAlign: 'center',
-                  color: 'black',
-                  fontSize: '3.5vw',
-                },
-              }}
-              sx={{
-                position: 'absolute',
-                width: '5%',
-                alignSelf: 'center',
-                transform: 'translate(0px,7.5vw)',
-              }}
-              onChange={handleWisChange}
-              value={characterStats.wis}
-            />
-          </Box>
-          {/* charisma */}
-          <Box
-            marginBottom="1vh"
-            sx={{ height: '30%' }}
-            display="flex"
-            justifyContent="center"
-          >
-            <img src={stats_img[5]} style={stats_img_style} alt="charisma" />
-            <p
-              style={{
-                position: 'absolute',
-                color: 'black',
-                alignSelf: 'center',
-                transform: 'translate(0px,1vh)',
-                fontSize: '7vw',
-              }}
-            >
-              {getBonusValue(characterStats['cha'])}
-            </p>
-            <TextField
-              variant="standard"
-              inputProps={{
-                min: 0,
-                max: 20,
-                style: {
-                  textAlign: 'center',
-                  color: 'black',
-                  fontSize: '3.5vw',
-                },
-              }}
-              sx={{
-                position: 'absolute',
-                width: '5%',
-                alignSelf: 'center',
-                transform: 'translate(0px,8.5vw)',
-              }}
-              onChange={handleChaChange}
-              value={characterStats.cha}
-            />
-          </Box>
-          {/* skills menu buton */}
-          <Box
-            marginTop="0vw"
-            marginBottom="0vw"
-            sx={{ height: '10%' }}
-            display="flex"
-            justifyContent="center"
-            alignContent="center"
-          >
-            <Button
-              sx={{ height: '100%', width: '100%' }}
-              onClick={handleShowSkillsChange}
-            >
-              <img
-                src={skills_img[0]}
-                style={{ height: '20%', width: '70%' }}
-                alt="skills_menu"
-              />
-            </Button>
-            {/* skills menu */}
-            <Box
-              position="absolute"
-              left="0"
-              top="0"
-              zIndex="3"
-              width="80%"
-              display="flex"
-              justifyContent="center"
-              justifyItems="center"
-              justifySelf="center"
-            >
-              {checkIfShowSkills()}
-            </Box>
-          </Box>
-        </Stack>
+        <RightStats character={character} handleUpdate={handleUpdate} />
       </Stack>
+
       {/* character name and border */}
       <Box display="flex" justifyContent="center" alignItems="center">
         <p
           style={{ position: 'absolute', textAlign: 'center', fontSize: '5vw' }}
         >
-          {character_name}
+          {character.name}
         </p>
         <img src={name_img[0]} style={{ width: '100%' }} alt="name" />
       </Box>

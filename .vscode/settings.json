@@ -28,5 +28,5 @@
       "source.organizeImports": "explicit"
     }
   },
-  "conventionalCommits.scopes": ["backend"]
+  "conventionalCommits.scopes": ["backend", "frontend"]
 }
