@@ -1,17 +1,14 @@
-import { useCharacter } from '../services/CharacterServices';
+import { useCharacter } from '../services/useCharacter';
 
 function Test() {
   const character = useCharacter('juan');
 
   return (
     <>
-      <div
-        className=""
-        /*  style={{ display: 'flex', width: '100%', flexWrap: 'wrap' }} */
-      >
+      <div>
         <button
           onClick={() =>
-            character.updateCharacter({
+            character.updateStats({
               ...character.stats(),
               strength: character.stats().strength + 1,
             })
