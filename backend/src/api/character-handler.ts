@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { _getCharacter, _putCharacter } from "./routers/get-character";
 import { _getCharacterStats } from "./routers/get-character-stats";
 import { _getHpStats } from "./routers/get-hp-stats";
 import { _getOtherCharacterStats } from "./routers/get-other-character-stats";
@@ -9,6 +10,24 @@ import { _putOtherCharacterStats } from "./routers/put-other-character-stats";
 import { _putSkillsStats } from "./routers/put-skills-stats";
 
 //get methods
+export const getCharacter = async (req: any, res: any) => {
+  try {
+    const character = await _getCharacter(req.params.characterID);
+    if (character) {
+      return res.status(StatusCodes.OK).send(character);
+    } else {
+      return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
+    }
+  } catch (error) {
+    console.error("Error while trying to update the character stats.");
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send(
+        "Error while trying to update the character stats." + error.message
+      );
+  }
+};
+
 export const getCharacterStats = async (req: any, res: any) => {
   try {
     const stats = await _getCharacterStats(req.params.characterID);
@@ -82,6 +101,20 @@ export const getSkillsStats = async (req: any, res: any) => {
 };
 
 //put methods
+export const putCharacter = async (req: any, res: any) => {
+  try {
+    await _putCharacter(req.params.characterID, req.body);
+    res.status(StatusCodes.OK).send("Stats updated correctly.");
+  } catch (error) {
+    console.error("Error while trying to update the character stats.");
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send(
+        "Error while trying to update the character stats." + error.message
+      );
+  }
+};
+
 export const putCharacterStats = async (req: any, res: any) => {
   try {
     await _putCharacterStats(req.params.characterID, req.body);

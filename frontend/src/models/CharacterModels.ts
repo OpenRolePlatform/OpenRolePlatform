@@ -29,30 +29,30 @@ export const StatsList = [
 ];
 
 export interface Skills {
-  strength?: number;
-  dexterity?: number;
-  constitution?: number;
-  intelligence?: number;
-  wisdom?: number;
-  charisma?: number;
-  acrobatics?: number;
-  animal?: number;
-  arcana?: number;
-  athletics?: number;
-  deception?: number;
-  history?: number;
-  insight?: number;
-  intimidation?: number;
-  investigation?: number;
-  medicine?: number;
-  nature?: number;
-  perception?: number;
-  performance?: number;
-  persuasion?: number;
-  religion?: number;
-  hand?: number;
-  stealth?: number;
-  survival?: number;
+  strength?: boolean;
+  dexterity?: boolean;
+  constitution?: boolean;
+  intelligence?: boolean;
+  wisdom?: boolean;
+  charisma?: boolean;
+  acrobatics?: boolean;
+  animal?: boolean;
+  arcana?: boolean;
+  athletics?: boolean;
+  deception?: boolean;
+  history?: boolean;
+  insight?: boolean;
+  intimidation?: boolean;
+  investigation?: boolean;
+  medicine?: boolean;
+  nature?: boolean;
+  perception?: boolean;
+  performance?: boolean;
+  persuasion?: boolean;
+  religion?: boolean;
+  hand?: boolean;
+  stealth?: boolean;
+  survival?: boolean;
 }
 
 export interface HpStats {
