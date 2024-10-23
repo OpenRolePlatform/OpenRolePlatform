@@ -1,4 +1,4 @@
-import expressWs, { Application } from "express-ws";
+/* import expressWs, { Application } from "express-ws";
 
 function broadcast(message) {
   // Broadcast the message to all connected clients
@@ -46,6 +46,6 @@ wss.on("connection", (ws) => {
 
 function wsRoutes(ws: expressWs.Instance) {
   ws.app.ws();
-}
+} */
 
 // //https://www.geeksforgeeks.org/real-time-updates-with-websockets-and-react-hooks/

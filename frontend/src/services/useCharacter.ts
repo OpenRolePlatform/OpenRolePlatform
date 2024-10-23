@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useGetSetState, useMount } from 'react-use';
+import useWebSocket from 'react-use-websocket';
 import {
   Character,
   HpStats,
@@ -92,6 +93,36 @@ export function useCharacter(name: string): CharacterService {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
+
+  useWebSocket('/ws', {
+    onOpen: () => {
+      console.log('WebSocket is connected');
+    },
+    onMessage: (event) => {
+      console.log(event.data);
+
+      const message = JSON.parse(event.data);
+      if (message.character === name) {
+        console.log(message);
+        if (message.skills)
+          Object.keys(message?.skills).forEach((key) => {
+            setSkillsStats({ [key]: message.skills[key] });
+          });
+        if (message.stats)
+          Object.keys(message?.stats).forEach((key) => {
+            setStats({ [key]: message.stats[key] });
+          });
+        if (message.hp)
+          Object.keys(message?.hp).forEach((key) => {
+            setHpStats({ [key]: message.hp[key] });
+          });
+        if (message.other)
+          Object.keys(message?.other).forEach((key) => {
+            setOtherStats({ [key]: message.other[key] });
+          });
+      }
+    },
+  });
 
   // Hook start
   useMount(async () => {

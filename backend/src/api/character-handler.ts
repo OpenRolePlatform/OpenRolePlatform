@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { WebSocketService } from "../WebSocketServices";
 import { _getCharacter, _putCharacter } from "./routers/get-character";
 import { _getCharacterStats } from "./routers/get-character-stats";
 import { _getHpStats } from "./routers/get-hp-stats";
@@ -119,6 +120,10 @@ export const putCharacterStats = async (req: any, res: any) => {
   try {
     await _putCharacterStats(req.params.characterID, req.body);
     res.status(StatusCodes.OK).send("Stats updated correctly.");
+    WebSocketService.Instance.broadcast({
+      character: req.params.characterID,
+      stats: req.body,
+    });
   } catch (error) {
     console.error("Error while trying to update the character stats.");
     res
