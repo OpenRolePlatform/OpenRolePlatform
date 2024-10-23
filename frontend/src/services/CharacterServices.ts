@@ -2,7 +2,7 @@ import { HpStats, OtherStats, Skills, Stats } from '../models/CharacterModels';
 
 export async function getCharacterStats(name: string) {
   try {
-    const response = await fetch(`/api/characterStats/${name}`, {
+    const response = await fetch(`/api/character/${name}/stats`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ export async function getCharacterStats(name: string) {
 
 export async function updateCharacterStats(name: string, newStats: Stats) {
   try {
-    const response = await fetch(`/api/characterStats/${name}`, {
+    const response = await fetch(`/api/character/${name}/stats`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export async function updateCharacterStats(name: string, newStats: Stats) {
 
 export async function getCharacterSkills(name: string) {
   try {
-    const response = await fetch(`/api/skillsStats/${name}`, {
+    const response = await fetch(`/api/character/${name}/skills`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export async function getCharacterSkills(name: string) {
 
 export async function updateCharacterSkills(name: string, newSkills: Skills) {
   try {
-    const response = await fetch(`/api/skillsStats/${name}`, {
+    const response = await fetch(`/api/character/${name}/skills`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ export async function updateCharacterSkills(name: string, newSkills: Skills) {
 
 export async function getCharacterHp(name: string) {
   try {
-    const response = await fetch(`/api/hpStats/${name}`, {
+    const response = await fetch(`/api/character/${name}/hp`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ export async function getCharacterHp(name: string) {
 
 export async function updateCharacterHp(name: string, newHp: HpStats) {
   try {
-    const response = await fetch(`/api/hpStats/${name}`, {
+    const response = await fetch(`/api/character/${name}/hp`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ export async function updateCharacterHp(name: string, newHp: HpStats) {
 
 export async function getCharacterOtherStats(name: string) {
   try {
-    const response = await fetch(`/api/otherCharacterStats/${name}`, {
+    const response = await fetch(`/api/character/${name}/other`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -148,7 +148,7 @@ export async function updateCharacterOtherStats(
   newOtherStats: OtherStats,
 ) {
   try {
-    const response = await fetch(`/api/otherCharacterStats/${name}`, {
+    const response = await fetch(`/api/character/${name}/other`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

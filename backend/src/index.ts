@@ -1,16 +1,15 @@
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
-import expressWs from "express-ws";
+import { WebSocket } from "ws";
 import { db } from "./connectDB";
 import { routes } from "./router-controller";
-
+import { WebSocketService } from "./WebSocketServices";
 const PORT = process.env.PORT || 3001;
 const delay = 0;
 
 // initialize express app
 const app = express();
-const ws = expressWs(app);
 db;
 
 function setCorsHeaders(req: any, res: any, next: () => void) {
@@ -35,6 +34,12 @@ app.use(setCorsHeaders);
 routes(app);
 
 // start the server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is listening at http://localhost:${PORT}`);
 });
+
+const wss = new WebSocket.Server({
+  server: server,
+});
+
+new WebSocketService(wss).init();

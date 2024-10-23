@@ -9,6 +9,7 @@ export function routes(app: Application) {
       .json({ message: "OpenRolePlatform database loaded successfully" });
   });
   app.use("/api/character", characterRouter);
+
   //character router
   //get methods
   /* app.get("/api/characterStats/:characterID", getCharacterStats);
