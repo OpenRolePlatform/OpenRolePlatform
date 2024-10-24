@@ -1,7 +1,7 @@
-import otherCharacterStats from "../../../core/schemas/character/characterOtherStats-schema";
+import characterOtherStats from "../../../core/schemas/character/characterOtherStats-schema";
 
 export async function _getCharacterOtherStats(character: string) {
-  return await otherCharacterStats.findOne({
+  return await characterOtherStats.findOne({
     character: character,
   });
 }
