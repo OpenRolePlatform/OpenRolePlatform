@@ -1,9 +1,9 @@
 import express from "express";
 import {
   getCharacter,
+  getCharacterOtherStats,
   getCharacterStats,
   getHpStats,
-  getOtherCharacterStats,
   getSkillsStats,
   putCharacter,
   putCharacterStats,
@@ -18,7 +18,7 @@ const characterRouter = express.Router();
 //get methods
 characterRouter.get("/:characterID", getCharacter);
 characterRouter.get("/:characterID/stats", getCharacterStats);
-characterRouter.get("/:characterID/other", getOtherCharacterStats);
+characterRouter.get("/:characterID/other", getCharacterOtherStats);
 characterRouter.get("/:characterID/hp", getHpStats);
 characterRouter.get("/:characterID/skills", getSkillsStats);
 

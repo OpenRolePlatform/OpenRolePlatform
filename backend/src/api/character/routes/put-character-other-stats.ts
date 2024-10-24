@@ -1,7 +1,7 @@
 import { OtherStats } from "../../../core/models/other-stats";
-import otherCharacterStats from "../../../core/schemas/otherCharacterStats-schema";
+import otherCharacterStats from "../../../core/schemas/character/characterOtherStats-schema";
 
-export async function _putOtherCharacterStats(
+export async function _putCharacterOtherStats(
   character: string,
   stats: OtherStats
 ) {

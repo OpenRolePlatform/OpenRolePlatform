@@ -1,14 +1,15 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../WebSocketServices";
-import { _getCharacter, _putCharacter } from "./routes/get-character";
+import { _getCharacter } from "./routes/get-character";
+import { _getCharacterHpStats } from "./routes/get-character-hp-stats";
+import { _getCharacterOtherStats } from "./routes/get-character-other-stats";
+import { _getCharacterSkillsStats } from "./routes/get-character-skills-stats";
 import { _getCharacterStats } from "./routes/get-character-stats";
-import { _getHpStats } from "./routes/get-hp-stats";
-import { _getOtherCharacterStats } from "./routes/get-other-character-stats";
-import { _getSkillsStats } from "./routes/get-skills-stats";
+import { _putCharacter } from "./routes/put-character";
+import { _putCharacterHpStats } from "./routes/put-character-hp-stats";
+import { _putCharacterOtherStats } from "./routes/put-character-other-stats";
+import { _putCharacterSkillsStats } from "./routes/put-character-skills-stats";
 import { _putCharacterStats } from "./routes/put-character-stats";
-import { _putHpStats } from "./routes/put-hp-stats";
-import { _putOtherCharacterStats } from "./routes/put-other-character-stats";
-import { _putSkillsStats } from "./routes/put-skills-stats";
 
 //get methods
 export const getCharacter = async (req: any, res: any) => {
@@ -20,12 +21,10 @@ export const getCharacter = async (req: any, res: any) => {
       return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
     }
   } catch (error) {
-    console.error("Error while trying to update the character stats.");
+    console.error("Error while trying to obtain the character.");
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(
-        "Error while trying to update the character stats." + error.message
-      );
+      .send("Error while trying to obtain the character." + error.message);
   }
 };
 
@@ -38,65 +37,66 @@ export const getCharacterStats = async (req: any, res: any) => {
       return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
     }
   } catch (error) {
-    console.error("Error while trying to update the character stats.");
+    console.error("Error while trying to obtain the character stats.");
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send(
-        "Error while trying to update the character stats." + error.message
+        "Error while trying to obtain the character stats." + error.message
       );
   }
 };
 
-export const getOtherCharacterStats = async (req: any, res: any) => {
+export const getCharacterOtherStats = async (req: any, res: any) => {
   try {
-    const stats = await _getOtherCharacterStats(req.params.characterID);
+    const stats = await _getCharacterOtherStats(req.params.characterID);
     if (stats) {
       return res.status(StatusCodes.OK).send(stats);
     } else {
       return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
     }
   } catch (error) {
-    console.error("Error while trying to get the character other stats.");
+    console.error("Error while trying to obtain the character other stats.");
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send(
-        "Error while trying to get the character other stats." + error.message
+        "Error while trying to obtain the character other stats." +
+          error.message
       );
   }
 };
 
 export const getHpStats = async (req: any, res: any) => {
   try {
-    const stats = await _getHpStats(req.params.characterID);
+    const stats = await _getCharacterHpStats(req.params.characterID);
     if (stats) {
       return res.status(StatusCodes.OK).send(stats);
     } else {
       return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
     }
   } catch (error) {
-    console.error("Error while trying to get the character hp.");
+    console.error("Error while trying to obtain the character hp.");
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send(
-        "Error while trying to update the character stats." + error.message
+        "Error while trying to obtain the character stats." + error.message
       );
   }
 };
 
 export const getSkillsStats = async (req: any, res: any) => {
   try {
-    const stats = await _getSkillsStats(req.params.characterID);
+    const stats = await _getCharacterSkillsStats(req.params.characterID);
     if (stats) {
       return res.status(StatusCodes.OK).send(stats);
     } else {
       return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
     }
   } catch (error) {
-    console.error("Error while trying to get the character skills.");
+    console.error("Error while trying to obtain the character skills.");
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send(
-        "Error while trying to update the character skills." + error.message
+        "Error while trying to obtain the character skills." + error.message
       );
   }
 };
@@ -105,14 +105,12 @@ export const getSkillsStats = async (req: any, res: any) => {
 export const putCharacter = async (req: any, res: any) => {
   try {
     await _putCharacter(req.params.characterID, req.body);
-    res.status(StatusCodes.OK).send("Stats updated correctly.");
+    res.status(StatusCodes.OK).send("Character updated correctly.");
   } catch (error) {
-    console.error("Error while trying to update the character stats.");
+    console.error("Error while trying to update the character.");
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(
-        "Error while trying to update the character stats." + error.message
-      );
+      .send("Error while trying to update the character." + error.message);
   }
 };
 
@@ -136,7 +134,7 @@ export const putCharacterStats = async (req: any, res: any) => {
 
 export const putOtherCharacterStats = async (req: any, res: any) => {
   try {
-    await _putOtherCharacterStats(req.params.characterID, req.body);
+    await _putCharacterOtherStats(req.params.characterID, req.body);
     res.status(StatusCodes.OK).send("Other stats updated correctly.");
   } catch (error) {
     console.error("Error while trying to update the character other stats.");
@@ -151,7 +149,7 @@ export const putOtherCharacterStats = async (req: any, res: any) => {
 
 export const putHpStats = async (req: any, res: any) => {
   try {
-    await _putHpStats(req.params.characterID, req.body);
+    await _putCharacterHpStats(req.params.characterID, req.body);
     res.status(StatusCodes.OK).send("HP updated correctly.");
   } catch (error) {
     console.error("Error while trying to update the HP.");
@@ -163,7 +161,7 @@ export const putHpStats = async (req: any, res: any) => {
 
 export const putSkillsStats = async (req: any, res: any) => {
   try {
-    await _putSkillsStats(req.params.characterID, req.body);
+    await _putCharacterSkillsStats(req.params.characterID, req.body);
     res.status(StatusCodes.OK).send("Skills updated correctly.");
   } catch (error) {
     console.error("Error while trying to update the skills.");

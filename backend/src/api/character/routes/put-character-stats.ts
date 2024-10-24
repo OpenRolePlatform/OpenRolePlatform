@@ -1,5 +1,5 @@
 import { Stats } from "../../../core/models/stats";
-import characterStats from "../../../core/schemas/characterStats-schema";
+import characterStats from "../../../core/schemas/character/characterStats-schema";
 
 export async function _putCharacterStats(character: string, stats: Stats) {
   await characterStats.findOneAndUpdate(
