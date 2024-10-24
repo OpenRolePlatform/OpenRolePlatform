@@ -3,8 +3,9 @@ import "dotenv/config";
 import express from "express";
 import { WebSocket } from "ws";
 import { db } from "./connectDB";
-import { routes } from "./router-controller";
+import { routes } from "./router-main";
 import { WebSocketService } from "./WebSocketServices";
+
 const PORT = process.env.PORT || 3001;
 const delay = 0;
 

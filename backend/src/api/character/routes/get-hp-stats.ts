@@ -1,4 +1,4 @@
-import hpStats from "../../core/schemas/hpStats-schema";
+import hpStats from "../../../core/schemas/hpStats-schema";
 
 export async function _getHpStats(character: string) {
   return await hpStats.findOne({
