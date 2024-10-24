@@ -1,8 +1,8 @@
 import { Character } from "../../../core/models/character/character-model";
-import { CharacterModel } from "../../../core/schemas/character/character-schema";
+import CharacterSchema from "../../../core/schemas/character/character-schema";
 
 export async function _putCharacter(character: string, data: Character) {
-  await CharacterModel.findOneAndUpdate(
+  await CharacterSchema.findOneAndUpdate(
     {
       name: character,
     },

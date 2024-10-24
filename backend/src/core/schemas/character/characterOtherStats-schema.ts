@@ -10,11 +10,11 @@ const reqNumber = {
   required: true,
 };
 
-const otherCharacterStats = new Schema({
+const characterOtherStats = new Schema({
   character: reqString,
   ac: reqNumber,
   movement: reqNumber,
   bonus: reqNumber,
 });
 
-export default model("otherCharacterStats", otherCharacterStats);
+export default model("otherCharacterStats", characterOtherStats);

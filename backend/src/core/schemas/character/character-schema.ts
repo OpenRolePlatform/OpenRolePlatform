@@ -1,19 +1,39 @@
 import { model, Schema } from "mongoose";
-import characterHpStatsSchema from "./characterHpStats-schema";
-import otherCharacterStatsSchema from "./characterOtherStats-schema";
-import characterSkillsSchema from "./characterSkills-schema";
-import characterStatsSchema from "./characterStats-schema";
 
-const characterSchema = new Schema({
+const reqStat = {
+  type: Schema.Types.ObjectId,
+  ref: "characterStats",
+  required: false,
+};
+
+const reqSkills = {
+  type: Schema.Types.ObjectId,
+  ref: "characterSkills",
+  required: false,
+};
+
+const reqHp = {
+  type: Schema.Types.ObjectId,
+  ref: "hpStats",
+  required: false,
+};
+
+const reqOther = {
+  type: Schema.Types.ObjectId,
+  ref: "otherCharacterStats",
+  required: false,
+};
+
+const CharacterSchema = new Schema({
   name: {
     type: String,
     index: true,
     unique: true,
   },
-  stats: characterStatsSchema,
-  skills: characterSkillsSchema,
-  hp: characterHpStatsSchema,
-  other: otherCharacterStatsSchema,
+  stats: reqStat,
+  skills: reqSkills,
+  hp: reqHp,
+  other: reqOther,
 });
 
-export const CharacterModel = model("Character", characterSchema);
+export default model("CharacterSchema", CharacterSchema);
