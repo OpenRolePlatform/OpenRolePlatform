@@ -24,12 +24,23 @@ const reqOther = {
   required: false,
 };
 
+const reqCampaign = {
+  type: String,
+  require: true,
+  index: true,
+  unique: true,
+};
+
+const reqCharacter = {
+  type: String,
+  require: true,
+  index: true,
+  unique: true,
+};
+
 const CharacterSchema = new Schema({
-  name: {
-    type: String,
-    index: true,
-    unique: true,
-  },
+  campaign: reqCampaign,
+  name: reqCharacter,
   stats: reqStat,
   skills: reqSkills,
   hp: reqHp,

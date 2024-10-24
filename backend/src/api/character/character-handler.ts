@@ -14,7 +14,10 @@ import { _putCharacterStats } from "./routes/put-character-stats";
 //get methods
 export const getCharacter = async (req: any, res: any) => {
   try {
-    const character = await _getCharacter(req.params.characterID);
+    const character = await _getCharacter(
+      req.params.campaign,
+      req.params.characterID
+    );
     if (character) {
       return res.status(StatusCodes.OK).send(character);
     } else {
@@ -30,7 +33,10 @@ export const getCharacter = async (req: any, res: any) => {
 
 export const getCharacterStats = async (req: any, res: any) => {
   try {
-    const stats = await _getCharacterStats(req.params.characterID);
+    const stats = await _getCharacterStats(
+      req.params.campaign,
+      req.params.characterID
+    );
     if (stats) {
       return res.status(StatusCodes.OK).send(stats);
     } else {
@@ -48,7 +54,10 @@ export const getCharacterStats = async (req: any, res: any) => {
 
 export const getCharacterOtherStats = async (req: any, res: any) => {
   try {
-    const stats = await _getCharacterOtherStats(req.params.characterID);
+    const stats = await _getCharacterOtherStats(
+      req.params.campaign,
+      req.params.characterID
+    );
     if (stats) {
       return res.status(StatusCodes.OK).send(stats);
     } else {
@@ -67,7 +76,10 @@ export const getCharacterOtherStats = async (req: any, res: any) => {
 
 export const getHpStats = async (req: any, res: any) => {
   try {
-    const stats = await _getCharacterHpStats(req.params.characterID);
+    const stats = await _getCharacterHpStats(
+      req.params.campaign,
+      req.params.characterID
+    );
     if (stats) {
       return res.status(StatusCodes.OK).send(stats);
     } else {
@@ -85,7 +97,10 @@ export const getHpStats = async (req: any, res: any) => {
 
 export const getSkillsStats = async (req: any, res: any) => {
   try {
-    const stats = await _getCharacterSkillsStats(req.params.characterID);
+    const stats = await _getCharacterSkillsStats(
+      req.params.campaign,
+      req.params.characterID
+    );
     if (stats) {
       return res.status(StatusCodes.OK).send(stats);
     } else {
@@ -104,9 +119,10 @@ export const getSkillsStats = async (req: any, res: any) => {
 //put methods
 export const putCharacter = async (req: any, res: any) => {
   try {
-    await _putCharacter(req.params.characterID, req.body);
+    await _putCharacter(req.params.campaign, req.params.characterID, req.body);
     res.status(StatusCodes.OK).send("Character updated correctly.");
     WebSocketService.Instance.broadcast({
+      campaign: req.params.campaign,
       character: req.params.characterID,
       data: req.body,
     });
@@ -120,9 +136,14 @@ export const putCharacter = async (req: any, res: any) => {
 
 export const putCharacterStats = async (req: any, res: any) => {
   try {
-    await _putCharacterStats(req.params.characterID, req.body);
+    await _putCharacterStats(
+      req.params.campaign,
+      req.params.characterID,
+      req.body
+    );
     res.status(StatusCodes.OK).send("Stats updated correctly.");
     WebSocketService.Instance.broadcast({
+      campaign: req.params.campaign,
       character: req.params.characterID,
       stats: req.body,
     });
@@ -138,9 +159,14 @@ export const putCharacterStats = async (req: any, res: any) => {
 
 export const putOtherCharacterStats = async (req: any, res: any) => {
   try {
-    await _putCharacterOtherStats(req.params.characterID, req.body);
+    await _putCharacterOtherStats(
+      req.params.campaign,
+      req.params.characterID,
+      req.body
+    );
     res.status(StatusCodes.OK).send("Other stats updated correctly.");
     WebSocketService.Instance.broadcast({
+      campaign: req.params.campaign,
       character: req.params.characterID,
       otherStats: req.body,
     });
@@ -157,9 +183,14 @@ export const putOtherCharacterStats = async (req: any, res: any) => {
 
 export const putHpStats = async (req: any, res: any) => {
   try {
-    await _putCharacterHpStats(req.params.characterID, req.body);
+    await _putCharacterHpStats(
+      req.params.campaign,
+      req.params.characterID,
+      req.body
+    );
     res.status(StatusCodes.OK).send("HP updated correctly.");
     WebSocketService.Instance.broadcast({
+      campaign: req.params.campaign,
       character: req.params.characterID,
       hpStats: req.body,
     });
@@ -173,9 +204,14 @@ export const putHpStats = async (req: any, res: any) => {
 
 export const putSkillsStats = async (req: any, res: any) => {
   try {
-    await _putCharacterSkillsStats(req.params.characterID, req.body);
+    await _putCharacterSkillsStats(
+      req.params.campaign,
+      req.params.characterID,
+      req.body
+    );
     res.status(StatusCodes.OK).send("Skills updated correctly.");
     WebSocketService.Instance.broadcast({
+      campaign: req.params.campaign,
       character: req.params.characterID,
       skills: req.body,
     });

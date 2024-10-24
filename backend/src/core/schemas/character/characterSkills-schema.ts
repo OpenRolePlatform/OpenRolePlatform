@@ -1,17 +1,27 @@
 import { model, Schema } from "mongoose";
 
-const reqString = {
-  type: String,
-  required: true,
-};
-
 const reqBoolean = {
   type: Boolean,
   required: true,
 };
 
+const reqCampaign = {
+  type: String,
+  require: true,
+  index: true,
+  unique: true,
+};
+
+const reqCharacter = {
+  type: String,
+  require: true,
+  index: true,
+  unique: true,
+};
+
 const characterSkills = new Schema({
-  character: reqString,
+  campaign: reqCampaign,
+  character: reqCharacter,
   strength: reqBoolean,
   dexterity: reqBoolean,
   constitution: reqBoolean,
