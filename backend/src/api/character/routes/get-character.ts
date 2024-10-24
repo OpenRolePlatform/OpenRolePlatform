@@ -1,5 +1,5 @@
-import { Character } from "../../core/models/CharacterModels";
-import { CharacterModel } from "../../core/schemas/CharacterSchemas";
+import { Character } from "../../../core/models/CharacterModels";
+import { CharacterModel } from "../../../core/schemas/CharacterSchemas";
 
 export async function _getCharacter(character: string) {
   return await CharacterModel.findOne({

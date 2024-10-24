@@ -1,14 +1,14 @@
 import { StatusCodes } from "http-status-codes";
-import { WebSocketService } from "../WebSocketServices";
-import { _getCharacter, _putCharacter } from "./routers/get-character";
-import { _getCharacterStats } from "./routers/get-character-stats";
-import { _getHpStats } from "./routers/get-hp-stats";
-import { _getOtherCharacterStats } from "./routers/get-other-character-stats";
-import { _getSkillsStats } from "./routers/get-skills-stats";
-import { _putCharacterStats } from "./routers/put-character-stats";
-import { _putHpStats } from "./routers/put-hp-stats";
-import { _putOtherCharacterStats } from "./routers/put-other-character-stats";
-import { _putSkillsStats } from "./routers/put-skills-stats";
+import { WebSocketService } from "../../WebSocketServices";
+import { _getCharacter, _putCharacter } from "./routes/get-character";
+import { _getCharacterStats } from "./routes/get-character-stats";
+import { _getHpStats } from "./routes/get-hp-stats";
+import { _getOtherCharacterStats } from "./routes/get-other-character-stats";
+import { _getSkillsStats } from "./routes/get-skills-stats";
+import { _putCharacterStats } from "./routes/put-character-stats";
+import { _putHpStats } from "./routes/put-hp-stats";
+import { _putOtherCharacterStats } from "./routes/put-other-character-stats";
+import { _putSkillsStats } from "./routes/put-skills-stats";
 
 //get methods
 export const getCharacter = async (req: any, res: any) => {
