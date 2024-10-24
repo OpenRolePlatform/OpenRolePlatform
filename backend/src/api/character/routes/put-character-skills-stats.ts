@@ -1,7 +1,10 @@
 import { Skills } from "../../../core/models/skills";
-import characterSkills from "../../../core/schemas/characterSkills-schema";
+import characterSkills from "../../../core/schemas/character/characterSkills-schema";
 
-export async function _putSkillsStats(character: string, skills: Skills) {
+export async function _putCharacterSkillsStats(
+  character: string,
+  skills: Skills
+) {
   await characterSkills.findOneAndUpdate(
     {
       character: character,

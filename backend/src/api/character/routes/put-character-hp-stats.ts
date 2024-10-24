@@ -1,7 +1,7 @@
 import { HpStats } from "../../../core/models/hp-stats";
-import hpStats from "../../../core/schemas/hpStats-schema";
+import hpStats from "../../../core/schemas/character/characterHpStats-schema";
 
-export async function _putHpStats(character: string, stats: HpStats) {
+export async function _putCharacterHpStats(character: string, stats: HpStats) {
   await hpStats.findOneAndUpdate(
     {
       character: character,
