@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { WebSocketService } from "../../WebSocketServices";
+import { WebSocketService } from "../../connectWS";
 import { _getCharacter } from "./routes/get-character";
 import { _getCharacterHpStats } from "./routes/get-character-hp-stats";
 import { _getCharacterOtherStats } from "./routes/get-character-other-stats";
@@ -106,6 +106,10 @@ export const putCharacter = async (req: any, res: any) => {
   try {
     await _putCharacter(req.params.characterID, req.body);
     res.status(StatusCodes.OK).send("Character updated correctly.");
+    WebSocketService.Instance.broadcast({
+      character: req.params.characterID,
+      data: req.body,
+    });
   } catch (error) {
     console.error("Error while trying to update the character.");
     res
@@ -136,6 +140,10 @@ export const putOtherCharacterStats = async (req: any, res: any) => {
   try {
     await _putCharacterOtherStats(req.params.characterID, req.body);
     res.status(StatusCodes.OK).send("Other stats updated correctly.");
+    WebSocketService.Instance.broadcast({
+      character: req.params.characterID,
+      otherStats: req.body,
+    });
   } catch (error) {
     console.error("Error while trying to update the character other stats.");
     res
@@ -151,6 +159,10 @@ export const putHpStats = async (req: any, res: any) => {
   try {
     await _putCharacterHpStats(req.params.characterID, req.body);
     res.status(StatusCodes.OK).send("HP updated correctly.");
+    WebSocketService.Instance.broadcast({
+      character: req.params.characterID,
+      hpStats: req.body,
+    });
   } catch (error) {
     console.error("Error while trying to update the HP.");
     res
@@ -163,6 +175,10 @@ export const putSkillsStats = async (req: any, res: any) => {
   try {
     await _putCharacterSkillsStats(req.params.characterID, req.body);
     res.status(StatusCodes.OK).send("Skills updated correctly.");
+    WebSocketService.Instance.broadcast({
+      character: req.params.characterID,
+      skills: req.body,
+    });
   } catch (error) {
     console.error("Error while trying to update the skills.");
     res

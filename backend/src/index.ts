@@ -3,14 +3,16 @@ import "dotenv/config";
 import express from "express";
 import { WebSocket } from "ws";
 import { db } from "./connectDB";
+import { WebSocketService } from "./connectWS";
 import { routes } from "./router-main";
-import { WebSocketService } from "./WebSocketServices";
 
 const PORT = process.env.PORT || 3001;
 const delay = 0;
 
 // initialize express app
 const app = express();
+
+//database connection
 db;
 
 function setCorsHeaders(req: any, res: any, next: () => void) {
@@ -39,6 +41,7 @@ const server = app.listen(PORT, () => {
   console.log(`Server is listening at http://localhost:${PORT}`);
 });
 
+// start websockets
 const wss = new WebSocket.Server({
   server: server,
 });
