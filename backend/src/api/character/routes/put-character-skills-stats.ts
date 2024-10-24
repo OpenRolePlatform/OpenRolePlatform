@@ -1,4 +1,4 @@
-import { Skills } from "../../../core/models/skills";
+import { Skills } from "../../../core/models/skills-model";
 import characterSkills from "../../../core/schemas/character/characterSkills-schema";
 
 export async function _putCharacterSkillsStats(

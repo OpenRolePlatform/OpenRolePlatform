@@ -1,4 +1,4 @@
-import { OtherStats } from "../../../core/models/other-stats";
+import { OtherStats } from "../../../core/models/otherStats-model";
 import otherCharacterStats from "../../../core/schemas/character/characterOtherStats-schema";
 
 export async function _putCharacterOtherStats(

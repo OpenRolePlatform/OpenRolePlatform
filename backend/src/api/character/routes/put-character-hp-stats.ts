@@ -1,4 +1,4 @@
-import { HpStats } from "../../../core/models/hp-stats";
+import { HpStats } from "../../../core/models/hpStats-model";
 import hpStats from "../../../core/schemas/character/characterHpStats-schema";
 
 export async function _putCharacterHpStats(character: string, stats: HpStats) {
