@@ -1,4 +1,5 @@
-import { model, Schema } from "mongoose";
+import { Schema } from "mongoose";
+import { campaignDB } from "src/core/connectCampaign";
 
 const reqNumber = {
   type: Number,
@@ -30,4 +31,4 @@ const characterStats = new Schema({
   charisma: reqNumber,
 });
 
-export default model("characterStats", characterStats);
+export default campaignDB.model("characterStats", characterStats);
