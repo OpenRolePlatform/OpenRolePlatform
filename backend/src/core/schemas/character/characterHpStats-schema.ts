@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+import { campaignDB } from "src/core/connectCampaign";
 
 const reqNumber = {
   type: Number,
@@ -27,4 +28,4 @@ const hpStats = new Schema({
   hpPool: reqNumber,
 });
 
-export default model("hpStats", hpStats);
+export default campaignDB.model("hpStats", hpStats);

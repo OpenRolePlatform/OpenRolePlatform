@@ -1,4 +1,5 @@
-import { model, Schema } from "mongoose";
+import { Schema } from "mongoose";
+import { campaignDB } from "src/core/connectCampaign";
 
 const reqStat = {
   type: Schema.Types.ObjectId,
@@ -47,4 +48,4 @@ const CharacterSchema = new Schema({
   other: reqOther,
 });
 
-export default model("CharacterSchema", CharacterSchema);
+export default campaignDB.model("CharacterSchema", CharacterSchema);
