@@ -4,6 +4,21 @@
   .layout {
     min-height: 100vh;
   }
+  .header {
+    color: var(--ant-menu-dark-item-hover-color);
+  }
+  .light-theme-icon {
+    &:hover {
+      color: var(--ant-color-bg-mask) !important;
+    }
+  }
+
+  .logo {
+    max-width: 40vw;
+    max-height: 40vh;
+    border-radius: 999rem;
+    border: 1px solid var(--ant-color-border);
+  }
 }
 
 .bonus {

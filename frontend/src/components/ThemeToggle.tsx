@@ -9,13 +9,18 @@ export function ThemeToggle(props: ThemeHook) {
       onClick={() =>
         props.updateTheme(props.currentTheme === 'light' ? 'dark' : 'light')
       }
-      size="small"
+      shape="circle"
+      size="large"
+      type="default"
+      variant={'solid'}
+      color="default"
       aria-label="button to toggle theme"
+      className={props.currentTheme === 'dark' ? 'light-theme-icon' : ''}
     >
       {props.currentTheme === 'dark' ? (
-        <WbSunnyRoundedIcon fontSize="small" />
+        <WbSunnyRoundedIcon />
       ) : (
-        <ModeNightRoundedIcon fontSize="small" />
+        <ModeNightRoundedIcon />
       )}
     </Button>
   );

@@ -47,7 +47,7 @@ export const ais_img = [
 
 export const skills_img = ['/img/skills.png'];
 
-export const mainLogo = '/logo.png';
+export const mainLogo = '/logo.jpeg';
 
 export const classLogos = [
   '/img/fighter_logo.png',

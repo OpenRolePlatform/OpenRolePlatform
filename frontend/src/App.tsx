@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LayoutWrap from './components/Layout';
 import Character from './pages/character/character';
-import LandingPage from './pages/landing-page';
+import Dashboard from './pages/Dashboard';
+import MainPage from './pages/MainPage';
 import Test from './pages/test';
 import './styles/layout.scss';
 
@@ -11,7 +12,8 @@ function App() {
       <Routes>
         <Route element={<LayoutWrap />}>
           <Route path="/test" element={<Test></Test>}></Route>
-          <Route path="/" element={<LandingPage />}></Route>
+          <Route path="/" element={<MainPage />}></Route>
+          <Route path="/dm" element={<Dashboard />}></Route>
           <Route path="/character/:characterID" element={<Character />}></Route>
         </Route>
       </Routes>
