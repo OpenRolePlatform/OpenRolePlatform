@@ -6,6 +6,10 @@ export type Stat =
   | 'wisdom'
   | 'charisma';
 
+export type StatsBonus = {
+  [key in Stat]?: string;
+};
+
 export interface Stats {
   strength?: number;
   dexterity?: number;
@@ -15,10 +19,6 @@ export interface Stats {
   charisma?: number;
 }
 
-export type StatsBonus = {
-  [key in Stat]?: string;
-};
-
 export const StatsList = [
   'strength',
   'dexterity',
@@ -27,6 +27,27 @@ export const StatsList = [
   'wisdom',
   'charisma',
 ];
+
+export interface Stats {
+  strength?: number;
+  dexterity?: number;
+  constitution?: number;
+  intelligence?: number;
+  wisdom?: number;
+  charisma?: number;
+}
+
+export interface HpStats {
+  hp?: number;
+  hpTemp?: number;
+  hpPool?: number;
+}
+
+export interface OtherStats {
+  ac?: number; // Clase de armadura
+  movement?: number; // Movimiento
+  bonus?: number; // Bonificación
+}
 
 export interface Skills {
   strength?: boolean;
@@ -55,22 +76,171 @@ export interface Skills {
   survival?: boolean;
 }
 
-export interface HpStats {
-  hp?: number;
-  hpTemp?: number;
-  hpPool?: number;
-}
-
-export interface OtherStats {
-  ac?: number;
-  movement?: number;
-  bonus?: number;
-}
-
 export interface Character {
+  id: string;
   name: string;
   stats: Stats;
-  skills: Skills;
   hp: HpStats;
   other: OtherStats;
+  skills: Skills;
+  class?: string;
+  race?: string;
+  level?: number;
+  background?: string;
+  creator?: string;
+  createdAt?: Date;
 }
+
+export const charactersExamples: Character[] = [
+  {
+    id: '1',
+    name: 'Thorin Oakenshield',
+    class: 'Guerrero',
+    race: 'Enano',
+    level: 5,
+    stats: {
+      strength: 18,
+      constitution: 16,
+      dexterity: 12,
+    },
+    hp: {
+      hp: 40,
+      hpTemp: 5,
+      hpPool: 45,
+    },
+    other: {
+      ac: 16,
+      movement: 25,
+      bonus: 2,
+    },
+    skills: {
+      strength: true,
+      constitution: true,
+      intimidation: true,
+      athletics: true,
+    },
+    background: 'Rey en el exilio, busca recuperar su hogar.',
+    creator: 'ElmaDark',
+    createdAt: new Date('2023-09-15'),
+  },
+  {
+    id: '2',
+    name: 'Lyra Windrider',
+    class: 'Exploradora',
+    race: 'Elfa',
+    level: 4,
+    stats: {
+      dexterity: 17,
+      intelligence: 14,
+    },
+    hp: {
+      hp: 30,
+      hpTemp: 0,
+      hpPool: 30,
+    },
+    other: {
+      ac: 14,
+      movement: 30,
+      bonus: 1,
+    },
+    skills: {
+      dexterity: true,
+      acrobatics: true,
+      stealth: true,
+      survival: true,
+    },
+    background: 'Una aventurera con un pasado misterioso.',
+    creator: 'Tiberius',
+    createdAt: new Date('2023-10-01'),
+  },
+  {
+    id: '3',
+    name: 'Morgath el Sabio',
+    class: 'Mago',
+    race: 'Humano',
+    level: 6,
+    stats: {
+      intelligence: 20,
+      wisdom: 15,
+    },
+    hp: {
+      hp: 25,
+      hpTemp: 0,
+      hpPool: 25,
+    },
+    other: {
+      ac: 12,
+      movement: 30,
+      bonus: 0,
+    },
+    skills: {
+      intelligence: true,
+      arcana: true,
+      history: true,
+      insight: true,
+    },
+    background: 'Un erudito que busca el conocimiento antiguo.',
+    creator: 'Sara_RPG',
+    createdAt: new Date('2023-08-20'),
+  },
+  {
+    id: '4',
+    name: 'Ragnar el Bestia',
+    class: 'Bárbaro',
+    race: 'Medio-orco',
+    level: 7,
+    stats: {
+      strength: 19,
+      constitution: 17,
+    },
+    hp: {
+      hp: 50,
+      hpTemp: 10,
+      hpPool: 60,
+    },
+    other: {
+      ac: 14,
+      movement: 30,
+      bonus: 1,
+    },
+    skills: {
+      strength: true,
+      constitution: true,
+      intimidation: true,
+      survival: true,
+    },
+    background: 'Un guerrero feroz que busca redención.',
+    creator: 'Starlord',
+    createdAt: new Date('2023-10-10'),
+  },
+  {
+    id: '5',
+    name: 'Elara Nightshade',
+    class: 'Asesina',
+    race: 'Medio-elfa',
+    level: 3,
+    stats: {
+      dexterity: 16,
+      charisma: 14,
+    },
+    hp: {
+      hp: 28,
+      hpTemp: 0,
+      hpPool: 28,
+    },
+    other: {
+      ac: 15,
+      movement: 30,
+      bonus: 2,
+    },
+    skills: {
+      dexterity: true,
+      stealth: true,
+      deception: true,
+      acrobatics: true,
+    },
+    background: 'Una maestra del sigilo con un oscuro pasado.',
+    creator: 'AdventureJoe',
+    createdAt: new Date('2023-09-25'),
+  },
+];
