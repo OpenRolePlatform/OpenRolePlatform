@@ -26,7 +26,8 @@
     "react-router-dom": "^6.27.0",
     "react-use": "^17.5.1",
     "react-use-websocket": "^4.9.0",
-    "sass": "^1.79.5"
+    "sass": "^1.79.5",
+    "use-breakpoint": "^4.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",

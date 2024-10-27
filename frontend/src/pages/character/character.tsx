@@ -2,11 +2,9 @@
 import { ChangeEvent, useState } from 'react';
 
 //@mui imports
-import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 //@mui icons imports
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 //components imports
 import { useNavigate, useParams } from 'react-router-dom';
@@ -397,38 +395,13 @@ export default function Character() {
     }
   } */
 
-  /* show skills menu */
-  /* function checkIfShowSkills() {
-    if (showSkillsSwitch) {
-      return (
-        <SkillsMenu
-          bonus={otherCharacterStats.bonus}
-          characterStats={characterStats}
-          handleShowSkillsChange={handleShowSkillsChange}
-        />
-      );
-    } else return <></>;
-  } */
-
   return (
     <>
-      {/*   <CharacterCard name={character.name} /> */}
-      {/* go back button */}
-      <div style={{ position: 'absolute', left: '0', width: '5px' }}>
-        <Button
-          size="small"
-          sx={{ minWidth: '32px', height: '32px', p: '4px' }}
-          onClick={() => navigate('/')}
-        >
-          <ArrowBackIcon />
-        </Button>
-      </div>
       {/* general row */}
       <Stack
         display="flex"
         direction="row"
         sx={{ width: '100%', height: '50%' }}
-        marginBottom="-0px"
       >
         {/* left stats column */}
         <LeftStats character={character} handleUpdate={handleUpdate} />

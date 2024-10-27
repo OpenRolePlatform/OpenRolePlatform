@@ -55,3 +55,10 @@ export const classLogos = [
   '/img/warlock_logo.png',
   '/img/bloodhunter_logo.png',
 ];
+
+export const ClassLogos = {
+  fighter: '/img/fighter_logo.png',
+  paladin: '/img/paladin_logo.png',
+  warlock: '/img/warlock_logo.png',
+  bloodhunter: '/img/bloodhunter_logo.png',
+};

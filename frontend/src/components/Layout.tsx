@@ -15,6 +15,8 @@ const ComponentsTheme = {
     algorithm: true,
     headerBg: 'rgb(0,0,0)',
     headerColor: 'rgb(167,167,167)',
+    headerPadding: '0px 24px',
+    bodyBG: 'rgb(243,244,245)',
   },
   Button: {
     algorithm: true,
@@ -84,10 +86,10 @@ function LayoutWrap() {
           </Header>
           <Content
             style={{
-              padding: 24,
+              padding: 16,
               margin: 0,
               minHeight: 280,
-              background: 'var(--ant-color-primary-bg)',
+              maxHeight: '100vh',
             }}
           >
             <div
@@ -95,7 +97,7 @@ function LayoutWrap() {
               style={{
                 background: 'var(--ant-color-bg-base)',
                 minHeight: 280,
-                padding: 24,
+                padding: 8,
                 borderRadius: 12,
               }}
             >

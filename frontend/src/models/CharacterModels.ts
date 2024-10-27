@@ -89,14 +89,15 @@ export interface Character {
   background?: string;
   creator?: string;
   createdAt?: Date;
+  image?: string;
 }
 
 export const charactersExamples: Character[] = [
   {
     id: '1',
-    name: 'Thorin Oakenshield',
+    name: 'raven',
     class: 'Guerrero',
-    race: 'Enano',
+    race: 'Elfo',
     level: 5,
     stats: {
       strength: 18,
@@ -122,6 +123,7 @@ export const charactersExamples: Character[] = [
     background: 'Rey en el exilio, busca recuperar su hogar.',
     creator: 'ElmaDark',
     createdAt: new Date('2023-09-15'),
+    image: '/img/raven.jpeg',
   },
   {
     id: '2',
@@ -152,6 +154,7 @@ export const charactersExamples: Character[] = [
     background: 'Una aventurera con un pasado misterioso.',
     creator: 'Tiberius',
     createdAt: new Date('2023-10-01'),
+    image: '/img/aalis.jpeg',
   },
   {
     id: '3',
@@ -182,11 +185,12 @@ export const charactersExamples: Character[] = [
     background: 'Un erudito que busca el conocimiento antiguo.',
     creator: 'Sara_RPG',
     createdAt: new Date('2023-08-20'),
+    image: '/img/amadeus.jpeg',
   },
   {
     id: '4',
     name: 'Ragnar el Bestia',
-    class: 'Bárbaro',
+    class: 'fighter',
     race: 'Medio-orco',
     level: 7,
     stats: {
@@ -212,11 +216,12 @@ export const charactersExamples: Character[] = [
     background: 'Un guerrero feroz que busca redención.',
     creator: 'Starlord',
     createdAt: new Date('2023-10-10'),
+    image: '/img/ozymandias.png',
   },
   {
     id: '5',
     name: 'Elara Nightshade',
-    class: 'Asesina',
+    class: 'warlock',
     race: 'Medio-elfa',
     level: 3,
     stats: {
