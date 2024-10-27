@@ -4,16 +4,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
+import { useNavigate } from 'react-router-dom';
+import { classLogos, mainLogo } from '../assets/Images';
 //components imports
-
-const mainLogo = '/logo.png';
-
-const classLogos = [
-  '/img/fighter_logo.png',
-  '/img/paladin_logo.png',
-  '/img/warlock_logo.png',
-  '/img/bloodhunter_logo.png',
-];
 
 const mainLogoStyle = {
   width: window.innerHeight > window.innerWidth ? '50vw' : '50vh',
@@ -28,10 +21,7 @@ const classLogoStyle = {
 const characterFontSize = '6vw';
 
 export default function LandingPage() {
-  function handleCharacterSelection(character: string) {
-    localStorage.setItem('character', character);
-    window.location = '/character';
-  }
+  const navigate = useNavigate();
 
   return (
     <>
@@ -58,7 +48,7 @@ export default function LandingPage() {
           <Button
             variant="outlined"
             sx={{ width: '46%', height: '100%', margin: '2%' }}
-            onClick={() => handleCharacterSelection('raven')}
+            onClick={() => navigate('/character/raven')}
           >
             <Box>
               <img src={classLogos[0]} style={classLogoStyle} alt="fighter" />
@@ -68,7 +58,7 @@ export default function LandingPage() {
           <Button
             variant="outlined"
             sx={{ width: '46%', height: '100%', margin: '2%' }}
-            onClick={() => handleCharacterSelection('amadeus')}
+            onClick={() => navigate('/character/amadeus')}
           >
             <Box>
               <img src={classLogos[1]} style={classLogoStyle} alt="paladin" />
@@ -84,7 +74,7 @@ export default function LandingPage() {
           <Button
             variant="outlined"
             sx={{ width: '46%', height: '100%', margin: '2%' }}
-            onClick={() => handleCharacterSelection('ozymandias')}
+            onClick={() => navigate('/character/ozymandias')}
           >
             <Box>
               <img src={classLogos[2]} style={classLogoStyle} alt="warlock" />
@@ -94,7 +84,7 @@ export default function LandingPage() {
           <Button
             variant="outlined"
             sx={{ width: '46%', height: '100%', margin: '2%' }}
-            onClick={() => handleCharacterSelection('aalis')}
+            onClick={() => navigate('/character/aalis')}
           >
             <Box>
               <img

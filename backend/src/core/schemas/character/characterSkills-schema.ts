@@ -1,17 +1,28 @@
 import { model, Schema } from "mongoose";
-
-const reqString = {
-  type: String,
-  required: true,
-};
+import { campaignDB } from "src/core/connectCampaign";
 
 const reqBoolean = {
   type: Boolean,
   required: true,
 };
 
+const reqCampaign = {
+  type: String,
+  require: true,
+  index: true,
+  unique: true,
+};
+
+const reqCharacter = {
+  type: String,
+  require: true,
+  index: true,
+  unique: true,
+};
+
 const characterSkills = new Schema({
-  character: reqString,
+  campaign: reqCampaign,
+  character: reqCharacter,
   strength: reqBoolean,
   dexterity: reqBoolean,
   constitution: reqBoolean,
@@ -38,4 +49,4 @@ const characterSkills = new Schema({
   survival: reqBoolean,
 });
 
-export default model("characterSkills", characterSkills);
+export default campaignDB.model("characterSkills", characterSkills);

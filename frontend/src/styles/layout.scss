@@ -1,8 +1,22 @@
 :root {
   height: 100vh;
-  width: 100vh;
-  overflow: hidden;
+  width: 100vw;
   .layout {
     min-height: 100vh;
   }
+}
+
+.bonus {
+  position: absolute;
+  color: black;
+  align-self: center;
+  font-size: 7vw;
+}
+
+.stat-field {
+  position: absolute;
+  transform: translate(5px, 9.5vw);
+  align-self: center;
+  font-size: 3.5vw;
+  width: 60px;
 }

@@ -1,13 +1,18 @@
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
+import { WebSocket } from "ws";
 import { db } from "./connectDB";
-import { routes } from "./router-controller";
+import { WebSocketService } from "./connectWS";
+import { routes } from "./router-main";
+
+const PORT = process.env.PORT || 3001;
+const delay = 0;
 
 // initialize express app
-const PORT = process.env.PORT || 3001;
 const app = express();
 
+//database connection
 db;
 
 function setCorsHeaders(req: any, res: any, next: () => void) {
@@ -20,6 +25,10 @@ function setCorsHeaders(req: any, res: any, next: () => void) {
   next();
 }
 
+app.use(function (req, res, next) {
+  setTimeout(next, delay);
+});
+
 app.use(cors()); // enable `CORS` for all routes
 app.use(express.json()); // enable parsing of json request body
 app.use(express.urlencoded({ extended: true }));
@@ -28,6 +37,13 @@ app.use(setCorsHeaders);
 routes(app);
 
 // start the server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is listening at http://localhost:${PORT}`);
 });
+
+// start websockets
+const wss = new WebSocket.Server({
+  server: server,
+});
+
+new WebSocketService(wss).init();
