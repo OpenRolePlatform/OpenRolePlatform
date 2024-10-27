@@ -4,6 +4,7 @@ import express from "express";
 import { WebSocket } from "ws";
 import { db } from "./connectDB";
 import { WebSocketService } from "./connectWS";
+import { campaignDB } from "./core/connectCampaign";
 import { routes } from "./router-main";
 
 const PORT = process.env.PORT || 3001;
@@ -14,6 +15,7 @@ const app = express();
 
 //database connection
 db;
+campaignDB;
 
 function setCorsHeaders(req: any, res: any, next: () => void) {
   res.setHeader("Access-Control-Allow-Origin", "*");

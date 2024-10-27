@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { campaignDB } from "src/core/connectCampaign";
+import { campaignDB } from "../../connectCampaign";
 
 const reqNumber = {
   type: Number,
