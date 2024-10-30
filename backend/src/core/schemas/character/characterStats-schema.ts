@@ -1,5 +1,5 @@
-import { Schema } from "mongoose";
-import { campaignDB } from "../../connectCampaign";
+import "dotenv/config";
+import mongoose, { Schema } from "mongoose";
 
 const reqNumber = {
   type: Number,
@@ -23,4 +23,4 @@ const characterStats = new Schema({
   charisma: reqNumber,
 });
 
-export default campaignDB.model("characterStats", characterStats);
+export default mongoose.model("characterStats", characterStats);

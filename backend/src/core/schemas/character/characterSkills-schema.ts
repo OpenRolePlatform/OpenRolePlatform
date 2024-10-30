@@ -1,5 +1,4 @@
-import { Schema } from "mongoose";
-import { campaignDB } from "../../connectCampaign";
+import mongoose, { Schema } from "mongoose";
 
 const reqBoolean = {
   type: Boolean,
@@ -41,4 +40,4 @@ const characterSkills = new Schema({
   survival: reqBoolean,
 });
 
-export default campaignDB.model("characterSkills", characterSkills);
+export default mongoose.model("characterSkills", characterSkills);

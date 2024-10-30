@@ -1,5 +1,4 @@
-import { Schema } from "mongoose";
-import { campaignDB } from "../../connectCampaign";
+import mongoose, { Schema } from "mongoose";
 
 const reqNumber = {
   type: Number,
@@ -20,4 +19,4 @@ const characterOtherStats = new Schema({
   bonus: reqNumber,
 });
 
-export default campaignDB.model("characterOtherStats", characterOtherStats);
+export default mongoose.model("characterOtherStats", characterOtherStats);

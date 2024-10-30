@@ -24,6 +24,7 @@ export const getCampaigns = async (req: any, res: any) => {
 export const getSelectCampaign = async (req: any, res: any) => {
   try {
     const campaigns = await _getSelectCampaign(req.params.campaignID);
+    console.log("fuckoff4");
     if (campaigns === true) {
       return res.sendStatus(StatusCodes.OK);
     } else {

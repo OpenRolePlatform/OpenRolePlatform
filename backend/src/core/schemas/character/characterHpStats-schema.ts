@@ -1,5 +1,4 @@
-import { Schema } from "mongoose";
-import { campaignDB } from "../../connectCampaign";
+import mongoose, { Schema } from "mongoose";
 
 const reqNumber = {
   type: Number,
@@ -20,4 +19,4 @@ const hpStats = new Schema({
   hpPool: reqNumber,
 });
 
-export default campaignDB.model("hpStats", hpStats);
+export default mongoose.model("hpStats", hpStats);
