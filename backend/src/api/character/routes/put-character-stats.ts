@@ -1,14 +1,9 @@
-import { Stats } from "../../../core/models/stats-model";
+import { Stats } from "../../../core/models/character/stats-model";
 import characterStats from "../../../core/schemas/character/characterStats-schema";
 
-export async function _putCharacterStats(
-  campaign: string,
-  character: string,
-  stats: Stats
-) {
+export async function _putCharacterStats(character: string, stats: Stats) {
   await characterStats.findOneAndUpdate(
     {
-      campaign: campaign,
       character: character,
     },
     {

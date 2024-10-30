@@ -1,5 +1,6 @@
 import { Application } from "express";
 import { StatusCodes } from "http-status-codes";
+import campaignRouter from "./api/campaign/router-campaign";
 import characterRouter from "./api/character/router-character";
 
 export function routes(app: Application) {
@@ -10,5 +11,6 @@ export function routes(app: Application) {
       .json({ message: "OpenRolePlatform database loaded successfully" });
   });
 
+  app.use("/api/campaign", campaignRouter);
   app.use("/api/character", characterRouter);
 }

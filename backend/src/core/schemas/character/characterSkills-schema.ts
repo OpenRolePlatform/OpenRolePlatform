@@ -6,13 +6,6 @@ const reqBoolean = {
   required: true,
 };
 
-const reqCampaign = {
-  type: String,
-  require: true,
-  index: true,
-  unique: true,
-};
-
 const reqCharacter = {
   type: String,
   require: true,
@@ -21,7 +14,6 @@ const reqCharacter = {
 };
 
 const characterSkills = new Schema({
-  campaign: reqCampaign,
   character: reqCharacter,
   strength: reqBoolean,
   dexterity: reqBoolean,
