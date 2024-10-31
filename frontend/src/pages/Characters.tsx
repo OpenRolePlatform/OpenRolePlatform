@@ -18,7 +18,9 @@ export default function Characters() {
           size="large"
           dataSource={charactersExamples}
           renderItem={(character) => (
-            <List.Item onClick={() => navigate(`/character/${character.name}`)}>
+            <List.Item
+              onClick={() => navigate(`/characters/${character.name}`)}
+            >
               <List.Item.Meta
                 avatar={
                   character.image ? (
@@ -33,7 +35,7 @@ export default function Characters() {
           )}
         />
       ) : (
-        <Row align="middle" justify="space-between" gutter={[12, 12]}>
+        <Row align="middle" gutter={[12, 12]}>
           {charactersExamples.map((character, index) => (
             <Col
               key={`col-${index}`}
@@ -51,7 +53,7 @@ export default function Characters() {
                     <img src={ClassLogos[character.class]} />
                   )
                 }
-                onClick={() => navigate(`/character/${character.name}`)}
+                onClick={() => navigate(`/characters/${character.name}`)}
               >
                 <h3>{character.name}</h3>
               </Card>
