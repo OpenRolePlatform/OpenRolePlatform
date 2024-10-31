@@ -8,6 +8,7 @@ export interface Campaign {
   creator: string;
   createdAt: Date;
   status: 'active' | 'completed' | 'paused';
+  image: string;
 }
 
 export const campaignsExample: Campaign[] = [
@@ -22,6 +23,7 @@ export const campaignsExample: Campaign[] = [
     creator: 'ElmaDark',
     createdAt: new Date('2023-09-15'),
     status: 'active',
+    image: '/img/campaigns/logo.png',
   },
   {
     id: '2',
@@ -34,6 +36,7 @@ export const campaignsExample: Campaign[] = [
     creator: 'Tiberius',
     createdAt: new Date('2023-10-01'),
     status: 'active',
+    image: '/img/campaigns/logo.png',
   },
   {
     id: '3',
@@ -46,6 +49,7 @@ export const campaignsExample: Campaign[] = [
     creator: 'Sara_RPG',
     createdAt: new Date('2023-08-20'),
     status: 'completed',
+    image: '/img/campaigns/logo.png',
   },
   {
     id: '4',
@@ -58,6 +62,7 @@ export const campaignsExample: Campaign[] = [
     creator: 'Starlord',
     createdAt: new Date('2023-10-10'),
     status: 'paused',
+    image: '/img/campaigns/logo.png',
   },
   {
     id: '5',
@@ -70,5 +75,6 @@ export const campaignsExample: Campaign[] = [
     creator: 'AdventureJoe',
     createdAt: new Date('2023-09-25'),
     status: 'active',
+    image: '/img/campaigns/logo.png',
   },
 ];
