@@ -1,31 +1,31 @@
 export const stats_img = [
-  '/img/stats_str.png',
-  '/img/stats_dex.png',
-  '/img/stats_con.png',
-  '/img/stats_int.png',
-  '/img/stats_wis.png',
-  '/img/stats_cha.png',
+  '/img/stats/stats_str.png',
+  '/img/stats/stats_dex.png',
+  '/img/stats/stats_con.png',
+  '/img/stats/stats_int.png',
+  '/img/stats/stats_wis.png',
+  '/img/stats/stats_cha.png',
 ];
 
 export const StatsBackground = {
-  strength: '/img/stats_str.png',
-  dexterity: '/img/stats_dex.png',
-  constitution: '/img/stats_con.png',
-  intelligence: '/img/stats_int.png',
-  wisdom: '/img/stats_wis.png',
-  charisma: '/img/stats_cha.png',
+  strength: '/img/stats/stats_str.png',
+  dexterity: '/img/stats/stats_dex.png',
+  constitution: '/img/stats/stats_con.png',
+  intelligence: '/img/stats/stats_int.png',
+  wisdom: '/img/stats/stats_wis.png',
+  charisma: '/img/stats/stats_cha.png',
 };
 
 export const player_img = [
-  '/img/raven.jpeg',
+  '/img/characters/raven.jpeg',
   '/img/border2.png',
   '/img/border2_dark.png',
 ];
 
-export const name_img = [
-  //'img/name_dark.png',
-  '/img/name2.png',
-];
+export const NameBorder = {
+  light: '/img/name2.png',
+  dark: '/img/name_dark.png',
+};
 
 export const life_mod_img_border = ['/img/life_mod_border2.png'];
 
@@ -57,8 +57,8 @@ export const classLogos = [
 ];
 
 export const ClassLogos = {
-  fighter: '/img/fighter_logo.png',
-  paladin: '/img/paladin_logo.png',
-  warlock: '/img/warlock_logo.png',
-  bloodhunter: '/img/bloodhunter_logo.png',
+  fighter: '/img/classes/fighter_logo.png',
+  paladin: '/img/classes/paladin_logo.png',
+  warlock: '/img/classes/warlock_logo.png',
+  bloodhunter: '/img/classes/bloodhunter_logo.png',
 };

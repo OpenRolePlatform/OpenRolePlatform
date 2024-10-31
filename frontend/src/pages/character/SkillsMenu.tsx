@@ -1,33 +1,27 @@
 //react imports
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 //@mui imports
-import { Button, Divider } from '@mui/material';
+import { Divider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import Stack from '@mui/material/Stack';
 //@mui icons imports
-import CloseIcon from '@mui/icons-material/Close';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
-
-const backendUrl = 'http://localhost:3001';
-const wsUrl = 'ws://localhost:3002';
+import { Col, Descriptions, Row, Space } from 'antd';
+import { StatsList } from '../../models/CharacterModels';
+import { CharacterService } from '../../services/useCharacter';
+import {
+  getAllBonusNum,
+  getAllSkillBonus,
+  getBonusValueNum,
+} from '../../utils/data';
 
 const skills_img = ['img/skills_border.png'];
 
 const basicSkillsFontSize = '3vw';
 
-interface SkillsMenuProps {
-  bonus: number;
-  characterStats: {};
-  handleShowSkillsChange: () => void;
-}
-
-export default function SkillsMenu({
-  bonus,
-  characterStats,
-  handleShowSkillsChange,
-}: SkillsMenuProps) {
+export default function SkillsMenu(props: { character: CharacterService }) {
   const [skillsBonus, setSkillsBonus] = useState({
     strength: false,
     dexterity: false,
@@ -80,116 +74,9 @@ export default function SkillsMenu({
     stealth: 0,
     survival: 0,
   });
-  const [skillsSwitch, setSkillsSwitch] = useState(false);
-  const [skillsReSwitch, setSkillsReSwitch] = useState(false);
-
-  const [ws, setWs] = useState(null);
-  const message = useRef({});
-
-  /* web socket connection management */
-  useEffect(() => {
-    const websocket = new WebSocket(wsUrl);
-
-    websocket.onopen = () => {
-      console.log('WebSocket is connected');
-    };
-
-    websocket.onmessage = (e) => {
-      const message = JSON.parse(e.data);
-      if (
-        message.backendPayload.character === localStorage.getItem('character')
-      ) {
-        switch (message.route) {
-          case '/putSkillsStats':
-            handleSkillsChange(message.backendPayload);
-            break;
-        }
-      }
-    };
-
-    websocket.onclose = () => {
-      console.log('WebSocket is closed');
-    };
-
-    //@ts-ignore
-    setWs(websocket);
-
-    return () => {
-      websocket.close();
-    };
-  }, []);
-
-  /* web socket send message */
-  const sendMessage = () => {
-    if (ws) {
-      //@ts-ignore
-      ws.send(
-        JSON.stringify({
-          type: 'message',
-          payload: message,
-        }),
-      );
-      message.current = {};
-    }
-  };
-
-  /* web socket return stats updater */
-  function handleSkillsChange(data) {
-    setSkillsBonus({ ...data });
-    setSkillsReSwitch(false);
-  }
-
-  function getBonusValue(value: number) {
-    switch (value) {
-      case 0:
-        return -5;
-      case 1:
-        return -5;
-      case 2:
-        return -4;
-      case 3:
-        return -4;
-      case 4:
-        return -3;
-      case 5:
-        return -3;
-      case 6:
-        return -2;
-      case 7:
-        return -2;
-      case 8:
-        return -1;
-      case 9:
-        return -1;
-      case 10:
-        return 0;
-      case 11:
-        return 0;
-      case 12:
-        return 1;
-      case 13:
-        return 1;
-      case 14:
-        return 2;
-      case 15:
-        return 2;
-      case 16:
-        return 3;
-      case 17:
-        return 3;
-      case 18:
-        return 4;
-      case 19:
-        return 4;
-      case 20:
-        return 5;
-      default:
-        return 0;
-    }
-  }
 
   /* first database info getter */
-  useEffect(() => {
+  /*  useEffect(() => {
     const fetchSkillsStats = async () => {
       try {
         const userData = {
@@ -268,9 +155,9 @@ export default function SkillsMenu({
     };
     fetchSkillsStats();
   }, []);
-
+ */
   /* skills */
-  useEffect(() => {
+  /*  useEffect(() => {
     if (skillsSwitch && skillsReSwitch) {
       message.current = {
         route: '/putSkillsStats',
@@ -304,284 +191,297 @@ export default function SkillsMenu({
       };
       sendMessage();
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [skillsBonus, skillsSwitch, skillsReSwitch]);
+  }, [skillsBonus, skillsSwitch, skillsReSwitch]); */
 
   /* skill bonus calculation */
   useEffect(() => {
-    const resultStr = getBonusValue(characterStats['str']);
-    const resultDex = getBonusValue(characterStats['dex']);
-    const resultCon = getBonusValue(characterStats['con']);
-    const resultInt = getBonusValue(characterStats['int']);
-    const resultWis = getBonusValue(characterStats['wis']);
-    const resultCha = getBonusValue(characterStats['cha']);
+    const statsBonus = getAllBonusNum(props.character.stats());
+    const resultStr = getBonusValueNum(props.character.stats().strength);
+    const resultDex = getBonusValueNum(props.character.stats().dexterity);
+    const resultCon = getBonusValueNum(props.character.stats().constitution);
+    const resultInt = getBonusValueNum(props.character.stats().intelligence);
+    const resultWis = getBonusValueNum(props.character.stats().wisdom);
+    const resultCha = getBonusValueNum(props.character.stats().charisma);
 
-    const auxSkills = skillsValue;
+    const skillsBonuses = getAllSkillBonus(
+      props.character.stats(),
+      props.character.skillsStats(),
+      props.character.otherStats().bonus,
+    );
+    console.log(skillsBonuses);
+
+    const auxSkills = {};
+    const bonus = props.character.otherStats().bonus;
     auxSkills['strength'] =
-      resultStr + (skillsBonus['strength'] ? Number(bonus) : Number(0));
+      resultStr +
+      (props.character.skillsStats()['strength'] ? Number(bonus) : Number(0));
     auxSkills['dexterity'] =
-      resultDex + (skillsBonus['dexterity'] ? Number(bonus) : Number(0));
+      resultDex +
+      (props.character.skillsStats()['dexterity'] ? Number(bonus) : Number(0));
     auxSkills['constitution'] =
-      resultCon + (skillsBonus['constitution'] ? Number(bonus) : Number(0));
+      resultCon +
+      (props.character.skillsStats()['constitution']
+        ? Number(bonus)
+        : Number(0));
     auxSkills['intelligence'] =
-      resultInt + (skillsBonus['intelligence'] ? Number(bonus) : Number(0));
+      resultInt +
+      (props.character.skillsStats()['intelligence']
+        ? Number(bonus)
+        : Number(0));
     auxSkills['wisdom'] =
-      resultWis + (skillsBonus['wisdom'] ? Number(bonus) : Number(0));
+      resultWis +
+      (props.character.skillsStats()['wisdom'] ? Number(bonus) : Number(0));
     auxSkills['charisma'] =
-      resultCha + (skillsBonus['charisma'] ? Number(bonus) : Number(0));
+      resultCha +
+      (props.character.skillsStats()['charisma'] ? Number(bonus) : Number(0));
     auxSkills['acrobatics'] =
-      resultDex + (skillsBonus['acrobatics'] ? Number(bonus) : Number(0));
+      resultDex +
+      (props.character.skillsStats()['acrobatics'] ? Number(bonus) : Number(0));
     auxSkills['animal'] =
-      resultWis + (skillsBonus['animal'] ? Number(bonus) : Number(0));
+      resultWis +
+      (props.character.skillsStats()['animal'] ? Number(bonus) : Number(0));
     auxSkills['arcana'] =
-      resultInt + (skillsBonus['arcana'] ? Number(bonus) : Number(0));
+      resultInt +
+      (props.character.skillsStats()['arcana'] ? Number(bonus) : Number(0));
     auxSkills['athletics'] =
-      resultStr + (skillsBonus['athletics'] ? Number(bonus) : Number(0));
+      resultStr +
+      (props.character.skillsStats()['athletics'] ? Number(bonus) : Number(0));
     auxSkills['deception'] =
-      resultCha + (skillsBonus['deception'] ? Number(bonus) : Number(0));
+      resultCha +
+      (props.character.skillsStats()['deception'] ? Number(bonus) : Number(0));
     auxSkills['history'] =
-      resultInt + (skillsBonus['history'] ? Number(bonus) : Number(0));
+      resultInt +
+      (props.character.skillsStats()['history'] ? Number(bonus) : Number(0));
     auxSkills['insight'] =
-      resultWis + (skillsBonus['insight'] ? Number(bonus) : Number(0));
+      resultWis +
+      (props.character.skillsStats()['insight'] ? Number(bonus) : Number(0));
     auxSkills['intimidation'] =
-      resultCha + (skillsBonus['intimidation'] ? Number(bonus) : Number(0));
+      resultCha +
+      (props.character.skillsStats()['intimidation']
+        ? Number(bonus)
+        : Number(0));
     auxSkills['investigation'] =
-      resultInt + (skillsBonus['investigation'] ? Number(bonus) : Number(0));
+      resultInt +
+      (props.character.skillsStats()['investigation']
+        ? Number(bonus)
+        : Number(0));
     auxSkills['medicine'] =
-      resultWis + (skillsBonus['medicine'] ? Number(bonus) : Number(0));
+      resultWis +
+      (props.character.skillsStats()['medicine'] ? Number(bonus) : Number(0));
     auxSkills['nature'] =
-      resultInt + (skillsBonus['nature'] ? Number(bonus) : Number(0));
+      resultInt +
+      (props.character.skillsStats()['nature'] ? Number(bonus) : Number(0));
     auxSkills['perception'] =
-      resultWis + (skillsBonus['perception'] ? Number(bonus) : Number(0));
+      resultWis +
+      (props.character.skillsStats()['perception'] ? Number(bonus) : Number(0));
     auxSkills['performance'] =
-      resultCha + (skillsBonus['performance'] ? Number(bonus) : Number(0));
+      resultCha +
+      (props.character.skillsStats()['performance']
+        ? Number(bonus)
+        : Number(0));
     auxSkills['persuasion'] =
-      resultCha + (skillsBonus['persuasion'] ? Number(bonus) : Number(0));
+      resultCha +
+      (props.character.skillsStats()['persuasion'] ? Number(bonus) : Number(0));
     auxSkills['religion'] =
-      resultInt + (skillsBonus['religion'] ? Number(bonus) : Number(0));
+      resultInt +
+      (props.character.skillsStats()['religion'] ? Number(bonus) : Number(0));
     auxSkills['hand'] =
-      resultDex + (skillsBonus['hand'] ? Number(bonus) : Number(0));
+      resultDex +
+      (props.character.skillsStats()['hand'] ? Number(bonus) : Number(0));
     auxSkills['stealth'] =
-      resultDex + (skillsBonus['stealth'] ? Number(bonus) : Number(0));
+      resultDex +
+      (props.character.skillsStats()['stealth'] ? Number(bonus) : Number(0));
     auxSkills['survival'] =
-      resultWis + (skillsBonus['survival'] ? Number(bonus) : Number(0));
+      resultWis +
+      (props.character.skillsStats()['survival'] ? Number(bonus) : Number(0));
     setSkillsValue({ ...auxSkills });
-
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [skillsBonus]);
-
-  function handleBonusChange(target: string) {
-    const auxSkills = skillsBonus;
-    auxSkills[target] = !auxSkills[target];
-    setSkillsBonus({ ...auxSkills });
-    setSkillsReSwitch(true);
-  }
+    console.log(skillsValue);
+  }, [props.character, skillsBonus]);
 
   return (
-    // general container box
-    <Box
-      position="absolute"
-      left="10vw"
-      display="flex"
-      width="100%"
-      justifyContent="center"
-    >
+    <>
       {/* text box */}
-      <Box>
+      <Space direction="vertical">
         {/* basic stats row */}
-        <Stack direction="row" justifyContent="center" marginTop="15vw">
+        <Descriptions>
+          {StatsList.map((stat) => (
+            <>
+              <Descriptions.Item label={stat}>
+                {props.character.stats()[stat]}
+              </Descriptions.Item>
+            </>
+          ))}
+        </Descriptions>
+        <Row justify="space-around">
           {/* basic stats left column */}
-          <Stack
-            direction="column"
-            width="50%"
-            maxWidth="50%"
-            marginRight="-3vw"
-          >
+          <Col>
             {/* strength */}
-            <Box display="flex" alignItems="center">
+            <Row align="middle">
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['strength']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('strength')}
+                //onClick={() => handleBonusChange('strength')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['strength'] < 0 ? '' : '+'}
                   {skillsValue['strength']}
                 </b>
                 &nbsp;Fuerza
               </p>
-            </Box>
+            </Row>
             {/* dexterity */}
-            <Box display="flex" marginTop="-3vw" alignItems="center">
+            <Row align="middle">
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['dexterity']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('dexterity')}
+                //onClick={() => handleBonusChange('dexterity')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['dexterity'] < 0 ? '' : '+'}
                   {skillsValue['dexterity']}
                 </b>
                 &nbsp;Destreza
               </p>
-            </Box>
+            </Row>
             {/* constitution */}
-            <Box display="flex" marginTop="-3vw" alignItems="center">
+            <Row align="middle">
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['constitution']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('constitution')}
+                //onClick={() => handleBonusChange('constitution')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['constitution'] < 0 ? '' : '+'}
                   {skillsValue['constitution']}
                 </b>
                 &nbsp;Constitución
               </p>
-            </Box>
-          </Stack>
+            </Row>
+          </Col>
           {/* basic stats right column */}
-          <Stack direction="column" width="50%" maxWidth="50%">
+          <Col>
             {/* intelligence */}
-            <Box display="flex" alignItems="center">
+            <Row align="middle">
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['intelligence']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('intelligence')}
+                //onClick={() => handleBonusChange('intelligence')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['intelligence'] < 0 ? '' : '+'}
                   {skillsValue['intelligence']}
                 </b>
                 &nbsp;Inteligencia
               </p>
-            </Box>
+            </Row>
             {/* wisdom */}
-            <Box display="flex" marginTop="-3vw" alignItems="center">
+            <Row align="middle">
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['wisdom']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('wisdom')}
+                //onClick={() => handleBonusChange('wisdom')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['wisdom'] < 0 ? '' : '+'}
                   {skillsValue['wisdom']}
                 </b>
                 &nbsp;Sabiduría
               </p>
-            </Box>
+            </Row>
             {/* charisma */}
-            <Box display="flex" marginTop="-3vw" alignItems="center">
+            <Row align="middle">
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['charisma']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('charisma')}
+                //onClick={() => handleBonusChange('charisma')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['charisma'] < 0 ? '' : '+'}
                   {skillsValue['charisma']}
                 </b>
                 &nbsp;Carisma
               </p>
-            </Box>
-          </Stack>
-        </Stack>
+            </Row>
+          </Col>
+        </Row>
         <Divider style={{ margin: '1vh' }} />
         {/* skills stats general stack */}
         <Stack direction="row" justifyContent="center">
@@ -597,24 +497,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['acrobatics']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('acrobatics')}
+                //onClick={() => handleBonusChange('acrobatics')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['acrobatics'] < 0 ? '' : '+'}
                   {skillsValue['acrobatics']}
@@ -627,24 +524,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['animal']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('animal')}
+                //onClick={() => handleBonusChange('animal')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['animal'] < 0 ? '' : '+'}
                   {skillsValue['animal']}
@@ -657,24 +551,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['arcana']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('arcana')}
+                //onClick={() => handleBonusChange('arcana')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['arcana'] < 0 ? '' : '+'}
                   {skillsValue['arcana']}
@@ -687,24 +578,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['athletics']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('athletics')}
+                //onClick={() => handleBonusChange('athletics')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['athletics'] < 0 ? '' : '+'}
                   {skillsValue['athletics']}
@@ -717,24 +605,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['deception']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('deception')}
+                //onClick={() => handleBonusChange('deception')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['deception'] < 0 ? '' : '+'}
                   {skillsValue['deception']}
@@ -747,24 +632,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['history']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('history')}
+                //onClick={() => handleBonusChange('history')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['history'] < 0 ? '' : '+'}
                   {skillsValue['history']}
@@ -777,24 +659,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['insight']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('insight')}
+                //onClick={() => handleBonusChange('insight')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['insight'] < 0 ? '' : '+'}
                   {skillsValue['insight']}
@@ -807,24 +686,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['intimidation']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('intimidation')}
+                //onClick={() => handleBonusChange('intimidation')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['intimidation'] < 0 ? '' : '+'}
                   {skillsValue['intimidation']}
@@ -837,24 +713,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['investigation']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('investigation')}
+                //onClick={() => handleBonusChange('investigation')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['investigation'] < 0 ? '' : '+'}
                   {skillsValue['investigation']}
@@ -870,24 +743,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['medicine']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('medicine')}
+                //onClick={() => handleBonusChange('medicine')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['medicine'] < 0 ? '' : '+'}
                   {skillsValue['medicine']}
@@ -900,24 +770,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['nature']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('nature')}
+                //onClick={() => handleBonusChange('nature')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['nature'] < 0 ? '' : '+'}
                   {skillsValue['nature']}
@@ -930,24 +797,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['perception']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('perception')}
+                //onClick={() => handleBonusChange('perception')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['perception'] < 0 ? '' : '+'}
                   {skillsValue['perception']}
@@ -960,24 +824,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['performance']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('performance')}
+                //onClick={() => handleBonusChange('performance')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['performance'] < 0 ? '' : '+'}
                   {skillsValue['performance']}
@@ -990,24 +851,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['persuasion']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('persuasion')}
+                //onClick={() => handleBonusChange('persuasion')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['persuasion'] < 0 ? '' : '+'}
                   {skillsValue['persuasion']}
@@ -1020,24 +878,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['religion']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('religion')}
+                //onClick={() => handleBonusChange('religion')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['religion'] < 0 ? '' : '+'}
                   {skillsValue['religion']}
@@ -1050,24 +905,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['hand']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('hand')}
+                //onClick={() => handleBonusChange('hand')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['hand'] < 0 ? '' : '+'}
                   {skillsValue['hand']}
@@ -1080,24 +932,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['stealth']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('stealth')}
+                //onClick={() => handleBonusChange('stealth')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['stealth'] < 0 ? '' : '+'}
                   {skillsValue['stealth']}
@@ -1110,24 +959,21 @@ export default function SkillsMenu({
               <Checkbox
                 icon={
                   <SentimentVeryDissatisfiedIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checkedIcon={
                   <SentimentSatisfiedAltIcon
-                    style={{ height: '10vw', width: '7vw' }}
+                    style={{ height: '5vw', width: '5vw' }}
                   />
                 }
                 checked={skillsBonus['survival']}
                 sx={{
-                  marginRight: '-5%',
-                  height: '1vw',
                   color: 'grey',
-                  '&.Mui-checked': { color: 'white' },
                 }}
-                onClick={() => handleBonusChange('survival')}
+                //onClick={() => handleBonusChange('survival')}
               />
-              <p style={{ color: 'white', fontSize: `${basicSkillsFontSize}` }}>
+              <p style={{ fontSize: `${basicSkillsFontSize}` }}>
                 <b>
                   {skillsValue['survival'] < 0 ? '' : '+'}
                   {skillsValue['survival']}
@@ -1136,25 +982,19 @@ export default function SkillsMenu({
               </p>
             </Box>
           </Stack>
+          <img
+            src={skills_img[0]}
+            style={{
+              width: '120%',
+              position: 'absolute',
+              top: '1vh',
+              pointerEvents: 'none',
+              zIndex: '-1',
+            }}
+            alt="skills background"
+          />
         </Stack>
-      </Box>
-      <Button
-        sx={{ position: 'absolute', bottom: '-20vw' }}
-        onClick={handleShowSkillsChange}
-      >
-        <CloseIcon />
-      </Button>
-      <img
-        src={skills_img[0]}
-        style={{
-          width: '120%',
-          position: 'absolute',
-          top: '1vh',
-          pointerEvents: 'none',
-          zIndex: '-1',
-        }}
-        alt="skills background"
-      />
-    </Box>
+      </Space>
+    </>
   );
 }

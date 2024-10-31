@@ -239,45 +239,6 @@ export function LeftStats(props: {
             className="stat-field"
           />
         </Box>
-        {/* proficiency bonus */}
-        <Box
-          marginTop="3vw"
-          marginBottom="1vw"
-          sx={{ height: '10%' }}
-          display="flex"
-          justifyContent="center"
-          alignContent="center"
-        >
-          <img
-            src={ais_img[3]}
-            style={{ height: '10%', width: '50%' }}
-            alt="proficiency bonus"
-          />
-          <Box
-            position="absolute"
-            alignSelf="center"
-            justifyContent="center"
-            display="flex"
-            width="60%"
-          >
-            <p style={{ alignSelf: 'center', fontSize: '4vw' }}>+</p>
-            <TextField
-              variant="standard"
-              slotProps={{
-                htmlInput: {
-                  style: {
-                    textAlign: 'center',
-                    fontSize: '4vw',
-                  },
-                },
-              }}
-              sx={{ width: '10%', alignSelf: 'center' }}
-              name="bonus"
-              onChange={handleUpdate}
-              value={character.otherStats().bonus}
-            />
-          </Box>
-        </Box>
       </Stack>
     </>
   );
@@ -350,40 +311,6 @@ export function RightStats(props: { character: CharacterService }) {
             }
             className="stat-field"
           />
-        </Box>
-        {/* skills menu buton */}
-        <Box
-          marginTop="0vw"
-          marginBottom="0vw"
-          sx={{ height: '10%' }}
-          display="flex"
-          justifyContent="center"
-          alignContent="center"
-        >
-          <Button
-            sx={{ height: '100%', width: '100%' }}
-            /* onClick={handleShowSkillsChange} */
-          >
-            <img
-              src={skills_img[0]}
-              style={{ height: '20%', width: '70%' }}
-              alt="skills_menu"
-            />
-          </Button>
-          {/* skills menu */}
-          <Box
-            position="absolute"
-            left="0"
-            top="0"
-            zIndex="3"
-            width="80%"
-            display="flex"
-            justifyContent="center"
-            justifyItems="center"
-            justifySelf="center"
-          >
-            {/*  {checkIfShowSkills()} */}
-          </Box>
         </Box>
       </Stack>
     </>

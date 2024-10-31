@@ -2,20 +2,24 @@
 import { ChangeEvent, useState } from 'react';
 
 //@mui imports
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 //@mui icons imports
 
 //components imports
+import { Button, ConfigProvider, Drawer, Flex, InputNumber, Row } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
-import { name_img } from '../../assets/Images.ts';
+import { ais_img, NameBorder, skills_img } from '../../assets/Images.ts';
 import { useCharacter } from '../../services/useCharacter.ts';
+import { useTheme } from '../../utils/theme.ts';
+import SkillsMenu from './skillsMenu.tsx';
 import { GeneralStats, LeftStats, RightStats } from './stats.tsx';
 
 export default function Character() {
   const navigate = useNavigate();
   const { characterID } = useParams();
   const character = useCharacter(characterID ?? 'default');
+  const [showSkills, setShowSkills] = useState(false);
+  const { currentTheme, updateTheme } = useTheme();
 
   function handleUpdate(event: ChangeEvent<HTMLInputElement>) {
     const name = event.target.name;
@@ -37,59 +41,6 @@ export default function Character() {
         [name]: value,
       });
     }
-  }
-
-  const [hp, setHp] = useState({ hp: 10, hpTemp: 5, hpPool: 0 });
-  const [idHp, setIdHp] = useState(0);
-
-  const [otherCharacterStats, setOtherCharacterStats] = useState({
-    ac: 10,
-    mov: 30,
-    bonus: 0,
-  });
-
-  // Switches
-  const [characterStatsSwitch, setCharacterStatsSwitch] = useState(false);
-  const [characterReStatsSwitch, setCharacterReStatsSwitch] = useState(false);
-  const [otherCharacterStatsSwitch, setOtherCharacterStatsSwitch] =
-    useState(false);
-  const [otherCharacterReStatsSwitch, setOtherCharacterReStatsSwitch] =
-    useState(false);
-  const [hpStatsSwitch, setHpStatsSwitch] = useState(false);
-  const [hpReStatsSwitch, setHpReStatsSwitch] = useState(false);
-  const [showSkillsSwitch, setShowSkillsSwitch] = useState(false);
-
-  /* web socket return stats updater */
-  function handleStatsChange(data) {
-    const auxStats = {};
-    auxStats.str = data.strength;
-    auxStats.dex = data.dexterity;
-    auxStats.con = data.constitution;
-    auxStats.int = data.intelligence;
-    auxStats.wis = data.wisdom;
-    auxStats.cha = data.charisma;
-    //setCharacterStats({ ...auxStats });
-    setCharacterReStatsSwitch(false);
-  }
-
-  /* web socket return other stats updater */
-  function handleOtherStatsChange(data) {
-    const auxStats = otherCharacterStats;
-    auxStats.ac = data.ac;
-    auxStats.mov = data.movement;
-    auxStats.bonus = data.bonus;
-    setOtherCharacterStats({ ...auxStats });
-    setOtherCharacterReStatsSwitch(false);
-  }
-
-  /* web socket return hp updater */
-  function handleHpStatsChange(data) {
-    const auxStats = hp;
-    auxStats.hp = data.hp;
-    auxStats.hpTemp = data.hpTemp;
-    auxStats.hpPool = data.hpPool;
-    setHp({ ...auxStats });
-    setHpReStatsSwitch(false);
   }
 
   /* character hp */
@@ -411,15 +362,74 @@ export default function Character() {
         <RightStats character={character} />
       </Stack>
 
-      {/* character name and border */}
-      <Box display="flex" justifyContent="center" alignItems="center">
-        <p
-          style={{ position: 'absolute', textAlign: 'center', fontSize: '5vw' }}
+      <Row justify="space-between" align="middle">
+        {/* proficiency bonus */}
+        <Flex
+          justify="center"
+          align="center"
+          style={{
+            width: '25%',
+          }}
         >
-          {character.name}
-        </p>
-        <img src={name_img[0]} style={{ width: '100%' }} alt="name" />
-      </Box>
+          <img src={ais_img[3]} width="50%" alt="proficiency bonus" />
+          <InputNumber
+            style={{
+              position: 'absolute',
+              alignSelf: 'center',
+              width: 60,
+              fontSize: '3.5vw',
+            }}
+            formatter={(value) => `+${value}`}
+            variant="borderless"
+            name="bonus"
+            onChange={() => handleUpdate}
+            value={character.otherStats().bonus}
+          />
+        </Flex>
+        {/* skills menu button */}
+        <Flex
+          justify="center"
+          align="center"
+          style={{
+            width: '25%',
+          }}
+        >
+          <ConfigProvider
+            theme={{
+              components: {
+                Button: {
+                  controlHeightLG: '100%',
+                },
+              },
+            }}
+          >
+            <Button
+              icon={<img src={skills_img[0]} height="100%" alt="skills_menu" />}
+              size="large"
+              type="text"
+              onClick={() => setShowSkills(true)}
+            />
+          </ConfigProvider>
+        </Flex>
+      </Row>
+
+      {/* character name and border */}
+      <Flex justify="center" align="center">
+        <h1 style={{ position: 'absolute' }}>{character.name}</h1>
+        <img
+          src={NameBorder.light}
+          style={{ width: '100%', paddingTop: 12 }}
+          alt="name"
+        />
+      </Flex>
+      <Drawer
+        placement="bottom"
+        size="large"
+        open={showSkills}
+        onClose={() => setShowSkills(false)}
+      >
+        <SkillsMenu character={character} />
+      </Drawer>
     </>
   );
 }

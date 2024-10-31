@@ -6,8 +6,38 @@ export type Stat =
   | 'wisdom'
   | 'charisma';
 
+export type Skill =
+  | 'strength'
+  | 'dexterity'
+  | 'constitution'
+  | 'intelligence'
+  | 'wisdom'
+  | 'charisma'
+  | 'acrobatics'
+  | 'animal'
+  | 'arcana'
+  | 'athletics'
+  | 'deception'
+  | 'history'
+  | 'insight'
+  | 'intimidation'
+  | 'investigation'
+  | 'medicine'
+  | 'nature'
+  | 'perception'
+  | 'performance'
+  | 'persuasion'
+  | 'religion'
+  | 'hand'
+  | 'stealth'
+  | 'survival';
+
 export type StatsBonus = {
   [key in Stat]?: string;
+};
+
+export type SkillBonus = {
+  [key in Skill]?: number;
 };
 
 export interface Stats {
@@ -28,14 +58,27 @@ export const StatsList = [
   'charisma',
 ];
 
-export interface Stats {
-  strength?: number;
-  dexterity?: number;
-  constitution?: number;
-  intelligence?: number;
-  wisdom?: number;
-  charisma?: number;
-}
+export const SkillsSources = {
+  strength: ['strength', 'athletics'],
+  dexterity: ['dexterity', 'acrobatics', 'hand'],
+  constitution: ['constitution'],
+  intelligence: [
+    'intelligence',
+    'arcana',
+    'history',
+    'investigation',
+    'nature',
+    'religion',
+  ],
+  wisdom: ['wisdom', 'animal', 'insight', 'medicine', 'perception', 'survival'],
+  charisma: [
+    'charisma',
+    'deception',
+    'intimidation',
+    'performance',
+    'persuasion',
+  ],
+};
 
 export interface HpStats {
   hp?: number;
@@ -123,7 +166,7 @@ export const charactersExamples: Character[] = [
     background: 'Rey en el exilio, busca recuperar su hogar.',
     creator: 'ElmaDark',
     createdAt: new Date('2023-09-15'),
-    image: '/img/raven.jpeg',
+    image: '/img/characters/raven.jpeg',
   },
   {
     id: '2',
@@ -154,7 +197,7 @@ export const charactersExamples: Character[] = [
     background: 'Una aventurera con un pasado misterioso.',
     creator: 'Tiberius',
     createdAt: new Date('2023-10-01'),
-    image: '/img/aalis.jpeg',
+    image: '/img/characters/aalis.jpeg',
   },
   {
     id: '3',
@@ -185,7 +228,7 @@ export const charactersExamples: Character[] = [
     background: 'Un erudito que busca el conocimiento antiguo.',
     creator: 'Sara_RPG',
     createdAt: new Date('2023-08-20'),
-    image: '/img/amadeus.jpeg',
+    image: '/img/characters/amadeus.jpeg',
   },
   {
     id: '4',
@@ -216,7 +259,7 @@ export const charactersExamples: Character[] = [
     background: 'Un guerrero feroz que busca redención.',
     creator: 'Starlord',
     createdAt: new Date('2023-10-10'),
-    image: '/img/ozymandias.png',
+    image: '/img/characters/ozymandias.png',
   },
   {
     id: '5',
