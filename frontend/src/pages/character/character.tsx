@@ -1,25 +1,24 @@
 //react imports
 import { ChangeEvent, useState } from 'react';
-
-//@mui imports
-import Stack from '@mui/material/Stack';
-//@mui icons imports
+import { useParams } from 'react-router-dom';
 
 //components imports
 import { Button, ConfigProvider, Drawer, Flex, InputNumber, Row } from 'antd';
-import { useNavigate, useParams } from 'react-router-dom';
 import { ais_img, NameBorder, skills_img } from '../../assets/Images.ts';
+import SkillsMenu from './SkillsMenu.tsx';
+import { GeneralStats, StatsColumn } from './StatsComponents.tsx';
+
+import { Stat } from '../../models/CharacterModels.ts';
 import { useCharacter } from '../../services/useCharacter.ts';
-import { useTheme } from '../../utils/theme.ts';
-import SkillsMenu from './skillsMenu.tsx';
-import { GeneralStats, LeftStats, RightStats } from './stats.tsx';
+
+const STATS_LEFT: Array<Stat> = ['strength', 'dexterity', 'constitution'];
+const STATS_RIGHT: Array<Stat> = ['intelligence', 'wisdom', 'charisma'];
 
 export default function Character() {
-  const navigate = useNavigate();
   const { characterID } = useParams();
+
   const character = useCharacter(characterID ?? 'default');
   const [showSkills, setShowSkills] = useState(false);
-  const { currentTheme, updateTheme } = useTheme();
 
   function handleUpdate(event: ChangeEvent<HTMLInputElement>) {
     const name = event.target.name;
@@ -28,37 +27,21 @@ export default function Character() {
       character.updateStats({
         [name]: value,
       });
-    } else if (Object.keys(character.skillsStats()).includes(name)) {
+    } else if (Object.keys(character.skills()).includes(name)) {
       character.updateSkills({
         [name]: value,
       });
-    } else if (Object.keys(character.otherStats()).includes(name)) {
+    } else if (Object.keys(character.other()).includes(name)) {
       character.updateOther({
         [name]: value,
       });
-    } else if (Object.keys(character.hpStats()).includes(name)) {
+    } else if (Object.keys(character.hp()).includes(name)) {
       character.updateHp({
         [name]: value,
       });
     }
   }
 
-  /* character hp */
-  /*  useEffect(() => {
-    if (hpStatsSwitch && hpReStatsSwitch) {
-      message.current = {
-        route: '/putHpStats',
-        backendPayload: {
-          character: localStorage.getItem('character'),
-          hp: hp.hp,
-          hpTemp: hp.hpTemp,
-          hpPool: hp.hpPool,
-        },
-      };
-      sendMessage();
-    }
-  }, [hp, hpStatsSwitch, hpReStatsSwitch]);
- */
   /*
   function handleHpUpdate(mod: number) {
     const auxStats = hp;
@@ -193,174 +176,17 @@ export default function Character() {
     setShowSkillsSwitch(!showSkillsSwitch);
   }*/
 
-  /* extra life counter */
-  /*  function checkIfLifePoolNeeded() {
-    if (localStorage.getItem('character') === 'amadeus') {
-      return (
-        <Box width="100%" justifyContent="center" marginTop="0px">
-          <Box display="flex" justifyContent="center">
-            <Button
-              style={{
-                backgroundColor: 'transparent',
-                borderColor: 'transparent',
-                margin: '-7%',
-                height: '100%',
-              }}
-              onClick={() => handleHpSelect('normal')}
-            >
-              <img src={life_img} style={{ width: '100%' }} alt="life" />
-            </Button>
-            <TextField
-              variant="standard"
-              inputProps={{ style: { textAlign: 'center', fontSize: '7vw' } }}
-              sx={{
-                position: 'absolute',
-                width: '10%',
-                alignSelf: 'center',
-                zIndex: 2,
-              }}
-              onChange={handleHpChange}
-              value={hp.hp}
-            />
-          </Box>
-          <Box display="flex" justifyContent="center">
-            <Box display="flex" justifyContent="center" alignSelf="center">
-              <Button
-                style={{
-                  backgroundColor: 'transparent',
-                  borderColor: 'transparent',
-                  height: '100%',
-                }}
-                onClick={() => handleHpSelect('temp')}
-              >
-                <img
-                  src={life_temp_img}
-                  style={{ width: '12.5vw' }}
-                  alt="life_temp"
-                />
-              </Button>
-              <TextField
-                variant="standard"
-                inputProps={{ style: { textAlign: 'center', fontSize: '5vw' } }}
-                sx={{
-                  position: 'absolute',
-                  width: '7%',
-                  alignSelf: 'center',
-                  zIndex: 2,
-                }}
-                onChange={handleHpTempChange}
-                value={hp.hpTemp}
-              />
-            </Box>
-            <Box margin="-10px" />
-            <Box display="flex" justifyContent="center" alignSelf="center">
-              <Button
-                style={{
-                  backgroundColor: 'transparent',
-                  borderColor: 'transparent',
-                  height: '100%',
-                }}
-                onClick={() => handleHpSelect('pool')}
-              >
-                <img
-                  src={life_pool_img}
-                  style={{ width: '12.5vw' }}
-                  alt="life_temp"
-                />
-              </Button>
-              <TextField
-                variant="standard"
-                inputProps={{ style: { textAlign: 'center', fontSize: '5vw' } }}
-                sx={{
-                  position: 'absolute',
-                  width: '7%',
-                  alignSelf: 'center',
-                  zIndex: 2,
-                }}
-                onChange={handleHpPoolChange}
-                value={hp.hpPool}
-              />
-            </Box>
-          </Box>
-        </Box>
-      );
-    } else {
-      return (
-        <Box width="100%" justifyContent="center" marginTop="0px">
-          <Box display="flex" justifyContent="center" alignSelf="center">
-            <Button
-              style={{
-                backgroundColor: 'transparent',
-                borderColor: 'transparent',
-                margin: '-7%',
-                height: '100%',
-              }}
-              onClick={() => handleHpSelect('normal')}
-            >
-              <img src={life_img} style={{ width: '100%' }} alt="life" />
-            </Button>
-            <TextField
-              variant="standard"
-              inputProps={{ style: { textAlign: 'center', fontSize: '7vw' } }}
-              sx={{
-                position: 'absolute',
-                width: '10%',
-                alignSelf: 'center',
-                zIndex: 2,
-              }}
-              onChange={handleHpChange}
-              value={hp.hp}
-            />
-          </Box>
-          <Box display="flex" justifyContent="center" alignSelf="center">
-            <Button
-              style={{
-                backgroundColor: 'transparent',
-                borderColor: 'transparent',
-                margin: '-7%',
-                height: '100%',
-              }}
-              onClick={() => handleHpSelect('temp')}
-            >
-              <img
-                src={life_temp_img}
-                style={{ width: '80%' }}
-                alt="life_temp"
-              />
-            </Button>
-            <TextField
-              variant="standard"
-              inputProps={{ style: { textAlign: 'center', fontSize: '5vw' } }}
-              sx={{
-                position: 'absolute',
-                width: '10%',
-                alignSelf: 'center',
-                zIndex: 2,
-              }}
-              onChange={handleHpTempChange}
-              value={hp.hpTemp}
-            />
-          </Box>
-        </Box>
-      );
-    }
-  } */
-
   return (
     <>
       {/* general row */}
-      <Stack
-        display="flex"
-        direction="row"
-        sx={{ width: '100%', height: '50%' }}
-      >
+      <Row>
         {/* left stats column */}
-        <LeftStats character={character} handleUpdate={handleUpdate} />
+        <StatsColumn character={character} statsList={STATS_LEFT} />
         {/* center column */}
         <GeneralStats character={character} handleUpdate={handleUpdate} />
         {/* right stats column */}
-        <RightStats character={character} />
-      </Stack>
+        <StatsColumn character={character} statsList={STATS_RIGHT} />
+      </Row>
 
       <Row justify="space-between" align="middle">
         {/* proficiency bonus */}
@@ -376,14 +202,14 @@ export default function Character() {
             style={{
               position: 'absolute',
               alignSelf: 'center',
-              width: 60,
+              width: 70,
               fontSize: '3.5vw',
             }}
-            formatter={(value) => `+${value}`}
+            formatter={(value) => `+${value < 10 ? ` ${value}` : value}`}
             variant="borderless"
             name="bonus"
-            onChange={() => handleUpdate}
-            value={character.otherStats().bonus}
+            onChange={(value) => character.updateOther({ bonus: value })}
+            value={character.other().bonus}
           />
         </Flex>
         {/* skills menu button */}

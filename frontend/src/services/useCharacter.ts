@@ -72,9 +72,9 @@ export interface CharacterService {
   character: () => Character;
 
   stats: () => Stats;
-  skillsStats: () => Skills;
-  hpStats: () => HpStats;
-  otherStats: () => OtherStats;
+  skills: () => Skills;
+  hp: () => HpStats;
+  other: () => OtherStats;
 
   updateStats: (newStats: Stats) => void;
   updateSkills: (newSkills: Skills) => void;
@@ -87,9 +87,9 @@ export interface CharacterService {
 
 export function useCharacter(name: string): CharacterService {
   const [stats, setStats] = useGetSetState(initStats);
-  const [skillsStats, setSkillsStats] = useGetSetState(initSkills);
-  const [hpStats, setHpStats] = useGetSetState(initHp);
-  const [otherStats, setOtherStats] = useGetSetState(initOtherStats);
+  const [skills, setSkillsStats] = useGetSetState(initSkills);
+  const [hp, setHp] = useGetSetState(initHp);
+  const [other, setOtherStats] = useGetSetState(initOtherStats);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
@@ -114,7 +114,7 @@ export function useCharacter(name: string): CharacterService {
           });
         if (message.hp)
           Object.keys(message?.hp).forEach((key) => {
-            setHpStats({ [key]: message.hp[key] });
+            setHp({ [key]: message.hp[key] });
           });
         if (message.other)
           Object.keys(message?.other).forEach((key) => {
@@ -135,7 +135,7 @@ export function useCharacter(name: string): CharacterService {
       const other = await getCharacterOtherStats(name);
       setOtherStats(other);
       const hp = await getCharacterHp(name);
-      setHpStats(hp);
+      setHp(hp);
       setLoading(false);
     } catch (_error) {
       console.log(_error);
@@ -148,9 +148,9 @@ export function useCharacter(name: string): CharacterService {
     return {
       name,
       stats: stats(),
-      skills: skillsStats(),
-      hp: hpStats(),
-      other: otherStats(),
+      skills: skills(),
+      hp: hp(),
+      other: other(),
     };
   };
 
@@ -182,7 +182,7 @@ export function useCharacter(name: string): CharacterService {
     setLoading(true);
     try {
       await updateCharacterHp(name, hp);
-      setHpStats(hp);
+      setHp(hp);
     } catch (error) {
       setError(JSON.stringify(error));
     } finally {
@@ -208,9 +208,9 @@ export function useCharacter(name: string): CharacterService {
     character: getCharacter,
     // Getters
     stats,
-    skillsStats,
-    hpStats,
-    otherStats,
+    skills,
+    hp: hp,
+    other,
     // Setters
     updateStats: _updateStats,
     updateHp: _updateHp,

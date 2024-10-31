@@ -205,95 +205,85 @@ export default function SkillsMenu(props: { character: CharacterService }) {
 
     const skillsBonuses = getAllSkillBonus(
       props.character.stats(),
-      props.character.skillsStats(),
-      props.character.otherStats().bonus,
+      props.character.skills(),
+      props.character.other().bonus,
     );
     console.log(skillsBonuses);
 
     const auxSkills = {};
-    const bonus = props.character.otherStats().bonus;
+    const bonus = props.character.other().bonus;
     auxSkills['strength'] =
       resultStr +
-      (props.character.skillsStats()['strength'] ? Number(bonus) : Number(0));
+      (props.character.skills()['strength'] ? Number(bonus) : Number(0));
     auxSkills['dexterity'] =
       resultDex +
-      (props.character.skillsStats()['dexterity'] ? Number(bonus) : Number(0));
+      (props.character.skills()['dexterity'] ? Number(bonus) : Number(0));
     auxSkills['constitution'] =
       resultCon +
-      (props.character.skillsStats()['constitution']
-        ? Number(bonus)
-        : Number(0));
+      (props.character.skills()['constitution'] ? Number(bonus) : Number(0));
     auxSkills['intelligence'] =
       resultInt +
-      (props.character.skillsStats()['intelligence']
-        ? Number(bonus)
-        : Number(0));
+      (props.character.skills()['intelligence'] ? Number(bonus) : Number(0));
     auxSkills['wisdom'] =
       resultWis +
-      (props.character.skillsStats()['wisdom'] ? Number(bonus) : Number(0));
+      (props.character.skills()['wisdom'] ? Number(bonus) : Number(0));
     auxSkills['charisma'] =
       resultCha +
-      (props.character.skillsStats()['charisma'] ? Number(bonus) : Number(0));
+      (props.character.skills()['charisma'] ? Number(bonus) : Number(0));
     auxSkills['acrobatics'] =
       resultDex +
-      (props.character.skillsStats()['acrobatics'] ? Number(bonus) : Number(0));
+      (props.character.skills()['acrobatics'] ? Number(bonus) : Number(0));
     auxSkills['animal'] =
       resultWis +
-      (props.character.skillsStats()['animal'] ? Number(bonus) : Number(0));
+      (props.character.skills()['animal'] ? Number(bonus) : Number(0));
     auxSkills['arcana'] =
       resultInt +
-      (props.character.skillsStats()['arcana'] ? Number(bonus) : Number(0));
+      (props.character.skills()['arcana'] ? Number(bonus) : Number(0));
     auxSkills['athletics'] =
       resultStr +
-      (props.character.skillsStats()['athletics'] ? Number(bonus) : Number(0));
+      (props.character.skills()['athletics'] ? Number(bonus) : Number(0));
     auxSkills['deception'] =
       resultCha +
-      (props.character.skillsStats()['deception'] ? Number(bonus) : Number(0));
+      (props.character.skills()['deception'] ? Number(bonus) : Number(0));
     auxSkills['history'] =
       resultInt +
-      (props.character.skillsStats()['history'] ? Number(bonus) : Number(0));
+      (props.character.skills()['history'] ? Number(bonus) : Number(0));
     auxSkills['insight'] =
       resultWis +
-      (props.character.skillsStats()['insight'] ? Number(bonus) : Number(0));
+      (props.character.skills()['insight'] ? Number(bonus) : Number(0));
     auxSkills['intimidation'] =
       resultCha +
-      (props.character.skillsStats()['intimidation']
-        ? Number(bonus)
-        : Number(0));
+      (props.character.skills()['intimidation'] ? Number(bonus) : Number(0));
     auxSkills['investigation'] =
       resultInt +
-      (props.character.skillsStats()['investigation']
-        ? Number(bonus)
-        : Number(0));
+      (props.character.skills()['investigation'] ? Number(bonus) : Number(0));
     auxSkills['medicine'] =
       resultWis +
-      (props.character.skillsStats()['medicine'] ? Number(bonus) : Number(0));
+      (props.character.skills()['medicine'] ? Number(bonus) : Number(0));
     auxSkills['nature'] =
       resultInt +
-      (props.character.skillsStats()['nature'] ? Number(bonus) : Number(0));
+      (props.character.skills()['nature'] ? Number(bonus) : Number(0));
     auxSkills['perception'] =
       resultWis +
-      (props.character.skillsStats()['perception'] ? Number(bonus) : Number(0));
+      (props.character.skills()['perception'] ? Number(bonus) : Number(0));
     auxSkills['performance'] =
       resultCha +
-      (props.character.skillsStats()['performance']
-        ? Number(bonus)
-        : Number(0));
+      (props.character.skills()['performance'] ? Number(bonus) : Number(0));
     auxSkills['persuasion'] =
       resultCha +
-      (props.character.skillsStats()['persuasion'] ? Number(bonus) : Number(0));
+      (props.character.skills()['persuasion'] ? Number(bonus) : Number(0));
     auxSkills['religion'] =
       resultInt +
-      (props.character.skillsStats()['religion'] ? Number(bonus) : Number(0));
+      (props.character.skills()['religion'] ? Number(bonus) : Number(0));
     auxSkills['hand'] =
       resultDex +
-      (props.character.skillsStats()['hand'] ? Number(bonus) : Number(0));
+      (props.character.skills()['hand'] ? Number(bonus) : Number(0));
     auxSkills['stealth'] =
       resultDex +
-      (props.character.skillsStats()['stealth'] ? Number(bonus) : Number(0));
+      (props.character.skills()['stealth'] ? Number(bonus) : Number(0));
     auxSkills['survival'] =
       resultWis +
-      (props.character.skillsStats()['survival'] ? Number(bonus) : Number(0));
+      (props.character.skills()['survival'] ? Number(bonus) : Number(0));
     setSkillsValue({ ...auxSkills });
     console.log(skillsValue);
   }, [props.character, skillsBonus]);
