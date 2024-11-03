@@ -20,6 +20,7 @@ export default function Character() {
 
   const character = useCharacter(characterID ?? 'default');
   const [showSkills, setShowSkills] = useState(false);
+  //const [showSkills, setShowSkills] = useState(false);
 
   function handleUpdate(event: ChangeEvent<HTMLInputElement>) {
     const name = event.target.name;
@@ -42,140 +43,6 @@ export default function Character() {
       });
     }
   }
-
-  /*
-  function handleHpUpdate(mod: number) {
-    const auxStats = hp;
-    switch (idHp) {
-      case 0:
-        auxStats.hp += mod;
-        break;
-      case 1:
-        auxStats.hpTemp += mod;
-        break;
-      case 2:
-        auxStats.hpPool += mod;
-        break;
-    }
-    setHp({ ...auxStats });
-    setHpStatsSwitch(true);
-    setHpReStatsSwitch(true);
-  }
-
-  function handleHpSelect(type: string) {
-    switch (type) {
-      case 'normal':
-        setIdHp(0);
-        setLifeImg(life_img_border[1]);
-        setLifeTempImg(life_img_border[2]);
-        setLifePoolImg(life_img_border[4]);
-        break;
-      case 'temp':
-        setIdHp(1);
-        setLifeImg(life_img_border[0]);
-        setLifeTempImg(life_img_border[3]);
-        setLifePoolImg(life_img_border[4]);
-        break;
-      case 'pool':
-        setIdHp(2);
-        setLifeImg(life_img_border[0]);
-        setLifeTempImg(life_img_border[2]);
-        setLifePoolImg(life_img_border[5]);
-        break;
-    }
-  }
-
-  function handleStrChange(e) {
-    setCharacterReStatsSwitch(true);
-    const auxStats = characterStats;
-    if (e.target.value === '0-') auxStats.str = 0;
-    else auxStats.str = Number(e.target.value);
-    setCharacterStats({ ...auxStats });
-  }
-
-  function handleDexChange(e) {
-    setCharacterReStatsSwitch(true);
-    const auxStats = characterStats;
-    if (e.target.value === '0-') auxStats.dex = 0;
-    else auxStats.dex = Number(e.target.value);
-    setCharacterStats({ ...auxStats });
-  }
-  function handleConChange(e) {
-    setCharacterReStatsSwitch(true);
-    const auxStats = characterStats;
-    if (e.target.value === '0-') auxStats.con = 0;
-    else auxStats.con = Number(e.target.value);
-    setCharacterStats({ ...auxStats });
-  }
-  function handleIntChange(e) {
-    setCharacterReStatsSwitch(true);
-    const auxStats = characterStats;
-    if (e.target.value === '0-') auxStats.int = 0;
-    else auxStats.int = Number(e.target.value);
-    setCharacterStats({ ...auxStats });
-  }
-  function handleWisChange(e) {
-    setCharacterReStatsSwitch(true);
-    const auxStats = characterStats;
-    if (e.target.value === '0-') auxStats.wis = 0;
-    else auxStats.wis = Number(e.target.value);
-    setCharacterStats({ ...auxStats });
-  }
-  function handleChaChange(e) {
-    setCharacterReStatsSwitch(true);
-    const auxStats = characterStats;
-    if (e.target.value === '0-') auxStats.cha = 0;
-    else auxStats.cha = Number(e.target.value);
-    setCharacterStats({ ...auxStats });
-  }
-
-  function handleACChange(e) {
-    setOtherCharacterReStatsSwitch(true);
-    const auxStats = otherCharacterStats;
-    if (e.target.value === '0-') auxStats.ac = 0;
-    else auxStats.ac = Number(e.target.value);
-    setOtherCharacterStats(auxStats);
-  }
-  function handleMovChange(e) {
-    setOtherCharacterReStatsSwitch(true);
-    const auxStats = otherCharacterStats;
-    if (e.target.value === '0-') auxStats.mov = 0;
-    else auxStats.mov = Number(e.target.value);
-    setOtherCharacterStats(auxStats);
-  }
-  function handleBonusChange(e) {
-    setOtherCharacterReStatsSwitch(true);
-    const auxStats = otherCharacterStats;
-    if (e.target.value === '0-') auxStats.bonus = 0;
-    else auxStats.bonus = Number(e.target.value);
-    setOtherCharacterStats(auxStats);
-  }
-
-  function handleHpChange(e) {
-    setHpReStatsSwitch(true);
-    const auxStats = hp;
-    if (e.target.value === '0-') auxStats.hp = 0;
-    else auxStats.hp = Number(e.target.value);
-    setHp(auxStats);
-  }
-  function handleHpTempChange(e) {
-    setHpReStatsSwitch(true);
-    const auxStats = hp;
-    if (e.target.value === '0-') auxStats.hpTemp = 0;
-    else auxStats.hpTemp = Number(e.target.value);
-    setHp(auxStats);
-  }
-  function handleHpPoolChange(e) {
-    setHpReStatsSwitch(true);
-    const auxStats = hp;
-    if (e.target.value === '0-') auxStats.hpPool = 0;
-    else auxStats.hpPool = Number(e.target.value);
-    setHp(auxStats);
-  }
-
-  function handleShowSkillsChange() {
-    setShowSkillsSwitch(!showSkillsSwitch);
-  }*/
 
   return (
     <>
@@ -202,11 +69,13 @@ export default function Character() {
           <InputNumber
             style={{
               position: 'absolute',
-              alignSelf: 'center',
-              width: 70,
+
+              //width: 70,
               fontSize: '3.5vw',
             }}
-            formatter={(value) => `+${value < 10 ? ` ${value}` : value}`}
+            inputMode="numeric"
+            className="number-field"
+            formatter={(value) => `+${value < 10 ? `${value}` : value}`}
             variant="borderless"
             name="bonus"
             onChange={(value) => character.updateOther({ bonus: value })}
@@ -253,6 +122,11 @@ export default function Character() {
         placement="bottom"
         size="large"
         open={showSkills}
+        styles={{
+          body: {
+            padding: '0.5rem',
+          },
+        }}
         onClose={() => setShowSkills(false)}
       >
         <SkillsMenu character={character} />

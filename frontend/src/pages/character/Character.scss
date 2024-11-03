@@ -14,3 +14,11 @@
     }
   }
 }
+
+.skill-check {
+  transition: 0.3s ease-in-out;
+  &--active {
+    transform: rotate(180deg) scale(1.25);
+    transition: 0.3s ease-in-out;
+  }
+}

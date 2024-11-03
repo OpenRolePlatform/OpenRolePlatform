@@ -4,6 +4,7 @@ import {
   SkillsSources,
   Stat,
   Stats,
+  StatsList,
 } from '../models/CharacterModels';
 
 export function getBonusValue(value?: number) {
@@ -122,23 +123,20 @@ export function getAllBonusNum(stats: Stats) {
   return statsBonus;
 }
 
-export function getAllSkillBonus(stats: Stats, skills: Skills, bonus: number) {
+export function getAllSkillBonus(
+  stats: Stats,
+  skills: Skills,
+  bonus: number | undefined,
+) {
   const statsBonus = getAllBonusNum(stats);
-  const skillBonus: { [key in Skill]?: number } = {};
-  console.log(statsBonus);
+  const skillBonus: { [key in Skill]?: number | undefined } = {};
 
-  Object.keys(stats).forEach((stat: string) => {
-    SkillsSources[stat as Stat].forEach((skill: string) => {
-      console.log('Some stat');
-
-      console.log(skill, skills[skill]);
-      console.log(stat, statsBonus[stat]);
-
+  StatsList.forEach((stat: string) => {
+    SkillsSources[stat as Stat].forEach((skill: Skill) => {
       skillBonus[skill] =
-        statsBonus[stat] + (skills?.[skill] ? Number(bonus) : 0);
+        statsBonus[stat] + (skills?.[skill] ? Number(bonus ?? 0) : 0);
     });
   });
-  console.log(skillBonus);
 
   return skillBonus;
 }
