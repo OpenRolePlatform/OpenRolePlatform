@@ -1,41 +1,30 @@
-export const stats_img = [
-  '/img/stats_str.png',
-  '/img/stats_dex.png',
-  '/img/stats_con.png',
-  '/img/stats_int.png',
-  '/img/stats_wis.png',
-  '/img/stats_cha.png',
-];
-
 export const StatsBackground = {
-  strength: '/img/stats_str.png',
-  dexterity: '/img/stats_dex.png',
-  constitution: '/img/stats_con.png',
-  intelligence: '/img/stats_int.png',
-  wisdom: '/img/stats_wis.png',
-  charisma: '/img/stats_cha.png',
+  strength: '/img/stats/stats_str.png',
+  dexterity: '/img/stats/stats_dex.png',
+  constitution: '/img/stats/stats_con.png',
+  intelligence: '/img/stats/stats_int.png',
+  wisdom: '/img/stats/stats_wis.png',
+  charisma: '/img/stats/stats_cha.png',
+};
+
+export const SkillsImg = ['/img/skills.png'];
+
+export const HpBorders = {
+  button: '/img/hp/button_border.png',
+  hp: ['/img/hp/hp_border.png', '/img/hp/hp_border_selected.png'],
+  hpTemp: ['/img/hp/temp_border.png', '/img/hp/temp_border_selected.png'],
+  hpPool: ['/img/hp/pool_border.png', '/img/hp/pool_border_selected.png'],
+};
+
+export const NameBorder = {
+  light: '/img/name2.png',
+  dark: '/img/name_dark.png',
 };
 
 export const player_img = [
-  '/img/raven.jpeg',
+  '/img/characters/raven.jpeg',
   '/img/border2.png',
   '/img/border2_dark.png',
-];
-
-export const name_img = [
-  //'img/name_dark.png',
-  '/img/name2.png',
-];
-
-export const life_mod_img_border = ['/img/life_mod_border2.png'];
-
-export const life_img_border = [
-  '/img/life_border2.png',
-  '/img/life_border2_selected.png',
-  '/img/life_temp_border2.png',
-  '/img/life_temp_border2_selected.png',
-  '/img/life_pool_border2.png',
-  '/img/life_pool_border2_selected.png',
 ];
 
 export const ais_img = [
@@ -45,13 +34,11 @@ export const ais_img = [
   '/img/bonus_border.png',
 ];
 
-export const skills_img = ['/img/skills.png'];
+export const mainLogo = '/logo.jpeg';
 
-export const mainLogo = '/logo.png';
-
-export const classLogos = [
-  '/img/fighter_logo.png',
-  '/img/paladin_logo.png',
-  '/img/warlock_logo.png',
-  '/img/bloodhunter_logo.png',
-];
+export const ClassLogos = {
+  fighter: '/img/classes/fighter_logo.png',
+  paladin: '/img/classes/paladin_logo.png',
+  warlock: '/img/classes/warlock_logo.png',
+  bloodhunter: '/img/classes/bloodhunter_logo.png',
+};

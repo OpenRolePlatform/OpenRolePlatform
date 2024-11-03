@@ -1,0 +1,24 @@
+.hp-menu {
+  &__mid-col {
+    width: 33%;
+    height: 100%;
+  }
+  &__button-col {
+    width: 25%;
+    .hp-button {
+      padding: 0.25rem;
+      &__text {
+        position: absolute;
+        font-size: 1.25rem;
+      }
+    }
+  }
+}
+
+.skill-check {
+  transition: 0.3s ease-in-out;
+  &--active {
+    transform: rotate(180deg) scale(1.25);
+    transition: 0.3s ease-in-out;
+  }
+}
