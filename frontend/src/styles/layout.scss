@@ -30,7 +30,7 @@
 
 .stat-field {
   position: absolute;
-  transform: translate(0, 9.5vw);
+  transform: translate(0, 9vw);
   align-self: center;
   font-size: 3.5vw;
   width: 65px;
@@ -38,6 +38,8 @@
 
 .number-field {
   input {
+    color: var(--ant-color-text) !important;
     text-align: center !important;
+    cursor: text !important;
   }
 }

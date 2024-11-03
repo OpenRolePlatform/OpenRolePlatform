@@ -1,10 +1,11 @@
 //react imports
 import { ChangeEvent, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import './Character.scss';
 
 //components imports
 import { Button, ConfigProvider, Drawer, Flex, InputNumber, Row } from 'antd';
-import { ais_img, NameBorder, skills_img } from '../../assets/Images.ts';
+import { ais_img, NameBorder, SkillsImg } from '../../assets/Images.ts';
 import SkillsMenu from './SkillsMenu.tsx';
 import { GeneralStats, StatsColumn } from './StatsComponents.tsx';
 
@@ -230,7 +231,7 @@ export default function Character() {
             }}
           >
             <Button
-              icon={<img src={skills_img[0]} height="100%" alt="skills_menu" />}
+              icon={<img src={SkillsImg[0]} height="100%" alt="skills_menu" />}
               size="large"
               type="text"
               onClick={() => setShowSkills(true)}

@@ -1,0 +1,16 @@
+.hp-menu {
+  &__mid-col {
+    width: 33%;
+    height: 100%;
+  }
+  &__button-col {
+    width: 25%;
+    .hp-button {
+      padding: 0.25rem;
+      &__text {
+        position: absolute;
+        font-size: 1.25rem;
+      }
+    }
+  }
+}
