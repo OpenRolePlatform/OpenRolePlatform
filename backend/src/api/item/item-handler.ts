@@ -23,7 +23,6 @@ export const getOneItem = async (req: any, res: any) => {
 
 export const getAllItems = async (req: any, res: any) => {
   try {
-    console.log(req.query);
     const items = await _getAllItems(req.params.characterID, req.query, false);
     if (items) {
       return res.status(StatusCodes.OK).send(items);
