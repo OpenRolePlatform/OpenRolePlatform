@@ -32,6 +32,7 @@
     "backend",
     "frontend",
     "backend-websockets",
-    "backend-items"
+    "backend-items",
+    "backend-character"
   ]
 }

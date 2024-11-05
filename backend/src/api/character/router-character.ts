@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getAllCharacters,
   getCharacter,
   getCharacterOtherStats,
   getCharacterStats,
@@ -15,6 +16,8 @@ import {
 const characterRouter = express.Router();
 
 //character router
+//get method
+characterRouter.get("/:ownerID", getAllCharacters);
 //get methods
 characterRouter.get("/:characterID", getCharacter);
 characterRouter.get("/:characterID/stats", getCharacterStats);

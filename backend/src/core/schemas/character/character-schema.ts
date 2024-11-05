@@ -31,7 +31,15 @@ const reqCharacter = {
   unique: true,
 };
 
+const reqOwner = {
+  type: String,
+  require: true,
+  index: true,
+  unique: false,
+};
+
 const CharacterSchema = new Schema({
+  owner: reqOwner,
   name: reqCharacter,
   stats: reqStat,
   skills: reqSkills,

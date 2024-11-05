@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
+import { _getAllCharacter } from "./routes/get-all-characters";
 import { _getCharacter } from "./routes/get-character";
 import { _getCharacterHpStats } from "./routes/get-character-hp-stats";
 import { _getCharacterOtherStats } from "./routes/get-character-other-stats";
@@ -10,6 +11,23 @@ import { _putCharacterHpStats } from "./routes/put-character-hp-stats";
 import { _putCharacterOtherStats } from "./routes/put-character-other-stats";
 import { _putCharacterSkillsStats } from "./routes/put-character-skills-stats";
 import { _putCharacterStats } from "./routes/put-character-stats";
+
+//get method
+export const getAllCharacters = async (req: any, res: any) => {
+  try {
+    const characters = await _getAllCharacter(req.params.ownerID);
+    if (characters) {
+      return res.status(StatusCodes.OK).send(characters);
+    } else {
+      return res.status(StatusCodes.NOT_FOUND).send("Characters not found.");
+    }
+  } catch (error) {
+    console.error("Error while trying to obtain the characters.");
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send("Error while trying to obtain the characters." + error.message);
+  }
+};
 
 //get methods
 export const getCharacter = async (req: any, res: any) => {
