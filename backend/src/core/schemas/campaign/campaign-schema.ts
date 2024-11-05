@@ -8,10 +8,10 @@ const reqName = {
   unique: true,
 };
 
-const CampaignSchema = new Schema({
+const Campaigns = new Schema({
   name: reqName,
   description: String,
   creation_date: Date,
 });
 
-export default db.model("CampaignSchema", CampaignSchema);
+export default db.model("Campaigns", Campaigns);

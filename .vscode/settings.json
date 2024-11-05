@@ -28,5 +28,10 @@
       "source.organizeImports": "explicit"
     }
   },
-  "conventionalCommits.scopes": ["backend", "frontend", "backend-websockets"]
+  "conventionalCommits.scopes": [
+    "backend",
+    "frontend",
+    "backend-websockets",
+    "backend-items"
+  ]
 }

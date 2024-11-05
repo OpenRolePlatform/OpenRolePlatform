@@ -24,7 +24,6 @@ export const getCampaigns = async (req: any, res: any) => {
 export const getSelectCampaign = async (req: any, res: any) => {
   try {
     const campaigns = await _getSelectCampaign(req.params.campaignID);
-    console.log("fuckoff4");
     if (campaigns === true) {
       return res.sendStatus(StatusCodes.OK);
     } else {
@@ -41,10 +40,10 @@ export const getSelectCampaign = async (req: any, res: any) => {
 //put methods
 export const putCampaign = async (req: any, res: any) => {
   try {
-    await _putCampaign(req.params.name, req.body);
+    await _putCampaign(req.params.campaignID, req.body);
     res.status(StatusCodes.OK).send("Campaign updated correctly.");
     WebSocketService.Instance.broadcast({
-      name: req.params.name,
+      name: req.params.campaignID,
       data: req.body,
     });
   } catch (error) {

@@ -1,5 +1,5 @@
-import CampaignSchema from "../../../core/schemas/campaign/campaign-schema";
+import Campaigns from "../../../core/schemas/campaign/campaign-schema";
 
 export async function _getCampaigns() {
-  return await CampaignSchema.find({});
+  return await Campaigns.find({});
 }

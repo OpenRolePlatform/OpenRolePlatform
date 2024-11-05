@@ -1,4 +1,3 @@
-import "dotenv/config";
 import mongoose, { Schema } from "mongoose";
 
 const reqNumber = {

@@ -31,7 +31,7 @@ const reqCharacter = {
   unique: true,
 };
 
-export const CharacterSchema = new Schema({
+const CharacterSchema = new Schema({
   name: reqCharacter,
   stats: reqStat,
   skills: reqSkills,
