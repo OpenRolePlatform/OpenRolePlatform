@@ -12,9 +12,6 @@ const itemRouter = express.Router();
 //get methods
 itemRouter.get("/:characterID/one", getOneItem);
 itemRouter.get("/:characterID/all", getAllItems);
-// itemRouter.get("/all/:itemEquipable", getAllItemsEquipable);
-// itemRouter.get("/all/:itemEquipped", getAllItemsEquipped);
-// itemRouter.get("/all/:itemType", getAllItemsType);
 itemRouter.get("/allDB", getAllItemsDB);
 
 //put methods

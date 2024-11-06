@@ -37,68 +37,9 @@ export const getAllItems = async (req: any, res: any) => {
   }
 };
 
-// export const getAllItemsEquipable = async (req: any, res: any) => {
-//   try {
-//     const items = await _getAllItems(
-//         req.params.characterID,
-//         req.params.name,
-//         req.params,
-//         false
-//       );
-//     if (items) {
-//       return res.status(StatusCodes.OK).send(items);
-//     } else {
-//       return res.status(StatusCodes.NOT_FOUND).send("Items not found.");
-//     }
-//   } catch (error) {
-//     console.error("Error while trying to change the items.");
-//     res
-//       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-//       .send("Error while trying to change the items." + error.message);
-//   }
-// };
-
-// export const getAllItemsEquipped = async (req: any, res: any) => {
-//   try {
-//     const items = await _getSelectCampaign(
-//       req.params.characterID,
-//       req.params.name
-//     );
-//     if (items) {
-//       return res.status(StatusCodes.OK).send(items);
-//     } else {
-//       return res.status(StatusCodes.NOT_FOUND).send("Items not found.");
-//     }
-//   } catch (error) {
-//     console.error("Error while trying to change the items.");
-//     res
-//       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-//       .send("Error while trying to change the items." + error.message);
-//   }
-// };
-
-// export const getAllItemsType = async (req: any, res: any) => {
-//   try {
-//     const items = await _getSelectCampaign(
-//       req.params.characterID,
-//       req.params.name
-//     );
-//     if (items) {
-//       return res.status(StatusCodes.OK).send(items);
-//     } else {
-//       return res.status(StatusCodes.NOT_FOUND).send("Items not found.");
-//     }
-//   } catch (error) {
-//     console.error("Error while trying to change the items.");
-//     res
-//       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-//       .send("Error while trying to change the items." + error.message);
-//   }
-// };
-
 export const getAllItemsDB = async (req: any, res: any) => {
   try {
-    const items = await _getAllItems(req.params.characterID, req.query, true);
+    const items = await _getAllItems("*", req.query, true);
     if (items) {
       return res.status(StatusCodes.OK).send(items);
     } else {

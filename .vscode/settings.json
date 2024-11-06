@@ -33,6 +33,7 @@
     "frontend",
     "backend-websockets",
     "backend-items",
-    "backend-character"
+    "backend-character",
+    "backend-spells"
   ]
 }
