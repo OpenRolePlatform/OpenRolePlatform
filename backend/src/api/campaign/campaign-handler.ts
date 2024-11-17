@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
 import { _getCampaigns } from "./routes/get-campaigns";
 import { _getSelectCampaign } from "./routes/get-select-campaign";
+import { _postCampaign } from "./routes/post-campaign";
 import { _putCampaign } from "./routes/put-campaign";
 
 //get methods
@@ -34,6 +35,24 @@ export const getSelectCampaign = async (req: any, res: any) => {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send("Error while trying to change the campaigns." + error.message);
+  }
+};
+
+//post campaign
+export const postCampaign = async (req: any, res: any) => {
+  try {
+    let body = req.body;
+    if (req.file) {
+      body.image = `images/${req.file.filename}`;
+    }
+    const newCampaign = await _postCampaign(body);
+    res.status(StatusCodes.CREATED).send(newCampaign);
+    WebSocketService.Instance.broadcast({
+      name: req.params.campaignID,
+      data: body,
+    });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).send("Error:" + error.message);
   }
 };
 

@@ -36,6 +36,8 @@ app.use(express.json()); // enable parsing of json request body
 app.use(express.urlencoded({ extended: true }));
 app.use(setCorsHeaders);
 
+app.use("/upload", express.static("upload"));
+
 routes(app);
 
 // start the server
