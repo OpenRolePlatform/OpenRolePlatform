@@ -53,7 +53,7 @@ function LayoutWrap() {
             : theme.defaultAlgorithm,
       }}
     >
-      <App>
+      <App message={{ top: 5 }}>
         <Layout className="layout">
           <Header
             style={{
@@ -89,7 +89,8 @@ function LayoutWrap() {
               padding: 16,
               margin: 0,
               minHeight: 280,
-              maxHeight: '100vh',
+              paddingBottom: 120,
+              //maxHeight: '100vh',
             }}
           >
             <div

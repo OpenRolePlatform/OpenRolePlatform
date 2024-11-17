@@ -2,8 +2,6 @@ import { Button, Divider, Flex } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useNavigate } from 'react-router-dom';
 
-const MockCampaigns = [name];
-
 export default function Dashboard() {
   const navigate = useNavigate();
 
@@ -16,7 +14,13 @@ export default function Dashboard() {
         </Title>
 
         <Divider />
-        <Button onClick={() => navigate('/dm')}>Enter as Dungeon Master</Button>
+
+        <Button onClick={() => navigate('/campaigns')}>
+          Select a campaign
+        </Button>
+        <Button onClick={() => navigate('/campaigns/new')}>
+          Create New Campaign
+        </Button>
       </Flex>
     </>
   );
