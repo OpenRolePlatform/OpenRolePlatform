@@ -8,10 +8,14 @@ const reqName = {
   unique: true,
 };
 
-const Campaigns = new Schema({
-  name: reqName,
-  description: String,
-  creation_date: Date,
-});
+const Campaigns = new Schema(
+  {
+    name: reqName,
+    description: String,
+    creation_date: Date,
+    image: String,
+  },
+  { versionKey: false }
+);
 
 export default db.model("Campaigns", Campaigns);

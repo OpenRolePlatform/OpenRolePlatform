@@ -34,35 +34,41 @@ const reqNumber = {
   require: true,
 };
 
-const DamageSchema = new Schema<Damage>({
-  damage_dice_quantity: Number,
-  damage_dice_sides: Number,
-  damage_addition: Number,
-  damage_type: String,
-});
-
-const SpellSchema = new Schema({
-  owner: reqOwner,
-  name: reqName,
-  class: reqString,
-  level: reqNumber,
-  school: reqString,
-  casting_time: reqNumber,
-  duration: reqNumber,
-  range: reqNumber,
-  shape: reqString,
-  components: {
-    verbal: reqBool,
-    somatic: reqBool,
-    material: reqBool,
+const DamageSchema = new Schema<Damage>(
+  {
+    damage_dice_quantity: Number,
+    damage_dice_sides: Number,
+    damage_addition: Number,
+    damage_type: String,
   },
-  description: String,
-  equipable: reqBoolIndex,
-  equipped: reqBoolIndex,
-  type: reqString,
-  bonus: Number,
-  damage: DamageSchema,
-  hidden: reqBoolIndex,
-});
+  { versionKey: false }
+);
+
+const SpellSchema = new Schema(
+  {
+    owner: reqOwner,
+    name: reqName,
+    class: reqString,
+    level: reqNumber,
+    school: reqString,
+    casting_time: reqNumber,
+    duration: reqNumber,
+    range: reqNumber,
+    shape: reqString,
+    components: {
+      verbal: reqBool,
+      somatic: reqBool,
+      material: reqBool,
+    },
+    description: String,
+    equipable: reqBoolIndex,
+    equipped: reqBoolIndex,
+    type: reqString,
+    bonus: Number,
+    damage: DamageSchema,
+    hidden: reqBoolIndex,
+  },
+  { versionKey: false }
+);
 
 export default mongoose.model("Spell", SpellSchema);

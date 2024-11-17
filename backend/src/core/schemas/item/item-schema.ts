@@ -24,23 +24,29 @@ const reqString = {
   require: true,
 };
 
-const DamageSchema = new Schema<Damage>({
-  damage_dice_quantity: Number,
-  damage_dice_sides: Number,
-  damage_addition: Number,
-  damage_type: String,
-});
+const DamageSchema = new Schema<Damage>(
+  {
+    damage_dice_quantity: Number,
+    damage_dice_sides: Number,
+    damage_addition: Number,
+    damage_type: String,
+  },
+  { versionKey: false }
+);
 
-const ItemSchema = new Schema({
-  owner: reqOwner,
-  name: reqName,
-  description: String,
-  equipable: reqBool,
-  equipped: reqBool,
-  type: reqString,
-  bonus: Number,
-  damage: DamageSchema,
-  hidden: reqBool,
-});
+const ItemSchema = new Schema(
+  {
+    owner: reqOwner,
+    name: reqName,
+    description: String,
+    equipable: reqBool,
+    equipped: reqBool,
+    type: reqString,
+    bonus: Number,
+    damage: DamageSchema,
+    hidden: reqBool,
+  },
+  { versionKey: false }
+);
 
 export default mongoose.model("Item", ItemSchema);

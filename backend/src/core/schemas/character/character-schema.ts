@@ -38,13 +38,16 @@ const reqOwner = {
   unique: false,
 };
 
-const CharacterSchema = new Schema({
-  owner: reqOwner,
-  name: reqCharacter,
-  stats: reqStat,
-  skills: reqSkills,
-  hp: reqHp,
-  other: reqOther,
-});
+const CharacterSchema = new Schema(
+  {
+    owner: reqOwner,
+    name: reqCharacter,
+    stats: reqStat,
+    skills: reqSkills,
+    hp: reqHp,
+    other: reqOther,
+  },
+  { versionKey: false }
+);
 
 export default mongoose.model("Character", CharacterSchema);

@@ -12,11 +12,14 @@ const reqCharacter = {
   unique: true,
 };
 
-const characterOtherStats = new Schema({
-  character: reqCharacter,
-  ac: reqNumber,
-  movement: reqNumber,
-  bonus: reqNumber,
-});
+const characterOtherStats = new Schema(
+  {
+    character: reqCharacter,
+    ac: reqNumber,
+    movement: reqNumber,
+    bonus: reqNumber,
+  },
+  { versionKey: false }
+);
 
 export default mongoose.model("characterOtherStats", characterOtherStats);

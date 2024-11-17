@@ -12,14 +12,17 @@ const reqCharacter = {
   unique: true,
 };
 
-const characterStats = new Schema({
-  character: reqCharacter,
-  strength: reqNumber,
-  dexterity: reqNumber,
-  constitution: reqNumber,
-  intelligence: reqNumber,
-  wisdom: reqNumber,
-  charisma: reqNumber,
-});
+const characterStats = new Schema(
+  {
+    character: reqCharacter,
+    strength: reqNumber,
+    dexterity: reqNumber,
+    constitution: reqNumber,
+    intelligence: reqNumber,
+    wisdom: reqNumber,
+    charisma: reqNumber,
+  },
+  { versionKey: false }
+);
 
 export default mongoose.model("characterStats", characterStats);

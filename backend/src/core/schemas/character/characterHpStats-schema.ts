@@ -12,11 +12,14 @@ const reqCharacter = {
   unique: true,
 };
 
-const hpStats = new Schema({
-  character: reqCharacter,
-  hp: reqNumber,
-  hpTemp: reqNumber,
-  hpPool: reqNumber,
-});
+const hpStats = new Schema(
+  {
+    character: reqCharacter,
+    hp: reqNumber,
+    hpTemp: reqNumber,
+    hpPool: reqNumber,
+  },
+  { versionKey: false }
+);
 
 export default mongoose.model("hpStats", hpStats);
