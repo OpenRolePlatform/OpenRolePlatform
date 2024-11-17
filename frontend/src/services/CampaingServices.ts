@@ -1,8 +1,8 @@
 import { HpStats, OtherStats, Skills, Stats } from '../models/CharacterModels';
 
-export async function getCharacters() {
+export async function getCampaigns() {
   try {
-    const response = await fetch(`/api/character/`, {
+    const response = await fetch(`/api/campaign`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -20,9 +20,9 @@ export async function getCharacters() {
   }
 }
 
-export async function getCharacterStats(name: string) {
+export async function getCampaignData() {
   try {
-    const response = await fetch(`/api/character/${name}/stats`, {
+    const response = await fetch(`/api/campaign`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

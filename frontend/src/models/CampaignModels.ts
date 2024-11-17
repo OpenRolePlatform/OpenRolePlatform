@@ -1,4 +1,4 @@
-export interface Campaign {
+export interface ExampleCampaign {
   id: string;
   title: string;
   description: string;
@@ -11,7 +11,20 @@ export interface Campaign {
   image: string;
 }
 
-export const campaignsExample: Campaign[] = [
+export interface Campaign {
+  _id: string;
+  name: string;
+  description: string;
+  //genre: string;
+  //players: number;
+  //maxPlayers: number;
+  //creator: string;
+  creation_date: Date;
+  //status: 'active' | 'completed' | 'paused';
+  image: string;
+}
+
+export const campaignsExample: ExampleCampaign[] = [
   {
     id: '1',
     title: 'Las Sombras de Eldoria',
