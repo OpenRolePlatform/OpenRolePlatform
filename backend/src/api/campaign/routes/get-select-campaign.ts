@@ -1,5 +1,5 @@
-import connectCampaignDB from "../../../core/connectCampaign";
+import { CampaignManager } from "../../../CampaignManager";
 
 export async function _getSelectCampaign(name: string) {
-  return connectCampaignDB(name);
+  return await CampaignManager.Instance.connect(name);
 }

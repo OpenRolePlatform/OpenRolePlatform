@@ -13,10 +13,7 @@ export default async function connectCampaignDB(database: string) {
   if (campaignDB !== undefined) {
     await mongoose.connection.close();
   }
-  campaignDB = mongoose.createConnection(
-    `mongodb://${dbHost}:${dbPort}/${database}`
-  );
-  mongoose.connect(`mongodb://${dbHost}:${dbPort}/${database}`);
+  campaignDB = mongoose.connect(`mongodb://${dbHost}:${dbPort}/${database}`);
   if (
     campaignDB.once("open", () => {
       console.log(`Database connection successfully to ${database}`);

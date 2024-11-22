@@ -24,12 +24,12 @@ export const getCampaigns = async (req: any, res: any) => {
 
 export const getSelectCampaign = async (req: any, res: any) => {
   try {
-    const campaigns = await _getSelectCampaign(req.params.campaignID);
-    if (campaigns === true) {
-      return res.sendStatus(StatusCodes.OK);
+    await _getSelectCampaign(req.params.campaignID);
+
+    /*   return res.sendStatus(StatusCodes.OK);
     } else {
       return res.status(StatusCodes.NOT_FOUND).send("Campaigns not found.");
-    }
+    } */
   } catch (error) {
     console.error("Error while trying to change the campaigns.");
     res
