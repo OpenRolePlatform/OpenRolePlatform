@@ -47,11 +47,28 @@ export async function newCampaign(campaign: FormData) {
     if (response.ok) {
       if (response.status === 200) return await response.json();
     } else {
-      console.error('Error at character stats.');
+      console.error('Error creating the new campaign');
       throw new Error(response.statusText);
     }
   } catch (error) {
-    console.error('Error at character stats.' + error);
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function selectCampaign(name: string) {
+  try {
+    const response = await fetch(`/api/campaign/${name}`, {
+      method: 'GET',
+    });
+    if (response.ok) {
+      return;
+    } else {
+      console.error('Error loading the campaign');
+      throw new Error(response.statusText);
+    }
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 }

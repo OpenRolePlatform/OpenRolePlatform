@@ -292,3 +292,143 @@ export const charactersExamples: Character[] = [
     createdAt: new Date('2023-09-25'),
   },
 ];
+
+export const examples = [
+  {
+    name: 'raven',
+    stats: {
+      strength: 18,
+      constitution: 16,
+      dexterity: 12,
+    },
+    hp: {
+      hp: 40,
+      hpTemp: 5,
+      hpPool: 45,
+    },
+    other: {
+      ac: 16,
+      movement: 25,
+      bonus: 2,
+    },
+    skills: {
+      strength: true,
+      constitution: true,
+      intimidation: true,
+      athletics: true,
+    },
+    creator: 'ElmaDark',
+    createdAt: new Date('2023-09-15'),
+    image: '/img/characters/raven.jpeg',
+  },
+  {
+    name: 'Lyra Windrider',
+    stats: {
+      dexterity: 17,
+      intelligence: 14,
+    },
+    hp: {
+      hp: 30,
+      hpTemp: 0,
+      hpPool: 30,
+    },
+    other: {
+      ac: 14,
+      movement: 30,
+      bonus: 1,
+    },
+    skills: {
+      dexterity: true,
+      acrobatics: true,
+      stealth: true,
+      survival: true,
+    },
+
+    creator: 'Tiberius',
+    createdAt: new Date('2023-10-01'),
+    image: '/img/characters/aalis.jpeg',
+  },
+  {
+    name: 'Morgath el Sabio',
+
+    stats: {
+      intelligence: 20,
+      wisdom: 15,
+    },
+    hp: {
+      hp: 25,
+      hpTemp: 0,
+      hpPool: 25,
+    },
+    other: {
+      ac: 12,
+      movement: 30,
+      bonus: 0,
+    },
+    skills: {
+      intelligence: true,
+      arcana: true,
+      history: true,
+      insight: true,
+    },
+
+    creator: 'Sara_RPG',
+    createdAt: new Date('2023-08-20'),
+    image: '/img/characters/amadeus.jpeg',
+  },
+  {
+    name: 'Ragnar el Bestia',
+
+    stats: {
+      strength: 19,
+      constitution: 17,
+    },
+    hp: {
+      hp: 50,
+      hpTemp: 10,
+      hpPool: 60,
+    },
+    other: {
+      ac: 14,
+      movement: 30,
+      bonus: 1,
+    },
+    skills: {
+      strength: true,
+      constitution: true,
+      intimidation: true,
+      survival: true,
+    },
+
+    creator: 'Starlord',
+    createdAt: new Date('2023-10-10'),
+    image: '/img/characters/ozymandias.png',
+  },
+  {
+    name: 'Elara Nightshade',
+
+    stats: {
+      dexterity: 16,
+      charisma: 14,
+    },
+    hp: {
+      hp: 28,
+      hpTemp: 0,
+      hpPool: 28,
+    },
+    other: {
+      ac: 15,
+      movement: 30,
+      bonus: 2,
+    },
+    skills: {
+      dexterity: true,
+      stealth: true,
+      deception: true,
+      acrobatics: true,
+    },
+
+    creator: 'AdventureJoe',
+    createdAt: new Date('2023-09-25'),
+  },
+];

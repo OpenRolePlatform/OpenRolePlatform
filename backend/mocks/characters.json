@@ -1,0 +1,123 @@
+[
+  {
+    "name": "raven",
+    "stats": {
+      "strength": 18,
+      "constitution": 16,
+      "dexterity": 12
+    },
+    "hp": {
+      "hp": 40,
+      "hpTemp": 5,
+      "hpPool": 45
+    },
+    "other": {
+      "ac": 16,
+      "movement": 25,
+      "bonus": 2
+    },
+    "skills": {
+      "strength": true,
+      "constitution": true,
+      "intimidation": true,
+      "athletics": true
+    },
+    "owner": "ElmaDark"
+  },
+  {
+    "name": "Lyra Windrider",
+    "stats": {
+      "dexterity": 17,
+      "intelligence": 14
+    },
+    "hp": {
+      "hp": 30,
+      "hpTemp": 0,
+      "hpPool": 30
+    },
+    "other": {
+      "ac": 14,
+      "movement": 30,
+      "bonus": 1
+    },
+    "skills": {
+      "dexterity": true,
+      "acrobatics": true,
+      "stealth": true,
+      "survival": true
+    },
+    "owner": "Tiberius"
+  },
+  {
+    "name": "Morgath el Sabio",
+    "stats": {
+      "intelligence": 20,
+      "wisdom": 15
+    },
+    "hp": {
+      "hp": 25,
+      "hpTemp": 0,
+      "hpPool": 25
+    },
+    "other": {
+      "ac": 12,
+      "movement": 30,
+      "bonus": 0
+    },
+    "skills": {
+      "intelligence": true,
+      "arcana": true,
+      "history": true,
+      "insight": true
+    },
+    "owner": "Sara_RPG"
+  },
+  {
+    "name": "Ragnar el Bestia",
+    "stats": {
+      "strength": 19,
+      "constitution": 17
+    },
+    "hp": {
+      "hp": 50,
+      "hpTemp": 10,
+      "hpPool": 60
+    },
+    "other": {
+      "ac": 14,
+      "movement": 30,
+      "bonus": 1
+    },
+    "skills": {
+      "strength": true,
+      "constitution": true,
+      "intimidation": true,
+      "survival": true
+    },
+    "owner": "Starlord"
+  },
+  {
+    "name": "Elara Nightshade",
+    "stats": {
+      "dexterity": 16,
+      "charisma": 14
+    },
+    "hp": {
+      "hp": 28,
+      "hpTemp": 0,
+      "hpPool": 28
+    },
+    "other": {
+      "ac": 15,
+      "movement": 30,
+      "bonus": 2
+    },
+    "skills": {
+      "dexterity": true,
+      "stealth": true,
+      "deception": true,
+      "acrobatics": true
+    },
+    "owner": "AdventureJoe"
+  }
+]

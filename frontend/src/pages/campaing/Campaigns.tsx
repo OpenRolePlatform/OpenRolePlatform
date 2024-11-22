@@ -1,11 +1,11 @@
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import { Avatar, Card, Col, List, Row, Skeleton } from 'antd';
+import { Avatar, Button, Card, Col, List, message, Row, Skeleton } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMount } from 'react-use';
 import useBreakpoint from 'use-breakpoint';
 import { Campaign } from '../../models/CampaignModels';
-import { getCampaigns } from '../../services/CampaingServices';
+import { getCampaigns, selectCampaign } from '../../services/CampaingServices';
 import { getBackendImage } from '../../utils/images';
 import NewCampaign from './NewCampaign';
 const BREAKPOINTS = { mobile: 0, tablet: 576, desktop: 1280 };
@@ -31,6 +31,16 @@ export default function CampaignDetails() {
     }
   });
 
+  const loadCampaign = async (name: string) => {
+    try {
+      await selectCampaign(name);
+      message.success('Campaign loaded');
+      navigate('/characters');
+    } catch (error: any) {
+      message.error(error.message);
+    }
+  };
+
   return (
     <>
       {breakpoint === 'mobile' ? (
@@ -40,7 +50,17 @@ export default function CampaignDetails() {
           size="large"
           dataSource={campaigns}
           renderItem={(campaign) => (
-            <List.Item onClick={() => navigate(`/campaigns/${campaign.name}`)}>
+            <List.Item
+              onClick={() => navigate(`/campaigns/${campaign.name}`)}
+              actions={[
+                <Button
+                  variant="filled"
+                  onClick={() => loadCampaign(campaign.name)}
+                >
+                  Load Campaign
+                </Button>,
+              ]}
+            >
               <Skeleton loading={loading} active avatar>
                 <List.Item.Meta
                   avatar={
