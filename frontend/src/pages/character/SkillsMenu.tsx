@@ -2,9 +2,10 @@
 import { useEffect, useState } from 'react';
 //@mui imports
 //@mui icons imports
-import { Button, List, Typography } from 'antd';
+import { Button, Flex, List, Typography } from 'antd';
 
-import { Hex, HexFill } from '../../assets/Icons';
+import { Hexagon, Plus } from '@phosphor-icons/react';
+import { Hex } from '../../assets/Icons';
 import { Skill, SkillsSources, Stat } from '../../models/CharacterModels';
 import { CharacterService } from '../../services/useCharacter';
 import { getAllSkillBonus } from '../../utils/data';
@@ -75,7 +76,15 @@ export default function SkillsMenu(props: { character: CharacterService }) {
                     type="text"
                     shape="circle"
                     icon={
-                      props.character.skills()[skill as Skill] ? HexFill : Hex
+                      props.character.skills()[skill as Skill] ? (
+                        <Hexagon
+                          color="currenColor"
+                          size="2rem"
+                          weight="duotone"
+                        />
+                      ) : (
+                        Hex
+                      )
                     }
                     className={`skill-check ${props.character.skills()[skill as Skill] && 'skill-check--active'}`}
                     onClick={() =>
@@ -88,9 +97,12 @@ export default function SkillsMenu(props: { character: CharacterService }) {
                 title={
                   <>
                     <Typography.Text>
-                      {skillsValue[skill] > 0
-                        ? `+${skillsValue[skill]}`
-                        : skillsValue[skill]}
+                      <Flex align="baseline">
+                        {skillsValue[skill] > 0 && (
+                          <Plus color="currentColor" weight="bold" size={12} />
+                        )}
+                        {skillsValue[skill]}
+                      </Flex>
                     </Typography.Text>
                   </>
                 }

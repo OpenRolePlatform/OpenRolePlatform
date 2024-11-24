@@ -8,6 +8,7 @@ import {
   FormProps,
   GetProp,
   Input,
+  Select,
   Upload,
   UploadProps,
 } from 'antd';
@@ -21,6 +22,46 @@ const getBase64 = (img: FileType, callback: (url: string) => void) => {
   reader.addEventListener('load', () => callback(reader.result as string));
   reader.readAsDataURL(img);
 };
+
+const ClassesOptions = [
+  { label: 'Barbarian', value: 'barbarian' },
+  { label: 'Bard', value: 'bard' },
+  { label: 'Cleric', value: 'cleric' },
+  { label: 'Druid', value: 'druid' },
+  { label: 'Fighter', value: 'fighter' },
+  { label: 'Wizard', value: 'wizard' },
+  { label: 'Monk', value: 'monk' },
+  { label: 'Rogue', value: 'rogue' },
+  { label: 'Paladin', value: 'paladin' },
+  { label: 'Ranger', value: 'ranger' },
+  { label: 'Sorcerer', value: 'sorcerer' },
+  { label: 'Warlock', value: 'warlock' },
+  { label: 'Artificer', value: 'artificer' },
+];
+
+const RacesOptions = [
+  { label: 'Dwarf', value: 'dwarf' },
+  { label: 'Elf', value: 'elf' },
+  { label: 'Halfling', value: 'halfling' },
+  { label: 'Human', value: 'human' },
+  { label: 'Dragonborn', value: 'dragonborn' },
+  { label: 'Gnome', value: 'gnome' },
+  { label: 'Half-Elf', value: 'half-elf' },
+  { label: 'Half-Orc', value: 'half-orc' },
+  { label: 'Tiefling', value: 'tiefling' },
+  { label: 'Aarakocra', value: 'aarakocra' },
+  { label: 'Genasi', value: 'genasi' },
+  { label: 'Goliath', value: 'goliath' },
+  { label: 'Tabaxi', value: 'tabaxi' },
+  { label: 'Triton', value: 'triton' },
+  { label: 'Firbolg', value: 'firbolg' },
+  { label: 'Kenku', value: 'kenku' },
+  { label: 'Lizardfolk', value: 'lizardfolk' },
+  { label: 'Changeling', value: 'changeling' },
+  { label: 'Kalashtar', value: 'kalashtar' },
+  { label: 'Shifter', value: 'shifter' },
+  { label: 'Warforged', value: 'warforged' },
+];
 
 export default function NewCharacter() {
   const [form] = Form.useForm();
@@ -81,18 +122,38 @@ export default function NewCharacter() {
           >
             <Input />
           </Form.Item>
-          {/*   <Form.Item
-            label="Description"
-            name="description"
+          <Form.Item
+            label="Class"
+            name="class"
             rules={[
               {
                 required: true,
-                message: 'Please enter a campaign description',
+                message: "Class can't be empty",
               },
             ]}
           >
-            <TextArea />
-          </Form.Item> */}
+            <Select
+              options={ClassesOptions}
+              placeholder="Select a class"
+              showSearch
+            />
+          </Form.Item>
+          <Form.Item
+            label="Race"
+            name="race"
+            rules={[
+              {
+                required: true,
+                message: "Race can't be empty",
+              },
+            ]}
+          >
+            <Select
+              options={RacesOptions}
+              placeholder="Select a race"
+              showSearch
+            />
+          </Form.Item>
           <Form.Item
             label="Upload image"
             name="image"

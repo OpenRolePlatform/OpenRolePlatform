@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMount } from 'react-use';
 import useBreakpoint from 'use-breakpoint';
-import { ClassLogos } from '../../assets/Images';
+import { DEFAULT_AVATAR } from '../../assets/Images';
 import { Character } from '../../models/CharacterModels';
 import { getCharacters } from '../../services/CharacterServices';
 import { getBackendImage } from '../../utils/images';
@@ -45,9 +45,12 @@ export default function Characters() {
                 <List.Item.Meta
                   avatar={
                     character.image ? (
-                      <Avatar size="large" src={character.image} />
+                      <Avatar
+                        size="large"
+                        src={getBackendImage(character.image)}
+                      />
                     ) : (
-                      <Avatar size="large" src={ClassLogos[character.class]} />
+                      <Avatar size="large" src={DEFAULT_AVATAR} />
                     )
                   }
                   title={character.name}
@@ -80,7 +83,7 @@ export default function Characters() {
                     character.image ? (
                       <img src={getBackendImage(character.image)} />
                     ) : (
-                      <img src={ClassLogos[character.class]} />
+                      <img src={DEFAULT_AVATAR} />
                     )
                   }
                   onClick={() => navigate(`/characters/${character._id}`)}

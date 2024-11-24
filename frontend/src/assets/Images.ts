@@ -7,7 +7,7 @@ export const StatsBackground = {
   charisma: '/img/stats/stats_cha.png',
 };
 
-export const SkillsImg = ['/img/skills.png'];
+export const SkillsImg = '/img/skills.png';
 
 export const HpBorders = {
   button: '/img/hp/button_border.png',
@@ -17,15 +17,9 @@ export const HpBorders = {
 };
 
 export const NameBorder = {
-  light: '/img/name2.png',
-  dark: '/img/name_dark.png',
+  light: '/img/name_border.png',
+  dark: '/img/name_border_dark.png',
 };
-
-export const player_img = [
-  '/img/characters/raven.jpeg',
-  '/img/border2.png',
-  '/img/border2_dark.png',
-];
 
 export const ais_img = [
   '/img/armor_class.png',
@@ -42,3 +36,7 @@ export const ClassLogos = {
   warlock: '/img/classes/warlock_logo.png',
   bloodhunter: '/img/classes/bloodhunter_logo.png',
 };
+
+export const AVATAR_BORDER = '/img/border.png';
+export const ALT_AVATAR_BORDER = '/img/border_dark.png';
+export const DEFAULT_AVATAR = '/img/classes/cultist.png';

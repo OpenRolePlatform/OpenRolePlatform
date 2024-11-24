@@ -8,7 +8,7 @@ import {
 } from 'antd';
 import { useMemo } from 'react';
 
-import { player_img, StatsBackground } from '../../assets/Images';
+import { DEFAULT_AVATAR, StatsBackground } from '../../assets/Images';
 import { Stat } from '../../models/CharacterModels';
 import { CharacterService, useCharacter } from '../../services/useCharacter';
 import { getBonusValue } from '../../utils/data';
@@ -25,7 +25,7 @@ export function CharacterCard(props: { name: string }) {
           <StatField stat={'constitution'} character={character} />
         </Flex>
         <Flex vertical style={{ position: 'relative', width: '50%' }}>
-          <img src={player_img[0]} />
+          <img src={DEFAULT_AVATAR} />
         </Flex>
         <Flex vertical align="center">
           <StatField stat={'intelligence'} character={character} />

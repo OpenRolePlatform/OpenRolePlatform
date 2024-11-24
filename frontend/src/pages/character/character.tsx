@@ -4,11 +4,12 @@ import { useParams } from 'react-router-dom';
 import './Character.scss';
 
 //components imports
-import { Button, ConfigProvider, Drawer, Flex, InputNumber, Row } from 'antd';
-import { ais_img, NameBorder, SkillsImg } from '../../assets/Images.ts';
+import { Button, Drawer, Flex, InputNumber, Row } from 'antd';
+import { NameBorder } from '../../assets/Images.ts';
 import SkillsMenu from './SkillsMenu.tsx';
 import { GeneralStats, StatsColumn } from './StatsComponents.tsx';
 
+import { Seal, Sparkle } from '@phosphor-icons/react';
 import { Stat } from '../../models/CharacterModels.ts';
 import { useCharacter } from '../../services/useCharacter.ts';
 
@@ -65,13 +66,12 @@ export default function Character() {
             width: '25%',
           }}
         >
-          <img src={ais_img[3]} width="50%" alt="proficiency bonus" />
+          <Seal size="5rem" color="currentColor" />
+          {/*  <img src={ais_img[3]} width="50%" alt="proficiency bonus" /> */}
           <InputNumber
             style={{
               position: 'absolute',
-
-              //width: 70,
-              fontSize: '3.5vw',
+              fontSize: '2rem',
             }}
             inputMode="numeric"
             className="number-field"
@@ -90,22 +90,14 @@ export default function Character() {
             width: '25%',
           }}
         >
-          <ConfigProvider
-            theme={{
-              components: {
-                Button: {
-                  controlHeightLG: '100%',
-                },
-              },
-            }}
+          <Button
+            icon={<Sparkle size="2rem" color="currentColor" weight="duotone" />}
+            size="large"
+            variant="filled"
+            onClick={() => setShowSkills(true)}
           >
-            <Button
-              icon={<img src={SkillsImg[0]} height="100%" alt="skills_menu" />}
-              size="large"
-              type="text"
-              onClick={() => setShowSkills(true)}
-            />
-          </ConfigProvider>
+            Skills
+          </Button>
         </Flex>
       </Row>
 
@@ -121,6 +113,7 @@ export default function Character() {
       <Drawer
         placement="bottom"
         size="large"
+        title="Skills"
         open={showSkills}
         styles={{
           body: {

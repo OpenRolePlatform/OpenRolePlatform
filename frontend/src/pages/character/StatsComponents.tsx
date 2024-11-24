@@ -1,3 +1,4 @@
+import { Lightning, Shield } from '@phosphor-icons/react';
 import {
   Button,
   Col,
@@ -9,7 +10,12 @@ import {
   Space,
 } from 'antd';
 import { ChangeEvent, useState } from 'react';
-import { HpBorders, player_img, StatsBackground } from '../../assets/Images';
+import {
+  AVATAR_BORDER,
+  DEFAULT_AVATAR,
+  HpBorders,
+  StatsBackground,
+} from '../../assets/Images';
 import { Stat } from '../../models/CharacterModels';
 import { CharacterService } from '../../services/useCharacter';
 import { getBonusValue } from '../../utils/data';
@@ -63,34 +69,30 @@ export function AltStats(props: { character: CharacterService }) {
       {/*  <img src={ais_img[1]} alt="initiative" /> */}
       <InputNumber
         className="number-field"
-        style={{
-          width: '30%',
-          fontSize: '3.5vw',
-        }}
+        size="large"
+        controls={false}
         disabled
         variant="borderless"
         value={getBonusValue(character.stats().dexterity)}
       />
+
       <InputNumber
         className="number-field"
-        style={{
-          /* position: 'absolute', */
-          width: '30%',
-          fontSize: '3.5vw',
-        }}
+        suffix={<Shield color="currentColor" size="1.5rem" />}
+        size="large"
+        controls={false}
         formatter={(value) => `${value > 0 ? `+${value}` : value}`}
         variant="borderless"
         name="ac"
         onChange={(value) => character.updateOther({ ac: value ?? 0 })}
         value={character.other().ac}
       />
+
       <InputNumber
         className="number-field"
-        style={{
-          /* position: 'absolute', */
-          width: '30%',
-          fontSize: '3.5vw',
-        }}
+        size="large"
+        controls={false}
+        suffix={<Lightning color="currentColor" size="1.5rem" />}
         formatter={(value) => `${value > 0 ? `+${value}` : value}`}
         variant="borderless"
         name="movement"
@@ -302,12 +304,16 @@ export function GeneralStats(props: {
         {/* character image and border */}
         <Flex justify="center" align="middle">
           <img
-            src={getBackendImage(character.character().image)}
+            src={
+              character.character().image
+                ? getBackendImage(character.character().image!)
+                : DEFAULT_AVATAR
+            }
             style={{ width: '90%', height: '90%', marginTop: '5%' }}
             alt="character"
           />
           <img
-            src={player_img[1]}
+            src={AVATAR_BORDER}
             style={{
               position: 'absolute',
               width: '100%',
