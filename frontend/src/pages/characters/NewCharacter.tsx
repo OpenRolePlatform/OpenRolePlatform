@@ -11,9 +11,8 @@ import {
   Upload,
   UploadProps,
 } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
 import { useState } from 'react';
-import { newCampaign } from '../../services/CampaingServices';
+import { newCharacter } from '../../services/CharacterServices';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -23,7 +22,7 @@ const getBase64 = (img: FileType, callback: (url: string) => void) => {
   reader.readAsDataURL(img);
 };
 
-export default function NewCampaign() {
+export default function NewCharacter() {
   const [form] = Form.useForm();
 
   const [imageUrl, setImageUrl] = useState<string>('');
@@ -37,8 +36,8 @@ export default function NewCampaign() {
       if (values[name]) formData.append(name, values[name]);
     }
     try {
-      await newCampaign(formData);
-      message.success('Campaign created');
+      await newCharacter(formData);
+      message.success('Character created');
       setShowDrawer(false);
       form.resetFields();
     } catch (error: any) {
@@ -61,7 +60,7 @@ export default function NewCampaign() {
       <Drawer
         placement="bottom"
         size="large"
-        title="New Campaign"
+        title="New Character"
         open={showDrawer}
         onClose={() => setShowDrawer(false)}
       >
@@ -77,12 +76,12 @@ export default function NewCampaign() {
             label="Name"
             name="name"
             rules={[
-              { required: true, message: 'Please enter the campaign name' },
+              { required: true, message: 'Please enter the character name' },
             ]}
           >
             <Input />
           </Form.Item>
-          <Form.Item
+          {/*   <Form.Item
             label="Description"
             name="description"
             rules={[
@@ -93,7 +92,7 @@ export default function NewCampaign() {
             ]}
           >
             <TextArea />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="Upload image"
             name="image"
@@ -137,7 +136,7 @@ export default function NewCampaign() {
         }
         onClick={() => setShowDrawer(true)}
         style={{ height: 60, width: 160 }}
-        description="New campaign"
+        description="New character"
         shape="square"
         type="primary"
       />

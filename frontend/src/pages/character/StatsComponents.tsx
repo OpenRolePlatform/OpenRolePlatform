@@ -13,6 +13,7 @@ import { HpBorders, player_img, StatsBackground } from '../../assets/Images';
 import { Stat } from '../../models/CharacterModels';
 import { CharacterService } from '../../services/useCharacter';
 import { getBonusValue } from '../../utils/data';
+import { getBackendImage } from '../../utils/images';
 
 const stats_img_style = {
   height: '100%',
@@ -301,7 +302,7 @@ export function GeneralStats(props: {
         {/* character image and border */}
         <Flex justify="center" align="middle">
           <img
-            src={player_img[0]}
+            src={getBackendImage(character.character().image)}
             style={{ width: '90%', height: '90%', marginTop: '5%' }}
             alt="character"
           />

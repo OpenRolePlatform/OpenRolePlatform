@@ -120,12 +120,13 @@ export interface Skills {
 }
 
 export interface Character {
-  id: string;
+  _id?: string;
   name: string;
-  stats: Stats;
-  hp: HpStats;
-  other: OtherStats;
-  skills: Skills;
+  owner: string;
+  stats?: Stats;
+  hp?: HpStats;
+  other?: OtherStats;
+  skills?: Skills;
   class?: string;
   race?: string;
   level?: number;

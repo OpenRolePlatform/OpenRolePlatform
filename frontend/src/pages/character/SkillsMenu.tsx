@@ -9,8 +9,6 @@ import { Skill, SkillsSources, Stat } from '../../models/CharacterModels';
 import { CharacterService } from '../../services/useCharacter';
 import { getAllSkillBonus } from '../../utils/data';
 
-const skills_img = ['img/skills_border.png'];
-
 const basicSkillsFontSize = '3vw';
 
 export default function SkillsMenu(props: { character: CharacterService }) {
@@ -58,7 +56,6 @@ export default function SkillsMenu(props: { character: CharacterService }) {
     const result = Object.keys(SkillsSources).find((stat) =>
       SkillsSources[stat as Stat].includes(skill),
     );
-    console.log(result);
     return result;
   };
 

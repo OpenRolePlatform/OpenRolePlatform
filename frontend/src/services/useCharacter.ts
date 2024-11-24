@@ -8,16 +8,7 @@ import {
   Skills,
   Stats,
 } from '../models/CharacterModels';
-import {
-  getCharacterHp,
-  getCharacterOtherStats,
-  getCharacterSkills,
-  getCharacterStats,
-  updateCharacterHp,
-  updateCharacterOtherStats,
-  updateCharacterSkills,
-  updateCharacterStats,
-} from './CharacterServices';
+import { getCharacter, updateCharacter } from './CharacterServices';
 
 const initStats: Stats = {
   strength: 0,
@@ -61,7 +52,7 @@ const initHp: HpStats = {
   hpPool: 0,
 };
 
-const initOtherStats: OtherStats = {
+const initOther: OtherStats = {
   ac: 0,
   movement: 0,
   bonus: 0,
@@ -85,11 +76,8 @@ export interface CharacterService {
   error?: string;
 }
 
-export function useCharacter(name: string): CharacterService {
-  const [stats, setStats] = useGetSetState(initStats);
-  const [skills, setSkillsStats] = useGetSetState(initSkills);
-  const [hp, setHp] = useGetSetState(initHp);
-  const [other, setOtherStats] = useGetSetState(initOtherStats);
+export function useCharacter(id: string): CharacterService {
+  const [character, setCharacter] = useGetSetState<Character>();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
@@ -99,27 +87,11 @@ export function useCharacter(name: string): CharacterService {
       console.log('WebSocket is connected');
     },
     onMessage: (event) => {
-      console.log(event.data);
-
       const message = JSON.parse(event.data);
-      if (message.character === name) {
-        console.log(message);
-        if (message.skills)
-          Object.keys(message?.skills).forEach((key) => {
-            setSkillsStats({ [key]: message.skills[key] });
-          });
-        if (message.stats)
-          Object.keys(message?.stats).forEach((key) => {
-            setStats({ [key]: message.stats[key] });
-          });
-        if (message.hp)
-          Object.keys(message?.hp).forEach((key) => {
-            setHp({ [key]: message.hp[key] });
-          });
-        if (message.other)
-          Object.keys(message?.other).forEach((key) => {
-            setOtherStats({ [key]: message.other[key] });
-          });
+      console.log(message);
+
+      if (message.model === 'character' && message.data._id === id) {
+        setCharacter(message.data);
       }
     },
   });
@@ -128,14 +100,8 @@ export function useCharacter(name: string): CharacterService {
   useMount(async () => {
     setLoading(true);
     try {
-      const stats = await getCharacterStats(name);
-      setStats(stats);
-      const skills = await getCharacterSkills(name);
-      setSkillsStats(skills);
-      const other = await getCharacterOtherStats(name);
-      setOtherStats(other);
-      const hp = await getCharacterHp(name);
-      setHp(hp);
+      const character = await getCharacter(id);
+      setCharacter(character);
       setLoading(false);
     } catch (_error) {
       console.log(_error);
@@ -144,57 +110,12 @@ export function useCharacter(name: string): CharacterService {
   });
 
   // Function to get a character with all his data
-  const getCharacter = () => {
-    return {
-      name,
-      stats: stats(),
-      skills: skills(),
-      hp: hp(),
-      other: other(),
-    };
-  };
 
-  const _updateStats = async (stats: Stats) => {
+  const _updateCharacter = async (newCharacter: Partial<Character>) => {
     setLoading(true);
     try {
-      await updateCharacterStats(name, stats);
-      setStats(stats);
-    } catch (error) {
-      setError(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const _updateSkills = async (skills: Skills) => {
-    setLoading(true);
-    try {
-      await updateCharacterSkills(name, skills);
-      setSkillsStats(skills);
-    } catch (error) {
-      setError(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const _updateHp = async (hp: HpStats) => {
-    setLoading(true);
-    try {
-      await updateCharacterHp(name, hp);
-      setHp(hp);
-    } catch (error) {
-      setError(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const _updateOther = async (other: OtherStats) => {
-    setLoading(true);
-    try {
-      await updateCharacterOtherStats(name, other);
-      setOtherStats(other);
+      await updateCharacter(id, newCharacter);
+      setCharacter(newCharacter);
     } catch (error) {
       setError(JSON.stringify(error));
     } finally {
@@ -204,18 +125,25 @@ export function useCharacter(name: string): CharacterService {
 
   return {
     // Main
-    name,
-    character: getCharacter,
+    name: character().name,
+    character,
+
     // Getters
-    stats,
-    skills,
-    hp: hp,
-    other,
+    stats: () => character().stats ?? initStats,
+    skills: () => character().skills ?? initSkills,
+    hp: () => character().hp ?? initHp,
+    other: () => character().other ?? initOther,
+
     // Setters
-    updateStats: _updateStats,
-    updateHp: _updateHp,
-    updateSkills: _updateSkills,
-    updateOther: _updateOther,
+    updateStats: async (stats: Stats) =>
+      await _updateCharacter({ stats: { ...character().stats, ...stats } }),
+    updateSkills: async (skills: Skills) =>
+      await _updateCharacter({ skills: { ...character().skills, ...skills } }),
+    updateHp: async (hp: HpStats) =>
+      await _updateCharacter({ hp: { ...character().hp, ...hp } }),
+    updateOther: async (other: OtherStats) =>
+      await _updateCharacter({ other: { ...character().other, ...other } }),
+
     // State info
     loading,
     error,

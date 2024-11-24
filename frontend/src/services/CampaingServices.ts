@@ -9,7 +9,7 @@ export async function getCampaigns() {
     if (response.ok) {
       if (response.status === 200) return await response.json();
     } else {
-      console.error('Error at character stats.');
+      console.error('Error getting the campaigns.');
       throw new Error(response.statusText);
     }
   } catch (error) {
@@ -20,7 +20,7 @@ export async function getCampaigns() {
 
 export async function getCampaignData() {
   try {
-    const response = await fetch(`/api/campaign`, {
+    const response = await fetch(`/api/campaign/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ export async function newCampaign(campaign: FormData) {
 export async function selectCampaign(name: string) {
   try {
     const response = await fetch(`/api/campaign/${name}`, {
-      method: 'GET',
+      method: 'POST',
     });
     if (response.ok) {
       return;

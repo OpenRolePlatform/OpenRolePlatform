@@ -52,14 +52,18 @@ export default function CampaignDetails() {
           renderItem={(campaign) => (
             <List.Item
               onClick={() => navigate(`/campaigns/${campaign.name}`)}
-              actions={[
-                <Button
-                  variant="filled"
-                  onClick={() => loadCampaign(campaign.name)}
-                >
-                  Load Campaign
-                </Button>,
-              ]}
+              actions={
+                loading
+                  ? []
+                  : [
+                      <Button
+                        variant="filled"
+                        onClick={() => loadCampaign(campaign._id)}
+                      >
+                        Load Campaign
+                      </Button>,
+                    ]
+              }
             >
               <Skeleton loading={loading} active avatar>
                 <List.Item.Meta
@@ -95,7 +99,6 @@ export default function CampaignDetails() {
                 <Card
                   style={{ height: '100%' }}
                   cover={<Skeleton.Node style={{ width: '100%' }} active />}
-                  onClick={() => navigate(`/campaigns/${campaign.name}`)}
                 >
                   <Skeleton.Input style={{ width: '100%' }} active />
                 </Card>
