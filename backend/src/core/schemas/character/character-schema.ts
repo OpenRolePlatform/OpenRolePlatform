@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import { Schema } from "mongoose";
 
 const reqCharacter = {
   type: String,
@@ -24,10 +24,12 @@ const reqBoolean = {
   required: false,
 };
 
-const CharacterSchema = new Schema(
+export const CharacterSchema = new Schema(
   {
+    _id: String,
     owner: reqOwner,
     name: reqCharacter,
+    image: String,
     stats: {
       strength: reqNumber,
       dexterity: reqNumber,
@@ -75,5 +77,3 @@ const CharacterSchema = new Schema(
   },
   { versionKey: false }
 );
-
-export default mongoose.model("Character", CharacterSchema);

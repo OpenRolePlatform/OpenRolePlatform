@@ -44,7 +44,7 @@ const DamageSchema = new Schema<Damage>(
   { versionKey: false }
 );
 
-const SpellSchema = new Schema(
+export const SpellSchema = new Schema(
   {
     owner: reqOwner,
     name: reqName,

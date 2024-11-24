@@ -1,226 +1,113 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
+
 import {
-  _getAllCharacters,
-  _getAllCharactersOwner,
-} from "./routes/get-all-characters";
-import { _getCharacter } from "./routes/get-character";
-import { _getCharacterHpStats } from "./routes/get-character-hp-stats";
-import { _getCharacterOtherStats } from "./routes/get-character-other-stats";
-import { _getCharacterSkillsStats } from "./routes/get-character-skills-stats";
-import { _getCharacterStats } from "./routes/get-character-stats";
-import { _putCharacter } from "./routes/put-character";
-import { _putCharacterHpStats } from "./routes/put-character-hp-stats";
-import { _putCharacterOtherStats } from "./routes/put-character-other-stats";
-import { _putCharacterSkillsStats } from "./routes/put-character-skills-stats";
-import { _putCharacterStats } from "./routes/put-character-stats";
+  createCharacter,
+  getAllCharacters,
+  getAllCharactersOwner,
+  getCharacterDetails,
+  updateCharacter,
+} from "./characters-controller";
 
 //get method
 
-export const getAllCharacters = async (req: any, res: any) => {
+export const getCharacters = async (req: any, res: any) => {
   try {
-    const characters = await _getAllCharacters();
+    const characters = await getAllCharacters();
     if (characters) {
       return res.status(StatusCodes.OK).send(characters);
     } else {
       return res.status(StatusCodes.NOT_FOUND).send("Characters not found.");
     }
   } catch (error) {
-    console.error("Error while trying to obtain the characters.");
+    console.error("Error while trying to obtain the characters.", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to obtain the characters." + error.message);
+      .send("Error while trying to obtain the characters. " + error.message);
   }
 };
 
-export const getAllCharactersOwner = async (req: any, res: any) => {
+export const getCharactersOwner = async (req: any, res: any) => {
   try {
-    const characters = await _getAllCharactersOwner(req.params.ownerID);
+    const characters = await getAllCharactersOwner(req.params.ownerID);
     if (characters) {
       return res.status(StatusCodes.OK).send(characters);
     } else {
       return res.status(StatusCodes.NOT_FOUND).send("Characters not found.");
     }
   } catch (error) {
-    console.error("Error while trying to obtain the characters.");
+    console.error("Error while trying to get one character.", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to obtain the characters." + error.message);
+      .send("Error while trying to get one character. " + error.message);
   }
 };
 
 //get methods
 export const getCharacter = async (req: any, res: any) => {
   try {
-    const character = await _getCharacter(req.params.characterID);
-    if (character) {
-      return res.status(StatusCodes.OK).send(character);
-    } else {
+    const character = await getCharacterDetails(req.params.characterID);
+    if (!character)
       return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
-    }
+
+    res.status(StatusCodes.OK).send(character);
   } catch (error) {
-    console.error("Error while trying to obtain the character.");
+    console.error("Error while trying to get one character.", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to obtain the character." + error.message);
+      .send("Error while trying to get one character. " + error.message);
   }
 };
 
-export const getCharacterStats = async (req: any, res: any) => {
+//put methods
+export const postCharacter = async (req: any, res: any) => {
   try {
-    const stats = await _getCharacterStats(req.params.characterID);
-    if (stats) {
-      return res.status(StatusCodes.OK).send(stats);
-    } else {
-      return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
+    let body = req.body;
+    if (req.file) {
+      body.image = `images/${req.file.filename}`;
     }
+    let newCharacter = await createCharacter(req.body);
+    if (!newCharacter)
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .send("A character with this same id already exists");
+    res.status(StatusCodes.OK).send(newCharacter);
+    WebSocketService.Instance.broadcast({
+      type: "New",
+      model: "character",
+      data: newCharacter,
+    });
   } catch (error) {
-    console.error("Error while trying to obtain the character stats.");
+    console.error("Error while trying to update the character.", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(
-        "Error while trying to obtain the character stats." + error.message
-      );
-  }
-};
-
-export const getCharacterOtherStats = async (req: any, res: any) => {
-  try {
-    const stats = await _getCharacterOtherStats(req.params.characterID);
-    if (stats) {
-      return res.status(StatusCodes.OK).send(stats);
-    } else {
-      return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
-    }
-  } catch (error) {
-    console.error("Error while trying to obtain the character other stats.");
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(
-        "Error while trying to obtain the character other stats." +
-          error.message
-      );
-  }
-};
-
-export const getHpStats = async (req: any, res: any) => {
-  try {
-    const stats = await _getCharacterHpStats(req.params.characterID);
-    if (stats) {
-      return res.status(StatusCodes.OK).send(stats);
-    } else {
-      return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
-    }
-  } catch (error) {
-    console.error("Error while trying to obtain the character hp.");
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(
-        "Error while trying to obtain the character stats." + error.message
-      );
-  }
-};
-
-export const getSkillsStats = async (req: any, res: any) => {
-  try {
-    const stats = await _getCharacterSkillsStats(req.params.characterID);
-    if (stats) {
-      return res.status(StatusCodes.OK).send(stats);
-    } else {
-      return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
-    }
-  } catch (error) {
-    console.error("Error while trying to obtain the character skills.");
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(
-        "Error while trying to obtain the character skills." + error.message
-      );
+      .send("Error while trying to  the character. " + error.message);
   }
 };
 
 //put methods
 export const putCharacter = async (req: any, res: any) => {
   try {
-    await _putCharacter(req.params.characterID, req.body);
-    res.status(StatusCodes.OK).send("Character updated correctly.");
+    let body = req.body;
+    if (req.file) {
+      body.image = `images/${req.file.filename}`;
+    }
+    let updatedCharacter = await updateCharacter(
+      req.params.characterID,
+      req.body
+    );
+    if (!updatedCharacter)
+      return res.status(StatusCodes.NOT_FOUND).send(updateCharacter);
+    res.status(StatusCodes.OK).send(updatedCharacter);
     WebSocketService.Instance.broadcast({
-      character: req.params.characterID,
-      data: req.body,
+      type: "Update",
+      model: "character",
+      data: updatedCharacter,
     });
   } catch (error) {
-    console.error("Error while trying to update the character.");
+    console.error("Error while trying to update the character.", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to update the character." + error.message);
-  }
-};
-
-export const putCharacterStats = async (req: any, res: any) => {
-  try {
-    await _putCharacterStats(req.params.characterID, req.body);
-    res.status(StatusCodes.OK).send("Stats updated correctly.");
-    WebSocketService.Instance.broadcast({
-      character: req.params.characterID,
-      stats: req.body,
-    });
-  } catch (error) {
-    console.error("Error while trying to update the character stats.");
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(
-        "Error while trying to update the character stats." + error.message
-      );
-  }
-};
-
-export const putOtherCharacterStats = async (req: any, res: any) => {
-  try {
-    await _putCharacterOtherStats(req.params.characterID, req.body);
-    res.status(StatusCodes.OK).send("Other stats updated correctly.");
-    WebSocketService.Instance.broadcast({
-      character: req.params.characterID,
-      otherStats: req.body,
-    });
-  } catch (error) {
-    console.error("Error while trying to update the character other stats.");
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(
-        "Error while trying to update the character other stats." +
-          error.message
-      );
-  }
-};
-
-export const putHpStats = async (req: any, res: any) => {
-  try {
-    await _putCharacterHpStats(req.params.characterID, req.body);
-    res.status(StatusCodes.OK).send("HP updated correctly.");
-    WebSocketService.Instance.broadcast({
-      character: req.params.characterID,
-      hpStats: req.body,
-    });
-  } catch (error) {
-    console.error("Error while trying to update the HP.");
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to update the HP." + error.message);
-  }
-};
-
-export const putSkillsStats = async (req: any, res: any) => {
-  try {
-    await _putCharacterSkillsStats(req.params.characterID, req.body);
-    res.status(StatusCodes.OK).send("Skills updated correctly.");
-    WebSocketService.Instance.broadcast({
-      character: req.params.characterID,
-      skills: req.body,
-    });
-  } catch (error) {
-    console.error("Error while trying to update the skills.");
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to update the skils." + error.message);
+      .send("Error while trying to update the character. " + error.message);
   }
 };

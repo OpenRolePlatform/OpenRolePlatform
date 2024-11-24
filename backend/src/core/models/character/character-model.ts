@@ -9,4 +9,5 @@ export interface Character {
   skills?: Skills;
   hp?: HpStats;
   other?: OtherStats;
+  image?: string;
 }

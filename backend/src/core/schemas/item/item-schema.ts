@@ -34,7 +34,7 @@ const DamageSchema = new Schema<Damage>(
   { versionKey: false }
 );
 
-const ItemSchema = new Schema(
+export const ItemSchema = new Schema(
   {
     owner: reqOwner,
     name: reqName,

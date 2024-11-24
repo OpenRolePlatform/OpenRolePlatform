@@ -1,22 +1,27 @@
 import express from "express";
-
 import upload from "../../fileUpload";
 import {
+  getCampaign,
   getCampaigns,
-  getSelectCampaign,
+  getSelectedCampaign,
   postCampaign,
   putCampaign,
+  selectCampaign,
 } from "./campaign-handler";
 
+//campaign router
 const campaignRouter = express.Router();
 
-//campaign router
 //get methods
+campaignRouter.get("/loaded", getSelectedCampaign);
 campaignRouter.get("/", getCampaigns);
-campaignRouter.post("/", upload.single("image"), postCampaign);
-campaignRouter.get("/:campaignID", getSelectCampaign);
+campaignRouter.get("/:campaignID", getCampaign);
 
-//put methods
-campaignRouter.put("/:campaignID", putCampaign);
+//create and update methods
+campaignRouter.post("/", upload.single("image"), postCampaign);
+campaignRouter.put("/:campaignID", upload.single("image"), putCampaign);
+
+//select campaign
+campaignRouter.post("/:campaignID", selectCampaign);
 
 export default campaignRouter;

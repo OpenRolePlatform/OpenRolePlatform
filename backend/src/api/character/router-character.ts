@@ -1,37 +1,22 @@
 import express from "express";
+import upload from "../../fileUpload";
 import {
-  getAllCharacters,
-  getAllCharactersOwner,
   getCharacter,
-  getCharacterOtherStats,
-  getCharacterStats,
-  getHpStats,
-  getSkillsStats,
+  getCharacters,
+  postCharacter,
   putCharacter,
-  putCharacterStats,
-  putHpStats,
-  putOtherCharacterStats,
-  putSkillsStats,
 } from "./character-handler";
 
+//character router
 const characterRouter = express.Router();
 
-//character router
 //get method
-characterRouter.get("/", getAllCharacters);
-characterRouter.get("/:ownerID", getAllCharactersOwner);
-//get methods
+characterRouter.get("/", getCharacters);
+characterRouter.post("/", upload.single("image"), postCharacter);
 characterRouter.get("/:characterID", getCharacter);
-characterRouter.get("/:characterID/stats", getCharacterStats);
-characterRouter.get("/:characterID/other", getCharacterOtherStats);
-characterRouter.get("/:characterID/hp", getHpStats);
-characterRouter.get("/:characterID/skills", getSkillsStats);
+//characterRouter.get("/:ownerID", getCharactersOwner);
 
-//put methods
-characterRouter.put("/:characterID", putCharacter);
-characterRouter.put("/:characterID/stats", putCharacterStats);
-characterRouter.put("/:characterID/other", putOtherCharacterStats);
-characterRouter.put("/:characterID/hp", putHpStats);
-characterRouter.put("/:characterID/skills", putSkillsStats);
+//create and update methods
+characterRouter.put("/:characterID", upload.single("image"), putCharacter);
 
 export default characterRouter;

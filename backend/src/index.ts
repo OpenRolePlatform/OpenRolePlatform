@@ -2,7 +2,7 @@ import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import { WebSocket } from "ws";
-import connectDB from "./connectDB";
+import { ConnectionsManager } from "./ConnectionsManager";
 import { WebSocketService } from "./connectWS";
 import { routes } from "./router-main";
 
@@ -13,9 +13,7 @@ const delay = 0;
 const app = express();
 
 //database connection
-connectDB();
-//db;
-//campaignDB;
+new ConnectionsManager();
 
 function setCorsHeaders(req: any, res: any, next: () => void) {
   res.setHeader("Access-Control-Allow-Origin", "*");

@@ -1,5 +1,6 @@
 export interface Campaign {
-  name: String;
-  description: String;
-  creation_date: Date;
+  _id?: string;
+  name: string;
+  description: string;
+  creation_date?: Date;
 }

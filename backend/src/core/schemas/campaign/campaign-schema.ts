@@ -1,5 +1,4 @@
 import { Schema } from "mongoose";
-import { db } from "../../../connectDB";
 
 const reqName = {
   type: String,
@@ -8,14 +7,13 @@ const reqName = {
   unique: true,
 };
 
-const Campaigns = new Schema(
+export const CampaignSchema = new Schema(
   {
+    _id: String,
     name: reqName,
     description: String,
-    creation_date: Date,
+    creation_date: { type: Date, default: Date.now },
     image: String,
   },
   { versionKey: false }
 );
-
-export default db.model("Campaigns", Campaigns);
