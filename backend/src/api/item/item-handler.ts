@@ -1,13 +1,12 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
-import { _getAllItems } from "./routes/get-all-items";
-import { _getOneItem } from "./routes/get-one-item";
-import { _putOneItem } from "./routes/put-one-item";
+
+import { createItem, getAllItems, getItem } from "./items-controller";
 
 //get methods
 export const getOneItem = async (req: any, res: any) => {
   try {
-    const item = await _getOneItem(req.params.characterID, req.query.name);
+    const item = await getItem(req.params.characterID, req.query.name);
     if (item) {
       return res.status(StatusCodes.OK).send(item);
     } else {
@@ -21,9 +20,9 @@ export const getOneItem = async (req: any, res: any) => {
   }
 };
 
-export const getAllItems = async (req: any, res: any) => {
+export const getItems = async (req: any, res: any) => {
   try {
-    const items = await _getAllItems(req.params.characterID, req.query, false);
+    const items = await getAllItems(req.params.characterID, req.query, false);
     if (items) {
       return res.status(StatusCodes.OK).send(items);
     } else {
@@ -37,9 +36,9 @@ export const getAllItems = async (req: any, res: any) => {
   }
 };
 
-export const getAllItemsDB = async (req: any, res: any) => {
+export const getItemsDB = async (req: any, res: any) => {
   try {
-    const items = await _getAllItems("*", req.query, true);
+    const items = await getAllItems("*", req.query, true);
     if (items) {
       return res.status(StatusCodes.OK).send(items);
     } else {
@@ -56,7 +55,7 @@ export const getAllItemsDB = async (req: any, res: any) => {
 //put methods
 export const putOneItem = async (req: any, res: any) => {
   try {
-    await _putOneItem(req.params.characterID, req.query.name, req.body);
+    await createItem(req.params.characterID, req.query.name, req.body);
     res.status(StatusCodes.OK).send("Item updated correctly.");
     WebSocketService.Instance.broadcast({
       owner: req.params.characterID,

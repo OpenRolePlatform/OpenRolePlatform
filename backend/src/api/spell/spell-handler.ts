@@ -1,13 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
-import { _getAllSpells } from "./routes/get-all-spells";
-import { _getOneSpell } from "./routes/get-one-spell";
-import { _putOneSpell } from "./routes/put-one-spell";
+import { createSpell, getAllSpells, getSpell } from "./spell-controller";
 
 //get methods
 export const getOneSpell = async (req: any, res: any) => {
   try {
-    const item = await _getOneSpell(req.params.characterID, req.query.name);
+    const item = await getSpell(req.params.characterID, req.query.name);
     if (item) {
       return res.status(StatusCodes.OK).send(item);
     } else {
@@ -21,9 +19,9 @@ export const getOneSpell = async (req: any, res: any) => {
   }
 };
 
-export const getAllSpells = async (req: any, res: any) => {
+export const getSpells = async (req: any, res: any) => {
   try {
-    const items = await _getAllSpells(req.params.characterID, req.query, false);
+    const items = await getAllSpells(req.params.characterID, req.query, false);
     if (items) {
       return res.status(StatusCodes.OK).send(items);
     } else {
@@ -37,9 +35,9 @@ export const getAllSpells = async (req: any, res: any) => {
   }
 };
 
-export const getAllSpellsDB = async (req: any, res: any) => {
+export const getSpellsDB = async (req: any, res: any) => {
   try {
-    const items = await _getAllSpells(req.params.characterID, req.query, true);
+    const items = await getAllSpells(req.params.characterID, req.query, true);
     if (items) {
       return res.status(StatusCodes.OK).send(items);
     } else {
@@ -56,7 +54,7 @@ export const getAllSpellsDB = async (req: any, res: any) => {
 //put methods
 export const putOneSpell = async (req: any, res: any) => {
   try {
-    await _putOneSpell(req.params.characterID, req.query.name, req.body);
+    await createSpell(req.params.characterID, req.query.name, req.body);
     res.status(StatusCodes.OK).send("Spell updated correctly.");
     WebSocketService.Instance.broadcast({
       owner: req.params.characterID,

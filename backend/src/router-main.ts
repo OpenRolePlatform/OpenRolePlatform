@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import campaignRouter from "./api/campaign/router-campaign";
 import characterRouter from "./api/character/router-character";
 import itemRouter from "./api/item/router-item";
+import playerRouter from "./api/player/router-player";
 import spellRouter from "./api/spell/router-spell";
 
 export function routes(app: Application) {
@@ -13,6 +14,7 @@ export function routes(app: Application) {
       .json({ message: "OpenRolePlatform database loaded successfully" });
   });
 
+  app.use("/api/player", playerRouter);
   app.use("/api/campaign", campaignRouter);
   app.use("/api/character", characterRouter);
   app.use("/api/items", itemRouter);

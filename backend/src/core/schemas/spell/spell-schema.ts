@@ -1,13 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 import { Damage } from "src/core/models/damage-model";
+import { Name } from "../common";
 
 const reqOwner = {
-  type: String,
-  require: true,
-  index: true,
-};
-
-const reqName = {
   type: String,
   require: true,
   index: true,
@@ -47,7 +42,7 @@ const DamageSchema = new Schema<Damage>(
 export const SpellSchema = new Schema(
   {
     owner: reqOwner,
-    name: reqName,
+    name: Name,
     class: reqString,
     level: reqNumber,
     school: reqString,

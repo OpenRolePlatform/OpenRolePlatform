@@ -1,11 +1,5 @@
 import { Schema } from "mongoose";
-
-const reqCharacter = {
-  type: String,
-  require: true,
-  index: true,
-  unique: true,
-};
+import { Name } from "../common";
 
 const reqOwner = {
   type: String,
@@ -28,7 +22,7 @@ export const CharacterSchema = new Schema(
   {
     _id: String,
     owner: reqOwner,
-    name: reqCharacter,
+    name: Name,
     image: String,
     stats: {
       strength: reqNumber,
