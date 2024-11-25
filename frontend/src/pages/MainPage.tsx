@@ -1,7 +1,8 @@
-import { Button, Divider, Flex } from 'antd';
+import { Button, Divider, Flex, Space } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useNavigate } from 'react-router-dom';
 import { mainLogo } from '../assets/Images';
+import NewPlayer from './NewPlayer';
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -19,15 +20,19 @@ export default function MainPage() {
         </Title>
 
         <Divider />
-        <Button
-          shape="round"
-          size="large"
-          block
-          type="primary"
-          onClick={() => navigate('/dm')}
-        >
-          Enter as Dungeon Master
-        </Button>
+        <Space direction="vertical">
+          <Button
+            shape="round"
+            size="large"
+            block
+            type="primary"
+            onClick={() => navigate('/dm')}
+          >
+            Enter as Dungeon Master
+          </Button>
+
+          <NewPlayer />
+        </Space>
       </Flex>
     </>
   );
