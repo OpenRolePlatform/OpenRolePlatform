@@ -1,11 +1,13 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
-import { createSpell, getAllSpells, getSpell } from "./spell-controller";
+import { _getAllSpells } from "./routes/get-all-spells";
+import { _getSpell } from "./routes/get-spell";
+import { _putSpell } from "./routes/put-spell";
 
 //get methods
 export const getOneSpell = async (req: any, res: any) => {
   try {
-    const item = await getSpell(req.params.characterID, req.query.name);
+    const item = await _getSpell(req.params.characterID, req.query.name);
     if (item) {
       return res.status(StatusCodes.OK).send(item);
     } else {
@@ -21,7 +23,7 @@ export const getOneSpell = async (req: any, res: any) => {
 
 export const getSpells = async (req: any, res: any) => {
   try {
-    const items = await getAllSpells(req.params.characterID, req.query, false);
+    const items = await _getAllSpells(req.params.characterID, req.query, false);
     if (items) {
       return res.status(StatusCodes.OK).send(items);
     } else {
@@ -37,7 +39,7 @@ export const getSpells = async (req: any, res: any) => {
 
 export const getSpellsDB = async (req: any, res: any) => {
   try {
-    const items = await getAllSpells(req.params.characterID, req.query, true);
+    const items = await _getAllSpells(req.params.characterID, req.query, true);
     if (items) {
       return res.status(StatusCodes.OK).send(items);
     } else {
@@ -54,7 +56,7 @@ export const getSpellsDB = async (req: any, res: any) => {
 //put methods
 export const putOneSpell = async (req: any, res: any) => {
   try {
-    await createSpell(req.params.characterID, req.query.name, req.body);
+    await _putSpell(req.params.characterID, req.query.name, req.body);
     res.status(StatusCodes.OK).send("Spell updated correctly.");
     WebSocketService.Instance.broadcast({
       owner: req.params.characterID,
