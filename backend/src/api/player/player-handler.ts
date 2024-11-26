@@ -1,16 +1,14 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
-import {
-  createPlayer,
-  getAllPlayers,
-  getPlayerDetails,
-  updatePlayer,
-} from "./player-controller";
+import { _getPlayerDetails } from "./routes/get-player-details";
+import { _getAllPlayers } from "./routes/get-players";
+import { _postPlayer } from "./routes/post-player";
+import { _putPlayer } from "./routes/put-player";
 
 //get methods
 export const getPlayers = async (req: any, res: any) => {
   try {
-    const players = await getAllPlayers();
+    const players = await _getAllPlayers();
     if (players) return res.status(StatusCodes.OK).send(players);
     else return res.status(StatusCodes.NOT_FOUND).send("Players not found.");
   } catch (error) {
@@ -23,7 +21,7 @@ export const getPlayers = async (req: any, res: any) => {
 
 export const getPlayer = async (req: any, res: any) => {
   try {
-    const player = await getPlayerDetails(req.params.playerID);
+    const player = await _getPlayerDetails(req.params.playerID);
     if (!player)
       return res.status(StatusCodes.NOT_FOUND).send("Player not found.");
     else res.status(StatusCodes.OK).send(player);
@@ -44,7 +42,7 @@ export const postPlayer = async (req: any, res: any) => {
     if (req.file) {
       body.image = `images/${req.file.filename}`;
     }
-    const newPlayer = await createPlayer(body);
+    const newPlayer = await _postPlayer(body);
     //player already exists
     if (!newPlayer)
       return res
@@ -72,7 +70,7 @@ export const putPlayer = async (req: any, res: any) => {
     if (req.file) {
       body.image = `images/${req.file.filename}`;
     }
-    let updatedPlayer = await updatePlayer(req.params.playerID, req.body);
+    let updatedPlayer = await _putPlayer(req.params.playerID, req.body);
     if (!updatedPlayer)
       return res.status(StatusCodes.NOT_FOUND).send("Player not found.");
     res.status(StatusCodes.OK).send("Player updated correctly.");
