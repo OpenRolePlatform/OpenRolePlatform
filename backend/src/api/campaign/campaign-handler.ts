@@ -1,18 +1,16 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
-import {
-  createCampaign,
-  getAllCampaigns,
-  getCampaignDetails,
-  getLoadedCampaign,
-  loadCampaign,
-  updateCampaign,
-} from "./campaigns-controller";
+import { _getActiveCampaign } from "./routes/get-active-campaign";
+import { _getCampaign } from "./routes/get-campaign";
+import { _getCampaigns } from "./routes/get-campaigns";
+import { _getLoadCampaign } from "./routes/get-load-campaign";
+import { _postCampaign } from "./routes/post-campaign";
+import { _putCampaign } from "./routes/put-campaign";
 
 //get methods
 export const getCampaigns = async (req: any, res: any) => {
   try {
-    const campaigns = await getAllCampaigns();
+    const campaigns = await _getCampaigns();
     if (campaigns) return res.status(StatusCodes.OK).send(campaigns);
     else return res.status(StatusCodes.NOT_FOUND).send("Campaigns not found.");
   } catch (error) {
@@ -25,7 +23,7 @@ export const getCampaigns = async (req: any, res: any) => {
 
 export const getCampaign = async (req: any, res: any) => {
   try {
-    const campaign = await getCampaignDetails(req.params.campaignID);
+    const campaign = await _getCampaign(req.params.campaignID);
     if (!campaign)
       return res.status(StatusCodes.NOT_FOUND).send("Campaign not found.");
     else res.status(StatusCodes.OK).send(campaign);
@@ -39,14 +37,47 @@ export const getCampaign = async (req: any, res: any) => {
   }
 };
 
-//post campaign
+export const selectCampaign = async (req: any, res: any) => {
+  try {
+    let selectedCampaign = await _getLoadCampaign(req.params.campaignID);
+    if (!selectedCampaign)
+      return res.status(StatusCodes.NOT_FOUND).send("Campaign not found.");
+    res.status(StatusCodes.OK).send("Campaign loaded correctly.");
+    WebSocketService.Instance.broadcast({
+      type: "CampaignLoad",
+      model: "campaign",
+      data: selectCampaign,
+    });
+  } catch (error) {
+    console.error("Error while trying to change the campaigns.", error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send("Error while trying to change the campaigns." + error.message);
+  }
+};
+
+export const getSelectedCampaign = async (req: any, res: any) => {
+  try {
+    let selectedCampaign = await _getActiveCampaign();
+    if (!selectedCampaign)
+      return res.status(StatusCodes.NOT_FOUND).send("Campaign not loaded.");
+    res.status(StatusCodes.OK).send(selectedCampaign);
+  } catch (error) {
+    console.error("Error while trying to get the loaded campaign.", error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send("Error while trying to get the loaded campaign." + error.message);
+  }
+};
+
+//post methods
 export const postCampaign = async (req: any, res: any) => {
   try {
     let body = req.body;
     if (req.file) {
       body.image = `images/${req.file.filename}`;
     }
-    const newCampaign = await createCampaign(body);
+    const newCampaign = await _postCampaign(body);
     //campaign already exists
     if (!newCampaign)
       return res
@@ -74,7 +105,7 @@ export const putCampaign = async (req: any, res: any) => {
     if (req.file) {
       body.image = `images/${req.file.filename}`;
     }
-    let updatedCampaign = await updateCampaign(req.params.campaignID, req.body);
+    let updatedCampaign = await _putCampaign(req.params.campaignID, req.body);
     if (!updatedCampaign)
       return res.status(StatusCodes.NOT_FOUND).send("Campaign not found.");
     res.status(StatusCodes.OK).send("Campaign updated correctly.");
@@ -88,38 +119,5 @@ export const putCampaign = async (req: any, res: any) => {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send("Error while trying to update the campaign: " + error.message);
-  }
-};
-
-export const selectCampaign = async (req: any, res: any) => {
-  try {
-    let selectedCampaign = await loadCampaign(req.params.campaignID);
-    if (!selectedCampaign)
-      return res.status(StatusCodes.NOT_FOUND).send("Campaign not found.");
-    res.status(StatusCodes.OK).send("Campaign loaded correctly.");
-    WebSocketService.Instance.broadcast({
-      type: "CampaignLoad",
-      model: "campaign",
-      data: selectCampaign,
-    });
-  } catch (error) {
-    console.error("Error while trying to change the campaigns.", error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to change the campaigns." + error.message);
-  }
-};
-
-export const getSelectedCampaign = async (req: any, res: any) => {
-  try {
-    let selectedCampaign = await getLoadedCampaign();
-    if (!selectedCampaign)
-      return res.status(StatusCodes.NOT_FOUND).send("Campaign not loaded.");
-    res.status(StatusCodes.OK).send(selectedCampaign);
-  } catch (error) {
-    console.error("Error while trying to get the loaded campaign.", error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to get the loaded campaign." + error.message);
   }
 };

@@ -1,5 +1,5 @@
 import { Spell } from "src/core/models/spell/spell-model";
-import { ConnectionsManager } from "../../ConnectionsManager";
+import { ConnectionsManager } from "../../connectDB";
 
 const SpellModel = () => ConnectionsManager.Instance.campaignDB.model("Spell");
 

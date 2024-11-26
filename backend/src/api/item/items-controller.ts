@@ -1,4 +1,4 @@
-import { ConnectionsManager } from "../../ConnectionsManager";
+import { ConnectionsManager } from "../../connectDB";
 import { Item } from "../../core/models/item/item-model";
 
 const ItemModel = () => ConnectionsManager.Instance.campaignDB.model("Item");

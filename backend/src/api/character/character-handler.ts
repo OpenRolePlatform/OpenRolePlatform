@@ -9,7 +9,7 @@ import {
   updateCharacter,
 } from "./characters-controller";
 
-//get method
+//get methods
 
 export const getCharacters = async (req: any, res: any) => {
   try {
@@ -43,7 +43,6 @@ export const getCharactersOwner = async (req: any, res: any) => {
   }
 };
 
-//get methods
 export const getCharacter = async (req: any, res: any) => {
   try {
     const character = await getCharacterDetails(req.params.characterID);
@@ -85,7 +84,6 @@ export const postCharacter = async (req: any, res: any) => {
   }
 };
 
-//put methods
 export const putCharacter = async (req: any, res: any) => {
   try {
     let body = req.body;

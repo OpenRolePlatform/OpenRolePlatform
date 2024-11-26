@@ -34,6 +34,7 @@
     "backend-websockets",
     "backend-items",
     "backend-character",
-    "backend-spells"
+    "backend-spells",
+    "backend-campaign"
   ]
 }

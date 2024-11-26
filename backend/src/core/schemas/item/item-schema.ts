@@ -1,23 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import { Schema } from "mongoose";
 import { Damage } from "src/core/models/damage-model";
-import { Name } from "../common";
-
-const reqOwner = {
-  type: String,
-  require: true,
-  index: true,
-};
-
-const reqBool = {
-  type: Boolean,
-  require: true,
-  index: true,
-};
-
-const reqString = {
-  type: String,
-  require: true,
-};
+import { ReqBool, ReqName, ReqOwner, ReqString } from "../common";
 
 const DamageSchema = new Schema<Damage>(
   {
@@ -31,17 +14,17 @@ const DamageSchema = new Schema<Damage>(
 
 export const ItemSchema = new Schema(
   {
-    owner: reqOwner,
-    name: Name,
+    owner: ReqOwner,
+    name: ReqName,
     description: String,
-    equipable: reqBool,
-    equipped: reqBool,
-    type: reqString,
+    equipable: ReqBool,
+    equipped: ReqBool,
+    type: ReqString,
     bonus: Number,
     damage: DamageSchema,
-    hidden: reqBool,
+    hidden: ReqBool,
   },
   { versionKey: false }
 );
 
-export default mongoose.model("Item", ItemSchema);
+//export default mongoose.model("Item", ItemSchema);

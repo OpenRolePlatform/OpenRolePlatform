@@ -1,10 +1,10 @@
 import { Schema } from "mongoose";
-import { Name } from "../common";
+import { ReqName } from "../common";
 
 export const CampaignSchema = new Schema(
   {
     _id: String,
-    name: Name,
+    name: ReqName,
     description: String,
     creation_date: { type: Date, default: Date.now },
     image: String,

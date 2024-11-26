@@ -1,33 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import { Schema } from "mongoose";
 import { Damage } from "src/core/models/damage-model";
-import { Name } from "../common";
-
-const reqOwner = {
-  type: String,
-  require: true,
-  index: true,
-};
-
-const reqBoolIndex = {
-  type: Boolean,
-  require: true,
-  index: true,
-};
-
-const reqBool = {
-  type: Boolean,
-  require: true,
-};
-
-const reqString = {
-  type: String,
-  require: true,
-};
-
-const reqNumber = {
-  type: Number,
-  require: true,
-};
+import { ReqBool, ReqName, ReqNumber, ReqOwner, ReqString } from "../common";
 
 const DamageSchema = new Schema<Damage>(
   {
@@ -41,29 +14,29 @@ const DamageSchema = new Schema<Damage>(
 
 export const SpellSchema = new Schema(
   {
-    owner: reqOwner,
-    name: Name,
-    class: reqString,
-    level: reqNumber,
-    school: reqString,
-    casting_time: reqNumber,
-    duration: reqNumber,
-    range: reqNumber,
-    shape: reqString,
+    owner: ReqOwner,
+    name: ReqName,
+    class: ReqString,
+    level: ReqNumber,
+    school: ReqString,
+    casting_time: ReqNumber,
+    duration: ReqNumber,
+    range: ReqNumber,
+    shape: ReqString,
     components: {
-      verbal: reqBool,
-      somatic: reqBool,
-      material: reqBool,
+      verbal: ReqBool,
+      somatic: ReqBool,
+      material: ReqBool,
     },
     description: String,
-    equipable: reqBoolIndex,
-    equipped: reqBoolIndex,
-    type: reqString,
+    equipable: ReqBool,
+    equipped: ReqBool,
+    type: ReqString,
     bonus: Number,
     damage: DamageSchema,
-    hidden: reqBoolIndex,
+    hidden: ReqBool,
   },
   { versionKey: false }
 );
 
-export default mongoose.model("Spell", SpellSchema);
+//export default mongoose.model("Spell", SpellSchema);

@@ -2,7 +2,7 @@ import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import { WebSocket } from "ws";
-import { ConnectionsManager } from "./ConnectionsManager";
+import { ConnectionsManager } from "./connectDB";
 import { WebSocketService } from "./connectWS";
 import { routes } from "./router-main";
 

@@ -1,4 +1,4 @@
-import { ConnectionsManager } from "../../ConnectionsManager";
+import { ConnectionsManager } from "../../connectDB";
 import { Player } from "../../core/models/player-model";
 import { normalizeString } from "../../stringNormalizer";
 
