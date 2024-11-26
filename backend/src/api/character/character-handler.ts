@@ -1,19 +1,17 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
 
-import {
-  createCharacter,
-  getAllCharacters,
-  getAllCharactersOwner,
-  getCharacterDetails,
-  updateCharacter,
-} from "./characters-controller";
+import { _getCharacters } from "./routes/get-characters";
 
+import { _getCharacter } from "./routes/get-character";
+import { _getCharactersOwner } from "./routes/get-characters-owner";
+import { _postCharacter } from "./routes/post-character";
+import { _putCharacter } from "./routes/put-character";
 //get methods
 
 export const getCharacters = async (req: any, res: any) => {
   try {
-    const characters = await getAllCharacters();
+    const characters = await _getCharacters();
     if (characters) {
       return res.status(StatusCodes.OK).send(characters);
     } else {
@@ -29,7 +27,7 @@ export const getCharacters = async (req: any, res: any) => {
 
 export const getCharactersOwner = async (req: any, res: any) => {
   try {
-    const characters = await getAllCharactersOwner(req.params.ownerID);
+    const characters = await _getCharactersOwner(req.params.ownerID);
     if (characters) {
       return res.status(StatusCodes.OK).send(characters);
     } else {
@@ -45,7 +43,7 @@ export const getCharactersOwner = async (req: any, res: any) => {
 
 export const getCharacter = async (req: any, res: any) => {
   try {
-    const character = await getCharacterDetails(req.params.characterID);
+    const character = await _getCharacter(req.params.characterID);
     if (!character)
       return res.status(StatusCodes.NOT_FOUND).send("Character not found.");
 
@@ -58,14 +56,14 @@ export const getCharacter = async (req: any, res: any) => {
   }
 };
 
-//put methods
+//post methods
 export const postCharacter = async (req: any, res: any) => {
   try {
     let body = req.body;
     if (req.file) {
       body.image = `images/${req.file.filename}`;
     }
-    let newCharacter = await createCharacter(req.body);
+    let newCharacter = await _postCharacter(req.body);
     if (!newCharacter)
       return res
         .status(StatusCodes.NOT_FOUND)
@@ -84,18 +82,19 @@ export const postCharacter = async (req: any, res: any) => {
   }
 };
 
+//put methods
 export const putCharacter = async (req: any, res: any) => {
   try {
     let body = req.body;
     if (req.file) {
       body.image = `images/${req.file.filename}`;
     }
-    let updatedCharacter = await updateCharacter(
+    let updatedCharacter = await _putCharacter(
       req.params.characterID,
       req.body
     );
     if (!updatedCharacter)
-      return res.status(StatusCodes.NOT_FOUND).send(updateCharacter);
+      return res.status(StatusCodes.NOT_FOUND).send(updatedCharacter);
     res.status(StatusCodes.OK).send(updatedCharacter);
     WebSocketService.Instance.broadcast({
       type: "Update",
