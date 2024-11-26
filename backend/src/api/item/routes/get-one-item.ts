@@ -1,7 +1,9 @@
-import ItemSchema from "../../../core/schemas/item/item-schema";
+import { ConnectionsManager } from "../../../connectDB";
+
+const ItemModel = () => ConnectionsManager.Instance.campaignDB.model("Item");
 
 export async function _getOneItem(owner: String, name: String) {
-  return await ItemSchema.findOne({
+  return await ItemModel().findOne({
     owner: owner,
     name: name,
   });
