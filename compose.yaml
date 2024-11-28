@@ -1,0 +1,31 @@
+services:
+  frontend:
+    build: frontend/.
+    ports:
+      - "3002:3002"
+    networks:
+      - frontend
+
+  backend:
+    build: backend/.
+    ports:
+      - "3001:3000"
+    networks:
+      - frontend
+      - backend
+
+  database:
+    image: mongo:8.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+    networks:
+      - backend
+
+networks:
+  frontend:
+    driver: bridge
+
+  backend:
+    driver: bridge
