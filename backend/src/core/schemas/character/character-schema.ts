@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { ReqBool, ReqName, ReqNumber, ReqOwner } from "../common";
+import { ReqBool, ReqName, ReqNumber } from "../common";
 
 export const StatNumber = {
   type: Number,
@@ -10,7 +10,13 @@ export const StatNumber = {
 export const CharacterSchema = new Schema(
   {
     _id: String,
-    owner: ReqOwner,
+    owner: {
+      type: String,
+      ref: "Player",
+      require: true,
+      index: true,
+      unique: false,
+    },
     name: ReqName,
     image: String,
     stats: {

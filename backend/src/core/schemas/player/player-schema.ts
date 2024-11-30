@@ -8,7 +8,7 @@ export const PlayerSchema = new Schema(
     description: String,
     creation_date: { type: Date, default: Date.now },
     image: String,
-    campaigns: [{ type: Schema.Types.ObjectId, ref: "Champaign" }],
+    campaigns: [{ type: String, ref: "Campaign", default: [], unique: true }],
   },
   { versionKey: false }
 );

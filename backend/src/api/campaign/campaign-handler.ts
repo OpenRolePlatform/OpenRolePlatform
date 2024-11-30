@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
 import { _getActiveCampaign } from "./routes/get-active-campaign";
-import { _getCampaign } from "./routes/get-campaign";
+import { _getCampaign, _getCampaignPlayers } from "./routes/get-campaign";
 import { _getCampaigns } from "./routes/get-campaigns";
 import { _getLoadCampaign } from "./routes/get-load-campaign";
 import { _postCampaign } from "./routes/post-campaign";
@@ -24,6 +24,22 @@ export const getCampaigns = async (req: any, res: any) => {
 export const getCampaign = async (req: any, res: any) => {
   try {
     const campaign = await _getCampaign(req.params.campaignID);
+    if (!campaign)
+      return res.status(StatusCodes.NOT_FOUND).send("Campaign not found.");
+    else res.status(StatusCodes.OK).send(campaign);
+  } catch (error) {
+    console.error("Error while trying to obtain the campaign details.", error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send(
+        "Error while trying to obtain the campaign details: " + error.message
+      );
+  }
+};
+
+export const getCampaignPlayers = async (req: any, res: any) => {
+  try {
+    const campaign = await _getCampaignPlayers(req.params.campaignID);
     if (!campaign)
       return res.status(StatusCodes.NOT_FOUND).send("Campaign not found.");
     else res.status(StatusCodes.OK).send(campaign);

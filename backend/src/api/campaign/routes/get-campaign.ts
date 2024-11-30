@@ -9,3 +9,8 @@ const CampaignModel = () => ConnectionsManager.Instance.db.model("Campaign");
 export async function _getCampaign(id: string) {
   return await CampaignModel().findById(id);
 }
+
+export async function _getCampaignPlayers(id: string) {
+  let campaign = await CampaignModel().findById(id).populate("players");
+  return campaign.players;
+}

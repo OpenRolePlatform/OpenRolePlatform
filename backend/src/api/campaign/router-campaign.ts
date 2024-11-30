@@ -2,6 +2,7 @@ import express from "express";
 import upload from "../../fileUpload";
 import {
   getCampaign,
+  getCampaignPlayers,
   getCampaigns,
   getSelectedCampaign,
   postCampaign,
@@ -16,6 +17,7 @@ const campaignRouter = express.Router();
 campaignRouter.get("/loaded", getSelectedCampaign);
 campaignRouter.get("/", getCampaigns);
 campaignRouter.get("/:campaignID", getCampaign);
+campaignRouter.get("/:campaignID/players", getCampaignPlayers);
 
 //create and update methods
 campaignRouter.post("/", upload.single("image"), postCampaign);

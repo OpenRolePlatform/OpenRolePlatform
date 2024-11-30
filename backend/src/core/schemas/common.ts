@@ -7,6 +7,7 @@ export const ReqName = {
 
 export const ReqOwner = {
   type: String,
+  ref: "Character",
   require: true,
   index: true,
   unique: false,
