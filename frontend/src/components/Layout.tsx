@@ -57,7 +57,13 @@ function LayoutWrap() {
     if (playerContext.role === 'dm') setMenuRoutes(DmRoutes);
     else if (playerContext.role === 'player') setMenuRoutes(PlayerRoutes);
     else setMenuRoutes([]);
-  });
+  }, [playerContext.role]);
+
+  useEffect(() => {
+    if (location.pathname !== '/' && !playerContext.role) {
+      navigate('/');
+    }
+  }, [location, navigate, playerContext.role]);
 
   return (
     <ConfigProvider

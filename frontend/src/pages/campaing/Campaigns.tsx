@@ -1,5 +1,19 @@
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import { Avatar, Button, Card, Col, List, message, Row, Skeleton } from 'antd';
+import { SmileySad } from '@phosphor-icons/react';
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  ConfigProvider,
+  Flex,
+  List,
+  message,
+  Row,
+  Skeleton,
+  Space,
+} from 'antd';
+import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMount } from 'react-use';
@@ -9,6 +23,16 @@ import { Campaign } from '../../models/CampaignModels';
 import { getCampaigns, selectCampaign } from '../../services/CampaingServices';
 import { getBackendImage } from '../../utils/images';
 import NewCampaign from './NewCampaign';
+
+const EmptyCampaigns = () => {
+  return (
+    <Space direction="vertical" align="center">
+      <SmileySad size={32} />
+      <p>No campaigns created</p>
+      <p>Create a new campaign to start playing!!</p>
+    </Space>
+  );
+};
 
 export default function CampaignDetails() {
   const navigate = useNavigate();
@@ -27,6 +51,7 @@ export default function CampaignDetails() {
       setCampaigns(data);
       setLoading(false);
     } catch (error) {
+      setCampaigns([]);
       console.log(error);
     }
   });
@@ -43,88 +68,91 @@ export default function CampaignDetails() {
 
   return (
     <>
-      {breakpoint === 'mobile' ? (
-        <List
-          //loading={loading}
-          itemLayout="horizontal"
-          size="large"
-          dataSource={campaigns}
-          renderItem={(campaign) => (
-            <List.Item
-              onClick={() => navigate(`/campaigns/${campaign.name}`)}
-              actions={
-                loading
-                  ? []
-                  : [
-                      <Button
-                        variant="filled"
-                        onClick={() => loadCampaign(campaign._id)}
-                      >
-                        Load Campaign
-                      </Button>,
-                    ]
-              }
-            >
-              <Skeleton loading={loading} active avatar>
-                <List.Item.Meta
-                  avatar={
-                    campaign.image ? (
-                      <Avatar
-                        size="large"
-                        src={getBackendImage(campaign.image)}
-                      />
-                    ) : (
-                      <Avatar size="large" icon={<MenuBookIcon />} />
-                    )
+      <ErrorBoundary>
+        <ConfigProvider renderEmpty={EmptyCampaigns}>
+          {breakpoint === 'mobile' ? (
+            <List
+              itemLayout="horizontal"
+              size="large"
+              dataSource={campaigns}
+              renderItem={(campaign) => (
+                <List.Item
+                  extra={
+                    loading
+                      ? []
+                      : [
+                          <Flex style={{ width: '100%' }} justify="end">
+                            <Button
+                              variant="filled"
+                              onClick={() => loadCampaign(campaign._id)}
+                            >
+                              Load Campaign
+                            </Button>
+                          </Flex>,
+                        ]
                   }
-                  title={campaign.name}
-                  description={campaign.description}
-                />
-              </Skeleton>
-            </List.Item>
-          )}
-        />
-      ) : (
-        <Row align="stretch" gutter={[12, 12]}>
-          {campaigns.map((campaign, index) => (
-            <Col
-              key={`col-${index}`}
-              xs={{ flex: '100%' }}
-              sm={{ flex: '50%' }}
-              md={{ flex: '33%' }}
-              lg={{ flex: '20%' }}
-              xl={{ flex: '20%' }}
-            >
-              {loading ? (
-                <Card
-                  style={{ height: '100%' }}
-                  cover={<Skeleton.Node style={{ width: '100%' }} active />}
                 >
-                  <Skeleton.Input style={{ width: '100%' }} active />
-                </Card>
-              ) : (
-                <Card
-                  style={{ height: '100%' }}
-                  cover={
-                    campaign.image ? (
-                      <img
-                        /*  style={{ maxHeight: 300 }} */
-                        src={getBackendImage(campaign.image)}
-                      />
-                    ) : (
-                      <MenuBookIcon style={{ height: '100%' }} />
-                    )
-                  }
-                  onClick={() => navigate(`/campaigns/${campaign.name}`)}
-                >
-                  <h3>{campaign.name}</h3>
-                </Card>
+                  <Skeleton loading={loading} title={false} active avatar>
+                    <List.Item.Meta
+                      avatar={
+                        campaign.image ? (
+                          <Avatar
+                            size="large"
+                            src={getBackendImage(campaign.image)}
+                          />
+                        ) : (
+                          <Avatar size="large" icon={<MenuBookIcon />} />
+                        )
+                      }
+                      title={campaign.name}
+                    />
+                    {campaign.description}
+                  </Skeleton>
+                </List.Item>
               )}
-            </Col>
-          ))}
-        </Row>
-      )}
-
+            />
+          ) : (
+            <Row align="stretch" gutter={[12, 12]}>
+              {campaigns.map((campaign, index) => (
+                <Col
+                  key={`col-${index}`}
+                  xs={{ flex: '100%' }}
+                  sm={{ flex: '50%' }}
+                  md={{ flex: '33%' }}
+                  lg={{ flex: '20%' }}
+                  xl={{ flex: '20%' }}
+                >
+                  {loading ? (
+                    <Card
+                      style={{ height: '100%' }}
+                      cover={<Skeleton.Node style={{ width: '100%' }} active />}
+                    >
+                      <Skeleton.Input style={{ width: '100%' }} active />
+                    </Card>
+                  ) : (
+                    <Card
+                      style={{ height: '100%' }}
+                      cover={
+                        campaign.image ? (
+                          <img
+                            /*  style={{ maxHeight: 300 }} */
+                            src={getBackendImage(campaign.image)}
+                          />
+                        ) : (
+                          <MenuBookIcon style={{ height: '100%' }} />
+                        )
+                      }
+                      onClick={() => navigate(`/campaigns/${campaign.name}`)}
+                    >
+                      <h3>{campaign.name}</h3>
+                    </Card>
+                  )}
+                </Col>
+              ))}
+            </Row>
+          )}
+        </ConfigProvider>
+      </ErrorBoundary>
       <NewCampaign />
     </>
   );
