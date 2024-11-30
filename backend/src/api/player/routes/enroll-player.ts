@@ -14,14 +14,14 @@ const CampaignModel = () => ConnectionsManager.Instance.db.model("Campaign");
  */
 export async function _enrollPlayer(id: string, campaign: string) {
   let player = await PlayerModel().findById(id);
-
   let campaignInstance = await CampaignModel().findById(campaign);
-  if (player?.campaigns) player?.campaigns.push(campaign);
-  else player?.set("campaigns", [campaign]);
 
-  campaignInstance.players.push(player?._id);
+  if (!player?.campaigns.includes(campaign)) player?.campaigns.push(campaign);
+  if (!campaignInstance.players.includes(id))
+    campaignInstance.players.push(player?._id);
+
   campaignInstance.save();
   player?.save();
 
-  return player;
+  return [player, campaignInstance];
 }

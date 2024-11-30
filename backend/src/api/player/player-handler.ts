@@ -109,7 +109,7 @@ export const putPlayer = async (req: any, res: any) => {
 
 export const enrollPlayer = async (req: any, res: any) => {
   try {
-    let updatedPlayer = await _enrollPlayer(
+    const [updatedPlayer, updatedCampaign] = await _enrollPlayer(
       req.params.playerID,
       req.params.campaignID
     );
@@ -124,7 +124,7 @@ export const enrollPlayer = async (req: any, res: any) => {
     WebSocketService.Instance.broadcast({
       type: "Update",
       model: "campaign",
-      data: updatedPlayer,
+      data: updatedCampaign,
     });
   } catch (error) {
     console.error("Error while trying to update the player.", error);

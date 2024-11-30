@@ -38,8 +38,15 @@ export const CampaignProvider: React.FC<CampaignProviderProps> = ({
     },
     onMessage: (event) => {
       const message = JSON.parse(event.data);
-      if (message.model === 'campaign' && message.type === 'CampaignLoad') {
-        setCampaign(message.data);
+      if (message.model === 'campaign') {
+        if (message.type === 'CampaignLoad') {
+          setCampaign(message.data);
+        } else if (
+          message.type === 'Update' &&
+          message.data._id === campaign?._id
+        ) {
+          setCampaign(message.data);
+        }
       }
     },
   });
