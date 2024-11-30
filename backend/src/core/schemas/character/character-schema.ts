@@ -1,6 +1,12 @@
 import { Schema } from "mongoose";
 import { ReqBool, ReqName, ReqNumber, ReqOwner } from "../common";
 
+export const StatNumber = {
+  type: Number,
+  required: true,
+  default: 10,
+};
+
 export const CharacterSchema = new Schema(
   {
     _id: String,
@@ -8,12 +14,12 @@ export const CharacterSchema = new Schema(
     name: ReqName,
     image: String,
     stats: {
-      strength: ReqNumber,
-      dexterity: ReqNumber,
-      constitution: ReqNumber,
-      intelligence: ReqNumber,
-      wisdom: ReqNumber,
-      charisma: ReqNumber,
+      strength: StatNumber,
+      dexterity: StatNumber,
+      constitution: StatNumber,
+      intelligence: StatNumber,
+      wisdom: StatNumber,
+      charisma: StatNumber,
     },
     skills: {
       strength: ReqBool,

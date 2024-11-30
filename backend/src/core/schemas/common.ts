@@ -15,6 +15,7 @@ export const ReqOwner = {
 export const ReqBool = {
   type: Boolean,
   require: true,
+  default: false,
 };
 
 export const ReqString = {
@@ -25,4 +26,5 @@ export const ReqString = {
 export const ReqNumber = {
   type: Number,
   required: true,
+  default: 0,
 };

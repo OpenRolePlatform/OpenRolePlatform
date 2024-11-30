@@ -46,7 +46,7 @@ export const selectCampaign = async (req: any, res: any) => {
     WebSocketService.Instance.broadcast({
       type: "CampaignLoad",
       model: "campaign",
-      data: selectCampaign,
+      data: selectedCampaign,
     });
   } catch (error) {
     console.error("Error while trying to change the campaigns.", error);
