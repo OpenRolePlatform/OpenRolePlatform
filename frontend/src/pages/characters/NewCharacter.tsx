@@ -13,6 +13,7 @@ import {
   UploadProps,
 } from 'antd';
 import { useState } from 'react';
+import { usePlayer } from '../../components/PlayerContext';
 import { newCharacter } from '../../services/CharacterServices';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -64,12 +65,13 @@ const RacesOptions = [
 ];
 
 export default function NewCharacter() {
+  const { message } = App.useApp();
+  const playerContext = usePlayer();
+
   const [form] = Form.useForm();
 
   const [imageUrl, setImageUrl] = useState<string>('');
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
-
-  const { message } = App.useApp();
 
   const onFinish: FormProps['onFinish'] = async (values) => {
     const formData = new FormData();
@@ -112,7 +114,13 @@ export default function NewCharacter() {
           onFinish={onFinish}
           layout="vertical"
           onFinishFailed={onFinishFailed}
+          initialValues={{
+            owner: playerContext.player?._id,
+          }}
         >
+          <Form.Item name="owner" hidden>
+            <Input />
+          </Form.Item>
           <Form.Item
             label="Name"
             name="name"

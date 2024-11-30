@@ -63,14 +63,14 @@ export default function Players() {
               <Skeleton loading={loading} active avatar>
                 <List.Item.Meta
                   avatar={
-                    player.image ? (
-                      <Avatar
-                        size="large"
-                        src={getBackendImage(player.image)}
-                      />
-                    ) : (
-                      <Avatar size="large" src={DEFAULT_AVATAR} />
-                    )
+                    <Avatar
+                      size="large"
+                      src={
+                        player.image
+                          ? getBackendImage(player.image)
+                          : DEFAULT_AVATAR
+                      }
+                    />
                   }
                   title={player.name}
                 />
@@ -88,7 +88,7 @@ export default function Players() {
         type="text"
         variant="filled"
       >
-        Select Player
+        Enter as Player
       </Button>
     </>
   );
