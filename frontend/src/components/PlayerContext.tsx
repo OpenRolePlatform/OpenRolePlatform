@@ -9,6 +9,7 @@ interface PlayerContextType {
   selectPlayer: (newPlayer: Player) => void;
   role: Role | undefined;
   selectDM: () => void;
+  logout: () => void;
 }
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -36,12 +37,13 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
 
   function deletePlayer() {
     setPlayer(undefined);
+    setRole(undefined);
     localStorage.removeItem('player');
   }
 
   function deleteDM() {
-    setRole('player');
-    localStorage.setItem('role', 'player');
+    setRole(undefined);
+    localStorage.removeItem('role');
   }
 
   async function load() {
@@ -63,6 +65,11 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
     } else deletePlayer();
   }
 
+  function logout() {
+    if (role === 'dm') deleteDM();
+    else deletePlayer();
+  }
+
   useMount(() => {
     load();
   });
@@ -72,6 +79,7 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
     selectPlayer,
     role,
     selectDM,
+    logout,
   };
 
   return (

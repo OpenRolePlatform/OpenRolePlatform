@@ -2,6 +2,7 @@ import { Button, Divider, Flex, Space } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MasterIcon } from '../assets/Icons';
 import { mainLogo } from '../assets/Images';
 import { usePlayer } from '../components/PlayerContext';
 import Players from './Players';
@@ -12,7 +13,7 @@ export default function MainPage() {
 
   useEffect(() => {
     if (player.role === 'dm') {
-      navigate('/dm');
+      navigate('/campaigns');
     } else if (player.role === 'player') navigate('/characters');
   });
 
@@ -35,10 +36,12 @@ export default function MainPage() {
             size="large"
             block
             type="primary"
+            icon={MasterIcon}
             onClick={() => player.selectDM()}
           >
             Enter as Dungeon Master
           </Button>
+          <Divider>or</Divider>
           <Players />
         </Space>
       </Flex>
