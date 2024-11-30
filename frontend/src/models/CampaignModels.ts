@@ -1,3 +1,5 @@
+import { Player } from './PlayerModels';
+
 export interface ExampleCampaign {
   id: string;
   title: string;
@@ -17,4 +19,5 @@ export interface Campaign {
   description: string;
   creation_date: Date;
   image?: string;
+  players: Array<string> | Array<Player>;
 }

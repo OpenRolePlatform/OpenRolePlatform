@@ -26,6 +26,7 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
     if (role === 'dm') deleteDM();
     setPlayer(newPlayer);
     setRole('player');
+    localStorage.setItem('role', 'player');
     localStorage.setItem('player', newPlayer._id);
   }
 

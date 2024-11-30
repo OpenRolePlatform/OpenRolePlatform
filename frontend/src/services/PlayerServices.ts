@@ -55,3 +55,20 @@ export async function newPlayer(player: FormData) {
     throw error;
   }
 }
+
+export async function enrollCampaign(player: string, campaign: string) {
+  try {
+    const response = await fetch(`/api/player/${player}/enroll/${campaign}`, {
+      method: 'PUT',
+    });
+    if (response.ok) {
+      if (response.status === 200) return await response.json();
+    } else {
+      console.error('Error creating the new player');
+      throw new Error(response.statusText);
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

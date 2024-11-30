@@ -1,10 +1,15 @@
 import { Character } from '../models/CharacterModels';
 
-export async function getCharacters() {
+export async function getCharacters(
+  query?: Partial<Pick<Character, 'class' | 'owner' | 'race'>>,
+) {
   try {
-    const response = await fetch(`/api/character/`, {
-      method: 'GET',
-    });
+    const response = await fetch(
+      `/api/character?` + new URLSearchParams(query).toString(),
+      {
+        method: 'GET',
+      },
+    );
     if (response.ok) {
       if (response.status === 200) return await response.json();
     } else {
