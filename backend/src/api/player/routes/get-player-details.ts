@@ -7,5 +7,5 @@ const PlayerModel = () => ConnectionsManager.Instance.db.model("Player");
  * @returns Details of the players
  */
 export async function _getPlayerDetails(id: string) {
-  return await PlayerModel().findById(id).populate(["dm", "player"]);
+  return await PlayerModel().findById(id).populate("campaign");
 }
