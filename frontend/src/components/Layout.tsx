@@ -32,6 +32,8 @@ const ThemeTokens = {
   borderRadius: 8,
 };
 
+export const BREAKPOINTS = { mobile: 0, tablet: 576, desktop: 1280 };
+
 function LayoutWrap() {
   const navigate = useNavigate();
   const location = useLocation();

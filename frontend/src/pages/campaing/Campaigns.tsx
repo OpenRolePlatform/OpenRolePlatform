@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMount } from 'react-use';
 import useBreakpoint from 'use-breakpoint';
+import { BREAKPOINTS } from '../../components/Layout';
 import { Campaign } from '../../models/CampaignModels';
 import { getCampaigns, selectCampaign } from '../../services/CampaingServices';
 import { getBackendImage } from '../../utils/images';
 import NewCampaign from './NewCampaign';
-const BREAKPOINTS = { mobile: 0, tablet: 576, desktop: 1280 };
 
 export default function CampaignDetails() {
   const navigate = useNavigate();

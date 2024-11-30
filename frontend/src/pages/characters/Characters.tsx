@@ -4,12 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { useMount } from 'react-use';
 import useBreakpoint from 'use-breakpoint';
 import { DEFAULT_AVATAR } from '../../assets/Images';
+import { BREAKPOINTS } from '../../components/Layout';
 import { Character } from '../../models/CharacterModels';
 import { getCharacters } from '../../services/CharacterServices';
 import { getBackendImage } from '../../utils/images';
 import NewCharacter from './NewCharacter';
-
-const BREAKPOINTS = { mobile: 0, tablet: 576, desktop: 1280 };
 
 export default function Characters() {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import useBreakpoint from 'use-breakpoint';
-const BREAKPOINTS = { mobile: 0, tablet: 576, desktop: 1280 };
+import { BREAKPOINTS } from '../../components/Layout';
 
 export default function CampaignDetails() {
   const navigate = useNavigate();
