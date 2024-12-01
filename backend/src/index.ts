@@ -6,7 +6,7 @@ import { ConnectionsManager } from "./connectDB";
 import { WebSocketService } from "./connectWS";
 import { routes } from "./router-main";
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.BACKEND_PORT || 3001;
 const delay = 0;
 
 // initialize express app
