@@ -8,6 +8,7 @@ const MenuRoutes = [
   { key: '/', label: 'Home' },
   { key: '/campaigns', label: 'Campaigns' },
   { key: '/characters', label: 'Characters' },
+  { key: '/items', label: 'Items' },
 ];
 
 const ComponentsTheme = {
@@ -23,6 +24,9 @@ const ComponentsTheme = {
   },
   Menu: {
     darkItemBg: 'rgb(0,0,0)',
+  },
+  Drawer: {
+    colorBgElevated: 'rgb(243,244,245)',
   },
 };
 

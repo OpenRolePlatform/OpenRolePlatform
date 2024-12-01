@@ -1,7 +1,12 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
 
-import { createItem, getAllItems, getItem } from "./items-controller";
+import {
+  createItems,
+  getAllItems,
+  getItem,
+  updateItem,
+} from "./items-controller";
 
 //get methods
 export const getOneItem = async (req: any, res: any) => {
@@ -22,7 +27,7 @@ export const getOneItem = async (req: any, res: any) => {
 
 export const getItems = async (req: any, res: any) => {
   try {
-    const items = await getAllItems(req.params.characterID, req.query, false);
+    const items = await getAllItems();
     if (items) {
       return res.status(StatusCodes.OK).send(items);
     } else {
@@ -38,7 +43,7 @@ export const getItems = async (req: any, res: any) => {
 
 export const getItemsDB = async (req: any, res: any) => {
   try {
-    const items = await getAllItems("*", req.query, true);
+    const items = await getAllItems();
     if (items) {
       return res.status(StatusCodes.OK).send(items);
     } else {
@@ -52,10 +57,27 @@ export const getItemsDB = async (req: any, res: any) => {
   }
 };
 
+export const postItem = async (req: any, res: any) => {
+  try {
+    await createItems(req.body);
+    res.status(StatusCodes.OK).send("Item updated correctly.");
+    WebSocketService.Instance.broadcast({
+      owner: req.params.characterID,
+      name: req.params.name,
+      data: req.body,
+    });
+  } catch (error) {
+    console.error("Error while trying to update the items.");
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send("Error while trying to update the items." + error.message);
+  }
+};
+
 //put methods
 export const putOneItem = async (req: any, res: any) => {
   try {
-    await createItem(req.params.characterID, req.query.name, req.body);
+    await updateItem(req.params.characterID, req.query.name, req.body);
     res.status(StatusCodes.OK).send("Item updated correctly.");
     WebSocketService.Instance.broadcast({
       owner: req.params.characterID,

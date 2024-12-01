@@ -31,15 +31,24 @@ const DamageSchema = new Schema<Damage>(
 
 export const ItemSchema = new Schema(
   {
-    owner: reqOwner,
+    _id: String,
     name: Name,
     description: String,
     equipable: reqBool,
-    equipped: reqBool,
     type: reqString,
     bonus: Number,
     damage: DamageSchema,
+  },
+  { versionKey: false }
+);
+
+export const ItemInstanceSchema = new Schema(
+  {
+    owner: { type: Schema.Types.ObjectId, ref: "Character" },
+    item: { type: Schema.Types.ObjectId, ref: "Item" },
+    equipped: reqBool,
     hidden: reqBool,
+    amount: Number,
   },
   { versionKey: false }
 );
