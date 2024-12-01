@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
+import { _enrollPlayers } from "./routes/enroll-players";
 import { _getActiveCampaign } from "./routes/get-active-campaign";
 import { _getCampaign, _getCampaignPlayers } from "./routes/get-campaign";
 import { _getCampaigns } from "./routes/get-campaigns";
@@ -135,5 +136,32 @@ export const putCampaign = async (req: any, res: any) => {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send("Error while trying to update the campaign: " + error.message);
+  }
+};
+
+export const enrollPlayers = async (req: any, res: any) => {
+  try {
+    const [updatedPlayers, updatedCampaign] = await _enrollPlayers(
+      req.params.campaignID,
+      req.body
+    );
+    if (!updatedCampaign)
+      return res.status(StatusCodes.NOT_FOUND).send(updatedCampaign);
+    res.status(StatusCodes.OK).send(updatedCampaign);
+    WebSocketService.Instance.broadcast({
+      type: "UpdateArray",
+      model: "player",
+      data: updatedPlayers,
+    });
+    WebSocketService.Instance.broadcast({
+      type: "Update",
+      model: "campaign",
+      data: updatedCampaign,
+    });
+  } catch (error) {
+    console.error("Error while trying to to enroll players.", error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send("Error while trying to enroll players. " + error.message);
   }
 };

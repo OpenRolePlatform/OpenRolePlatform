@@ -8,20 +8,22 @@ const PlayerModel = () =>
 const CampaignModel = () => ConnectionsManager.Instance.db.model("Campaign");
 /**
  * Update one character
- * @param id id of the character to update
+ * @param playerID id of the character to update
  * @param character new data of the character
  * @returns the updated character data
  */
-export async function _enrollPlayer(id: string, campaign: string) {
-  let player = await PlayerModel().findById(id);
-  let campaignInstance = await CampaignModel().findById(campaign);
+export async function _enrollPlayer(playerID: string, campaignID: string) {
+  let player = await PlayerModel().findById(playerID);
+  let campaign = await CampaignModel().findById(campaignID);
 
-  if (!player?.campaigns.includes(campaign)) player?.campaigns.push(campaign);
-  if (!campaignInstance.players.includes(id))
-    campaignInstance.players.push(player?._id);
+  if (player && campaign) {
+    if (!player?.campaigns.includes(campaign?._id))
+      player?.campaigns.push(campaign?._id);
+    if (!campaign.players.includes(player?._id))
+      campaign.players.push(player?._id);
+  }
 
-  campaignInstance.save();
+  campaign.save();
   player?.save();
-
-  return [player, campaignInstance];
+  return [player, campaign];
 }

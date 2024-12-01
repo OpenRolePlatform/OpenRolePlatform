@@ -1,5 +1,6 @@
 import "dotenv/config";
 import mongoose, { Connection } from "mongoose";
+import { WebSocketService } from "./connectWS";
 import { Campaign } from "./core/models/campaign/campaign-model";
 import { CampaignSchema } from "./core/schemas/campaign/campaign-schema";
 import { CharacterSchema } from "./core/schemas/character/character-schema";
@@ -32,6 +33,12 @@ export class ConnectionsManager {
       this._db = db;
       this._db.model("Campaign", CampaignSchema);
       this._db.model("Player", PlayerSchema);
+    });
+
+    WebSocketService.Instance.broadcast({
+      type: "CampaignLoad",
+      model: "campaign",
+      data: undefined,
     });
   }
 
