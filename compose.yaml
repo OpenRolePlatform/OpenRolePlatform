@@ -10,6 +10,8 @@ services:
     build: backend/.
     ports:
       - "3001:3001"
+    depends_on:
+      - database
     networks:
       - frontend
       - backend
