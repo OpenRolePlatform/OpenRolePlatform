@@ -7,9 +7,9 @@ import { ItemSchema } from "./core/schemas/item/item-schema";
 import { PlayerSchema } from "./core/schemas/player/player-schema";
 import { SpellSchema } from "./core/schemas/spell/spell-schema";
 
-const DB_HOST = process.env.LOCAL_HOST! ? "" : process.env.DOCKER_HOST;
-const DB_NAME = process.env.DATABASE_NAME;
-const DB_PORT = process.env.DATABASE_PORT;
+const db_host = process.env.LOCAL_HOST || process.env.NETWORK_HOST;
+const db_name = process.env.DATABASE_NAME;
+const db_port = process.env.DATABASE_PORT;
 
 mongoose.set("strictQuery", true);
 
@@ -28,7 +28,7 @@ export class ConnectionsManager {
   constructor() {
     if (ConnectionsManager._instance) return;
     ConnectionsManager._instance = this;
-    this.connect(DB_NAME!).then((db) => {
+    this.connect(db_name!).then((db) => {
       this._db = db;
       this._db.model("Campaign", CampaignSchema);
       this._db.model("Player", PlayerSchema);
@@ -61,7 +61,7 @@ export class ConnectionsManager {
    */
   private async connect(database: string) {
     const db = mongoose.createConnection(
-      `mongodb://${DB_HOST}:${DB_PORT}/${database}`,
+      `mongodb://${db_host}:${db_port}/${database}`,
       {
         dbName: database,
       }
@@ -73,7 +73,7 @@ export class ConnectionsManager {
       console.error(`Database ${database} Error: `, err);
     });
     db.once("close", () => {
-      console.log(`Database ${DB_NAME} closed`);
+      console.log(`Database ${db_name} closed`);
     });
     return db;
   }
