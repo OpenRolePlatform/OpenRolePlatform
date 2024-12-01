@@ -36,6 +36,7 @@
     "backend-character",
     "backend-spells",
     "backend-campaign",
-    "backend-player"
+    "backend-player",
+    "backend-deploy"
   ]
 }

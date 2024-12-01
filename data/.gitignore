@@ -1,1 +1,7 @@
 *.wt
+*.lock
+*.bson
+Wired*
+journal
+diagnostics.data
+.bash_history
