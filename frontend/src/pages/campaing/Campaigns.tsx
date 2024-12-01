@@ -6,6 +6,7 @@ import {
   Card,
   Col,
   ConfigProvider,
+  Drawer,
   Flex,
   List,
   message,
@@ -20,8 +21,9 @@ import { useMount } from 'react-use';
 import useBreakpoint from 'use-breakpoint';
 import { BREAKPOINTS } from '../../components/Layout';
 import { Campaign } from '../../models/CampaignModels';
-import { getCampaigns, selectCampaign } from '../../services/CampaingServices';
+import { getCampaigns, selectCampaign } from '../../services/CampaignServices';
 import { getBackendImage } from '../../utils/images';
+import CampaignDetails from './CampaignDetails';
 import NewCampaign from './NewCampaign';
 
 const EmptyCampaigns = () => {
@@ -34,10 +36,12 @@ const EmptyCampaigns = () => {
   );
 };
 
-export default function CampaignDetails() {
+export default function CampaignsList() {
   const navigate = useNavigate();
   const { breakpoint } = useBreakpoint(BREAKPOINTS);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const [selectedCampaign, setSelectedCampaign] = useState<string>();
 
   const [campaigns, setCampaigns] = useState<Array<Campaign>>([
     { name: '', description: '', image: '', creation_date: new Date() },
@@ -131,6 +135,7 @@ export default function CampaignDetails() {
                     </Card>
                   ) : (
                     <Card
+                      hoverable
                       style={{ height: '100%' }}
                       cover={
                         campaign.image ? (
@@ -142,7 +147,7 @@ export default function CampaignDetails() {
                           <MenuBookIcon style={{ height: '100%' }} />
                         )
                       }
-                      onClick={() => navigate(`/campaigns/${campaign.name}`)}
+                      onClick={() => setSelectedCampaign(campaign._id)}
                     >
                       <h3>{campaign.name}</h3>
                     </Card>
@@ -153,6 +158,24 @@ export default function CampaignDetails() {
           )}
         </ConfigProvider>
       </ErrorBoundary>
+      <Drawer
+        placement="bottom"
+        size="large"
+        open={selectedCampaign !== undefined}
+        onClose={() => setSelectedCampaign(undefined)}
+        extra={
+          <Button
+            variant="filled"
+            onClick={() => loadCampaign(selectedCampaign)}
+          >
+            Load Campaign
+          </Button>
+        }
+      >
+        {selectedCampaign && (
+          <CampaignDetails id={selectedCampaign}></CampaignDetails>
+        )}
+      </Drawer>
       <NewCampaign />
     </>
   );

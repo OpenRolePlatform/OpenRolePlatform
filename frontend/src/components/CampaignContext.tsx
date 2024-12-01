@@ -2,7 +2,7 @@ import { createContext, ReactNode, useContext, useState } from 'react';
 import { useMount } from 'react-use';
 import useWebSocket from 'react-use-websocket';
 import { Campaign } from '../models/CampaignModels';
-import { getLoadedCampaign } from '../services/CampaingServices';
+import { getLoadedCampaign } from '../services/CampaignServices';
 
 interface CampaignContextType {
   campaign: Campaign | undefined;

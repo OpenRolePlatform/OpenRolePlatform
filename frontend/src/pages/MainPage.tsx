@@ -49,8 +49,9 @@ export default function MainPage() {
             <b> OpenRolePlatform!</b>
           </i>
         </Title>
+        {/* No role content */}
         {!playerContext.role && (
-          <Space direction="vertical">
+          <Space direction="vertical" style={{ width: '80%' }}>
             <Divider />
             <Button
               shape="round"
@@ -66,6 +67,7 @@ export default function MainPage() {
             <Players />
           </Space>
         )}
+        {/* DM content */}
         {playerContext.role === 'dm' && (
           <>
             <Space direction="vertical">
@@ -76,65 +78,74 @@ export default function MainPage() {
                 type="primary"
                 onClick={() => navigate('/campaigns')}
               >
-                Go to campaign to start playing
+                Select a campaign to start playing
               </Button>
             </Space>
           </>
         )}
-        {playerContext.role === 'player' && campaignContext.campaign ? (
+        {/* Player content */}
+        {playerContext.role === 'player' && (
           <>
-            <Space direction="vertical" align="center" style={{ width: '80%' }}>
-              <Divider />
+            {/* Campaign loaded or not content */}
+            {campaignContext.campaign ? (
+              <Space
+                direction="vertical"
+                align="center"
+                style={{ width: '80%' }}
+              >
+                <Divider />
 
-              <Flex gap={'1rem'}>
-                <Space
-                  direction="vertical"
-                  align="start"
-                  style={{ height: '100%' }}
-                >
-                  <img
-                    className="campaign-logo"
-                    src={getBackendImage(campaignContext.campaign.image)}
-                    alt="logo"
-                  />
-                </Space>
-                <Space direction="vertical">
-                  <Typography.Title level={4}>
-                    <b>{campaignContext.campaign.name}</b>
-                  </Typography.Title>
-                  {campaignContext.campaign.description}
-                </Space>
-              </Flex>
+                <Flex gap={'1rem'}>
+                  <Space
+                    direction="vertical"
+                    align="start"
+                    style={{ height: '100%' }}
+                  >
+                    <img
+                      className="campaign-logo"
+                      src={getBackendImage(campaignContext.campaign.image)}
+                      alt="logo"
+                    />
+                  </Space>
+                  <Space direction="vertical">
+                    <Typography.Title level={4}>
+                      <b>{campaignContext.campaign.name}</b>
+                    </Typography.Title>
+                    {campaignContext.campaign.description}
+                  </Space>
+                </Flex>
 
-              <br />
-              <Space direction="vertical" align="center">
-                <Button
-                  shape="round"
-                  size="large"
-                  block
-                  type="primary"
-                  onClick={() =>
-                    enrollCampaign(
-                      playerContext.player?._id,
-                      campaignContext.campaign?._id,
-                    )
-                  }
-                >
-                  Enroll Campaign
-                </Button>
-                <Divider>or</Divider>
-                <Players />
+                <br />
+                <Space direction="vertical" align="center">
+                  <Button
+                    shape="round"
+                    size="large"
+                    block
+                    type="primary"
+                    onClick={() =>
+                      enrollCampaign(
+                        playerContext.player?._id,
+                        campaignContext.campaign?._id,
+                      )
+                    }
+                  >
+                    Enroll Campaign
+                  </Button>
+                  <Divider>or</Divider>
+                  <Players />
+                </Space>
               </Space>
-            </Space>
-          </>
-        ) : (
-          <>
-            <Space direction="vertical">
-              <Divider />
-              <Typography.Title level={4}>
-                Wait for the DM to load the campaign
-              </Typography.Title>
-            </Space>
+            ) : (
+              <Space
+                direction="vertical"
+                align="center"
+                style={{ width: '80%' }}
+              >
+                <Typography.Title level={4}>
+                  Wait for the DM to load the campaign
+                </Typography.Title>
+              </Space>
+            )}
           </>
         )}
       </Flex>

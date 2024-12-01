@@ -18,9 +18,29 @@ export async function getCampaigns() {
   }
 }
 
-export async function getCampaignData() {
+export async function getCampaignData(id: string) {
   try {
-    const response = await fetch(`/api/campaign/`, {
+    const response = await fetch(`/api/campaign/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      if (response.status === 200) return await response.json();
+    } else {
+      console.error('Error at character stats.');
+      throw new Error(response.statusText);
+    }
+  } catch (error) {
+    console.error('Error at character stats.' + error);
+    throw error;
+  }
+}
+
+export async function getCampaignPlayers(id: string) {
+  try {
+    const response = await fetch(`/api/campaign/${id}/players`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

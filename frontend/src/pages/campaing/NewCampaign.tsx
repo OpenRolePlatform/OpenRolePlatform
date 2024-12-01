@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useState } from 'react';
-import { newCampaign } from '../../services/CampaingServices';
+import { newCampaign } from '../../services/CampaignServices';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 

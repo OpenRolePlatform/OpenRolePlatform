@@ -1,13 +1,12 @@
 import { User } from '@phosphor-icons/react';
-import { App, Avatar, Button, Drawer, List, Skeleton } from 'antd';
+import { App, Button, Drawer } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMount } from 'react-use';
-import { DEFAULT_AVATAR } from '../assets/Images';
 import { usePlayer } from '../components/PlayerContext';
+import PlayersList from '../components/PlayersList';
 import { Player } from '../models/PlayerModels';
 import { getPlayers } from '../services/PlayerServices';
-import { getBackendImage } from '../utils/images';
 import NewPlayer from './NewPlayer';
 
 export default function Players() {
@@ -46,37 +45,16 @@ export default function Players() {
         extra={<NewPlayer players={players} refresh={loadPlayers} />}
         onClose={() => setShowDrawer(false)}
       >
-        <List
-          itemLayout="horizontal"
-          size="large"
-          dataSource={players}
-          renderItem={(player) => (
-            <List.Item
-              actions={[
-                <>
-                  <Button onClick={() => playerContext.selectPlayer(player)}>
-                    Select Player
-                  </Button>
-                </>,
-              ]}
-            >
-              <Skeleton loading={loading} active avatar>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar
-                      size="large"
-                      src={
-                        player.image
-                          ? getBackendImage(player.image)
-                          : DEFAULT_AVATAR
-                      }
-                    />
-                  }
-                  title={player.name}
-                />
-              </Skeleton>
-            </List.Item>
-          )}
+        <PlayersList
+          players={players}
+          actions={(player) => [
+            <>
+              <Button onClick={() => playerContext.selectPlayer(player)}>
+                Select Player
+              </Button>
+            </>,
+          ]}
+          loading={loading}
         />
       </Drawer>
       <Button

@@ -19,5 +19,6 @@ export interface Campaign {
   description: string;
   creation_date: Date;
   image?: string;
+  status: 'active' | 'completed' | 'paused';
   players: Array<string> | Array<Player>;
 }
