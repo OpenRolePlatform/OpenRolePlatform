@@ -7,7 +7,7 @@ import { WebSocketService } from "./connectWS";
 import { routes } from "./router-main";
 
 const PORT = process.env.PORT || 3001;
-const delay = 500;
+const delay = 0;
 
 // initialize express app
 const app = express();

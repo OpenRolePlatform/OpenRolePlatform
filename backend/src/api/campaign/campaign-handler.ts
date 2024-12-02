@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
+import { MessageModel, MessageType } from "../WebsocketTypes";
 import { _enrollPlayers } from "./routes/enroll-players";
 import { _getActiveCampaign } from "./routes/get-active-campaign";
 import { _getCampaign, _getCampaignPlayers } from "./routes/get-campaign";
@@ -61,8 +62,8 @@ export const selectCampaign = async (req: any, res: any) => {
       return res.status(StatusCodes.NOT_FOUND).send("Campaign not found.");
     res.status(StatusCodes.OK).send("Campaign loaded correctly.");
     WebSocketService.Instance.broadcast({
-      type: "CampaignLoad",
-      model: "campaign",
+      type: MessageType.CampaignLoad,
+      model: MessageModel.campaign,
       data: selectedCampaign,
     });
   } catch (error) {
@@ -103,8 +104,8 @@ export const postCampaign = async (req: any, res: any) => {
     //campaign created
     res.status(StatusCodes.CREATED).send(newCampaign);
     WebSocketService.Instance.broadcast({
-      type: "New",
-      model: "campaign",
+      type: MessageType.New,
+      model: MessageModel.campaign,
       data: newCampaign,
     });
   } catch (error) {
@@ -127,8 +128,8 @@ export const putCampaign = async (req: any, res: any) => {
       return res.status(StatusCodes.NOT_FOUND).send("Campaign not found.");
     res.status(StatusCodes.OK).send("Campaign updated correctly.");
     WebSocketService.Instance.broadcast({
-      type: "Update",
-      model: "campaign",
+      type: MessageType.Update,
+      model: MessageModel.campaign,
       data: updatedCampaign,
     });
   } catch (error) {
@@ -149,13 +150,13 @@ export const enrollPlayers = async (req: any, res: any) => {
       return res.status(StatusCodes.NOT_FOUND).send(updatedCampaign);
     res.status(StatusCodes.OK).send(updatedCampaign);
     WebSocketService.Instance.broadcast({
-      type: "UpdateArray",
-      model: "player",
+      type: MessageType.UpdateArray,
+      model: MessageModel.player,
       data: updatedPlayers,
     });
     WebSocketService.Instance.broadcast({
-      type: "Update",
-      model: "campaign",
+      type: MessageType.Update,
+      model: MessageModel.campaign,
       data: updatedCampaign,
     });
   } catch (error) {

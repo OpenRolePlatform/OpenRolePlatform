@@ -5,3 +5,7 @@ export function getBackendImage(filename: string) {
 export function getClassImage(className: string) {
   return `/img/classes/${className}.jpeg`;
 }
+
+export function getItemImage(type: string) {
+  return `/img/items/${type}.png`;
+}

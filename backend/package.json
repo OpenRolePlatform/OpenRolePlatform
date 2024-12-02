@@ -4,7 +4,8 @@
   "description": "Backend for OpenRolePlatform",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon"
+    "start": "nodemon",
+    "build": "tsc"
   },
   "nodemonConfig": {
     "watch": [

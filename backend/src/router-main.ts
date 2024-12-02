@@ -5,6 +5,7 @@ import characterRouter from "./api/character/router-character";
 import itemRouter from "./api/item/router-item";
 import playerRouter from "./api/player/router-player";
 import spellRouter from "./api/spell/router-spell";
+import upload from "./fileUpload";
 
 export function routes(app: Application) {
   //main get at root path
@@ -19,4 +20,10 @@ export function routes(app: Application) {
   app.use("/api/character", characterRouter);
   app.use("/api/items", itemRouter);
   app.use("/api/spells", spellRouter);
+
+  app.post("/api/upload", upload.single("image"), (req: any, res: any) => {
+    return res.status(StatusCodes.CREATED).send({
+      url: `/upload/images/${req.file.filename}`,
+    });
+  });
 }

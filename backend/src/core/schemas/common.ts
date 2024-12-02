@@ -13,6 +13,13 @@ export const ReqOwner = {
   unique: false,
 };
 
+export const Owner = {
+  type: String,
+  ref: "Character",
+  require: false,
+  unique: false,
+};
+
 export const ReqBool = {
   type: Boolean,
   require: true,

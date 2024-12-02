@@ -1,12 +1,28 @@
+export interface Damage {
+  damage_dice_quantity: number;
+  damage_dice_sides: number;
+  damage_addition: number;
+  damage_type: string;
+}
+
 export interface Item {
-  id: string; // Identificador único del ítem
+  _id?: string; // Identificador único del ítem
   name: string; // Nombre del ítem
   description: string; // Descripción del ítem
   type: 'weapon' | 'armor' | 'potion' | 'accessory' | 'misc'; // Tipo de ítem
-  stats?: Stats; // Stats adicionales que puede otorgar
-  equipped?: boolean; // Indica si el ítem está equipado
+  equipable?: boolean;
+  bonus?: number;
+  damage: Damage;
+  image?: string;
 }
 
+export interface ItemInstance {
+  owner: string;
+  equipped: string;
+  item: Item;
+  amount: number;
+  hidden: boolean;
+}
 export interface Inventory {
   id: string; // Identificador único del inventario
   characterId: string; // ID del personaje al que pertenece el inventario

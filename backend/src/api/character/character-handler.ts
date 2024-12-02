@@ -1,9 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
-
-import { _getCharacters } from "./routes/get-characters";
-
+import { MessageModel, MessageType } from "../WebsocketTypes";
 import { _getCharacter } from "./routes/get-character";
+import { _getCharacters } from "./routes/get-characters";
 import { _getCharactersOwner } from "./routes/get-characters-owner";
 import { _postCharacter } from "./routes/post-character";
 import { _putCharacter } from "./routes/put-character";
@@ -70,8 +69,8 @@ export const postCharacter = async (req: any, res: any) => {
         .send("A character with this same id already exists");
     res.status(StatusCodes.OK).send(newCharacter);
     WebSocketService.Instance.broadcast({
-      type: "New",
-      model: "character",
+      type: MessageType.New,
+      model: MessageModel.character,
       data: newCharacter,
     });
   } catch (error) {
@@ -97,8 +96,8 @@ export const putCharacter = async (req: any, res: any) => {
       return res.status(StatusCodes.NOT_FOUND).send(updatedCharacter);
     res.status(StatusCodes.OK).send(updatedCharacter);
     WebSocketService.Instance.broadcast({
-      type: "Update",
-      model: "character",
+      type: MessageType.Update,
+      model: MessageModel.character,
       data: updatedCharacter,
     });
   } catch (error) {

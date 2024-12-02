@@ -21,6 +21,9 @@ const ComponentsTheme = {
   Menu: {
     darkItemBg: 'rgb(0,0,0)',
   },
+  Drawer: {
+    //colorBgElevated: 'rgb(243,244,245)',
+  },
 };
 
 const ThemeTokens = {
@@ -35,6 +38,8 @@ const DmRoutes = [
   { key: '/', label: 'Home' },
   { key: '/campaigns', label: 'Campaigns' },
   { key: '/characters', label: 'Characters' },
+  { key: '/items', label: 'Items' },
+  { key: '/notes', label: 'Notes' },
 ];
 
 type MenuItem = Required<MenuProps>['items'][number];

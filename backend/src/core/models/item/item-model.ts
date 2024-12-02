@@ -1,13 +1,14 @@
 import { Damage } from "../damage-model";
 
 export interface Item {
-  owner: String;
-  name: String;
-  description: String;
+  name: string;
+  owner?: string;
+  description: string;
   equipable: boolean;
-  equipped: boolean;
-  type: String;
-  bonus: Number;
+  equipped?: boolean;
+  type: string;
+  bonus: number;
   damage: Damage;
-  hidden: boolean;
+  hidden?: boolean;
+  image?: string;
 }
