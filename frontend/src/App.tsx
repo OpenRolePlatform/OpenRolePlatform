@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LayoutWrap from './components/Layout';
-import CampaignDetails from './pages/campaing/CampaignDetails';
+// import CampaignDetails from './pages/campaing/CampaignDetails';
 import Campaigns from './pages/campaing/Campaigns';
-import Character from './pages/character/Character';
+// import Character from './pages/character/Character';
 import Characters from './pages/characters/Characters';
 import Dashboard from './pages/Dashboard';
 import MainPage from './pages/MainPage';
@@ -19,12 +19,12 @@ function App() {
           {/* Campaings routes */}
           <Route path="/campaigns">
             <Route index element={<Campaigns />} />
-            <Route path=":campaignID" element={<CampaignDetails />} />
+            {/* <Route path=":campaignID" element={<CampaignDetails />} /> */}
           </Route>
           {/* Characters routes */}
           <Route path="/characters">
             <Route index element={<Characters />} />
-            <Route path=":characterID" element={<Character />} />
+            {/* <Route path=":characterID" element={<Character />} /> */}
           </Route>
         </Route>
       </Routes>
