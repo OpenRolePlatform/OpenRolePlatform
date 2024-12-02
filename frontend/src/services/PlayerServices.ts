@@ -18,9 +18,9 @@ export async function getPlayers() {
   }
 }
 
-export async function getPlayerDetails() {
+export async function getPlayerDetails(id: string) {
   try {
-    const response = await fetch(`/api/campaign/`, {
+    const response = await fetch(`/api/player/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -56,15 +56,15 @@ export async function newPlayer(player: FormData) {
   }
 }
 
-export async function selectCampaign(name: string) {
+export async function enrollCampaign(player: string, campaign: string) {
   try {
-    const response = await fetch(`/api/campaign/${name}`, {
-      method: 'POST',
+    const response = await fetch(`/api/player/${player}/enroll/${campaign}`, {
+      method: 'PUT',
     });
     if (response.ok) {
-      return;
+      if (response.status === 200) return await response.json();
     } else {
-      console.error('Error loading the campaign');
+      console.error('Error creating the new player');
       throw new Error(response.statusText);
     }
   } catch (error) {

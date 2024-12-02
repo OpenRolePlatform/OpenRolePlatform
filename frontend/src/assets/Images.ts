@@ -40,3 +40,4 @@ export const ClassLogos = {
 export const AVATAR_BORDER = '/img/border.png';
 export const ALT_AVATAR_BORDER = '/img/border_dark.png';
 export const DEFAULT_AVATAR = '/img/classes/cultist.png';
+export const MASTER_AVATAR = '/img/hood.png';

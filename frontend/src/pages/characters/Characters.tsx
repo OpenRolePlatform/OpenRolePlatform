@@ -4,17 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import { useMount } from 'react-use';
 import useBreakpoint from 'use-breakpoint';
 import { DEFAULT_AVATAR } from '../../assets/Images';
+import { BREAKPOINTS } from '../../components/Layout';
+import { usePlayer } from '../../components/PlayerContext';
 import { Character } from '../../models/CharacterModels';
 import { getCharacters } from '../../services/CharacterServices';
 import { getBackendImage } from '../../utils/images';
 import NewCharacter from './NewCharacter';
 
-const BREAKPOINTS = { mobile: 0, tablet: 576, desktop: 1280 };
-
 export default function Characters() {
   const navigate = useNavigate();
   const { breakpoint } = useBreakpoint(BREAKPOINTS);
   const [loading, setLoading] = useState<boolean>(true);
+  const playerContext = usePlayer();
 
   const [characters, setCharacters] = useState<Array<Character>>([
     { name: '', owner: '' },
@@ -24,7 +25,11 @@ export default function Characters() {
 
   useMount(async () => {
     try {
-      const data = await getCharacters();
+      const data = await getCharacters(
+        playerContext.role === 'player'
+          ? { owner: playerContext.player?._id }
+          : undefined,
+      );
       setCharacters(data);
       setLoading(false);
     } catch (error) {

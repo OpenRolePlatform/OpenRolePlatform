@@ -1,0 +1,67 @@
+[
+  {
+    "_id": "Biel",
+    "name": "Biel",
+    "campaigns": ["El_Ultimo_Refugio"],
+    "creation_date": {
+      "$date": "2024-11-30T11:52:30.137Z"
+    }
+  },
+  {
+    "_id": "Javi",
+    "name": "Javi",
+    "campaigns": [],
+    "creation_date": {
+      "$date": "2024-11-30T12:48:10.179Z"
+    }
+  },
+  {
+    "_id": "Puto",
+    "name": "Puto",
+    "campaigns": [],
+    "creation_date": {
+      "$date": "2024-11-30T12:54:48.575Z"
+    }
+  },
+  {
+    "_id": "Maria",
+    "name": "Maria",
+    "campaigns": ["El_Ultimo_Refugio"],
+    "creation_date": {
+      "$date": "2024-11-30T13:04:30.471Z"
+    }
+  },
+  {
+    "_id": "Paco",
+    "name": "Paco",
+    "image": "images/ozymandias-1732976950876.png",
+    "campaigns": ["El_Ultimo_Refugio"],
+    "creation_date": {
+      "$date": "2024-11-30T14:29:10.893Z"
+    }
+  },
+  {
+    "_id": "come_muelas",
+    "name": "come muelas",
+    "campaigns": [],
+    "creation_date": {
+      "$date": "2024-11-30T17:12:05.023Z"
+    }
+  },
+  {
+    "_id": "jose",
+    "name": "jose",
+    "campaigns": ["La_Guerra_de_los_Dioses", "El_Ultimo_Refugio"],
+    "creation_date": {
+      "$date": "2024-11-30T18:17:37.725Z"
+    }
+  },
+  {
+    "_id": "Cabrooonn",
+    "name": "Cabrooonn",
+    "campaigns": ["El_Ultimo_Refugio"],
+    "creation_date": {
+      "$date": "2024-11-30T19:34:21.994Z"
+    }
+  }
+]

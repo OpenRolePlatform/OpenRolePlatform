@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LayoutWrap from './components/Layout';
 import CampaignDetails from './pages/campaing/CampaignDetails';
 import Campaigns from './pages/campaing/Campaigns';
-import NewCampaign from './pages/campaing/NewCampaign';
 import Character from './pages/character/Character';
 import Characters from './pages/characters/Characters';
 import Dashboard from './pages/Dashboard';
@@ -16,11 +15,11 @@ function App() {
         <Route element={<LayoutWrap />}>
           <Route index element={<MainPage />} />
           <Route path="/dm" element={<Dashboard />} />
+
           {/* Campaings routes */}
           <Route path="/campaigns">
             <Route index element={<Campaigns />} />
             <Route path=":campaignID" element={<CampaignDetails />} />
-            <Route path="new" element={<NewCampaign />} />
           </Route>
           {/* Characters routes */}
           <Route path="/characters">

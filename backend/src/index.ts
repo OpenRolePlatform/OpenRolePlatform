@@ -6,14 +6,11 @@ import { ConnectionsManager } from "./connectDB";
 import { WebSocketService } from "./connectWS";
 import { routes } from "./router-main";
 
-const PORT = process.env.BACKEND_PORT || 3001;
-const delay = 0;
+const PORT = process.env.PORT || 3001;
+const delay = 500;
 
 // initialize express app
 const app = express();
-
-//database connection
-new ConnectionsManager();
 
 function setCorsHeaders(req: any, res: any, next: () => void) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -49,3 +46,6 @@ const wss = new WebSocket.Server({
 });
 
 new WebSocketService(wss).init();
+
+//database connection
+new ConnectionsManager();

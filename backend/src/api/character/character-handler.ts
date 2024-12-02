@@ -11,7 +11,7 @@ import { _putCharacter } from "./routes/put-character";
 
 export const getCharacters = async (req: any, res: any) => {
   try {
-    const characters = await _getCharacters();
+    const characters = await _getCharacters(req.query);
     if (characters) {
       return res.status(StatusCodes.OK).send(characters);
     } else {

@@ -1,4 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
+import { Plus } from '@phosphor-icons/react';
 import {
   App,
   Button,
@@ -11,9 +12,8 @@ import {
   UploadProps,
 } from 'antd';
 import { useState } from 'react';
-import { useMount } from 'react-use';
 import { Player } from '../models/PlayerModels';
-import { getPlayers, newPlayer } from '../services/PlayerServices';
+import { newPlayer } from '../services/PlayerServices';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -23,23 +23,16 @@ const getBase64 = (img: FileType, callback: (url: string) => void) => {
   reader.readAsDataURL(img);
 };
 
-export default function NewPlayer() {
+const NewPlayer: React.FC<{ players: Array<Player>; refresh: () => void }> = ({
+  players,
+  refresh,
+}) => {
   const [form] = Form.useForm();
 
   const [imageUrl, setImageUrl] = useState<string>('');
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
 
   const { message } = App.useApp();
-
-  const [players, setPlayers] = useState<Array<Player>>();
-  useMount(async () => {
-    try {
-      const data = await getPlayers();
-      setPlayers(data);
-    } catch (error) {
-      console.log(error);
-    }
-  });
 
   const onFinish: FormProps['onFinish'] = async (values) => {
     const formData = new FormData();
@@ -50,8 +43,8 @@ export default function NewPlayer() {
       await newPlayer(formData);
       message.success('Player created');
       setShowDrawer(false);
+      refresh();
       form.resetFields();
-      setPlayers(await getPlayers());
     } catch (error: any) {
       message.error(error.message);
     }
@@ -76,6 +69,16 @@ export default function NewPlayer() {
         size="large"
         title="New Player"
         open={showDrawer}
+        extra={
+          <Button
+            block
+            type="primary"
+            shape="round"
+            onClick={() => form.submit()}
+          >
+            Submit
+          </Button>
+        }
         onClose={() => setShowDrawer(false)}
       >
         <Form
@@ -96,8 +99,9 @@ export default function NewPlayer() {
             <Input
               onChange={(e) => {
                 setValidName(
-                  !players?.find((player) => player.name === e.target.value) ??
-                    true,
+                  players.find((player) => player.name === e.target.value)
+                    ? false
+                    : true,
                 );
               }}
             />
@@ -126,23 +130,10 @@ export default function NewPlayer() {
               )}
             </Upload>
           </Form.Item>
-          <Form.Item
-            label={null}
-            //labelCol={{ span: 8 }}
-            wrapperCol={{ span: 12 }}
-          >
-            <Button block type="primary" shape="round" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
         </Form>
       </Drawer>
       <Button
-        icon={
-          <>
-            <PlusOutlined />
-          </>
-        }
+        icon={<Plus weight="bold" />}
         onClick={() => setShowDrawer(true)}
         shape="round"
         size="large"
@@ -154,4 +145,6 @@ export default function NewPlayer() {
       </Button>
     </>
   );
-}
+};
+
+export default NewPlayer;

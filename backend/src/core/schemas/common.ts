@@ -7,6 +7,7 @@ export const ReqName = {
 
 export const ReqOwner = {
   type: String,
+  ref: "Character",
   require: true,
   index: true,
   unique: false,
@@ -15,6 +16,7 @@ export const ReqOwner = {
 export const ReqBool = {
   type: Boolean,
   require: true,
+  default: false,
 };
 
 export const ReqString = {
@@ -25,4 +27,5 @@ export const ReqString = {
 export const ReqNumber = {
   type: Number,
   required: true,
+  default: 0,
 };
