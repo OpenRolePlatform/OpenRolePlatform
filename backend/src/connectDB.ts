@@ -9,9 +9,10 @@ import { ItemSchema } from "./core/schemas/item/item-schema";
 import { PlayerSchema } from "./core/schemas/player/player-schema";
 import { SpellSchema } from "./core/schemas/spell/spell-schema";
 
-const db_host = process.env.LOCAL_HOST || process.env.NETWORK_HOST;
-const db_name = process.env.DATABASE_NAME;
-const db_port = process.env.DATABASE_PORT;
+// Database connection params
+const db_host = process.env.DATABASE_HOST || "localhost";
+const db_name = process.env.DATABASE_NAME || "OpenRolePlatform";
+const db_port = process.env.DATABASE_PORT || 27017;
 
 mongoose.set("strictQuery", true);
 

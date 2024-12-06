@@ -1,14 +1,12 @@
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
-import { defineConfig, loadEnv } from 'vite';
-
-const env = loadEnv('', '..', '');
+import { defineConfig } from 'vite';
 
 const frontend_port =
-  env.FRONTEND_PORT != undefined ? env.FRONTEND_PORT : '3002';
+  process.env.FRONTEND_PORT != undefined ? process.env.FRONTEND_PORT : '3002';
 
-const backend_host = env.LOCAL_HOST || env.NETWORK_HOST;
-const backend_port = env.BACKEND_PORT;
+const API_URL = process.env.API_URL;
+const WS_URL = process.env.WS_URL;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,12 +22,12 @@ export default defineConfig({
     port: parseInt(frontend_port),
     proxy: {
       '/api': {
-        target: `http://${backend_host}:${backend_port}`,
+        target: API_URL || `http://localhost:3001`,
         secure: false,
         changeOrigin: false,
       },
       '/ws': {
-        target: `ws://${backend_host}:${backend_port}`,
+        target: WS_URL || `ws://localhost:3001`,
         secure: false,
         changeOrigin: false,
       },
