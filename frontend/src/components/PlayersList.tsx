@@ -1,8 +1,7 @@
 import { SmileySad } from '@phosphor-icons/react';
-import { Avatar, ConfigProvider, List, Skeleton, Space } from 'antd';
-import { DEFAULT_AVATAR } from '../assets/Images';
+import { ConfigProvider, List, Skeleton, Space } from 'antd';
 import { Player } from '../models/PlayerModels';
-import { getBackendImage } from '../utils/images';
+import { PlayerAvatar } from './PlayerAvatar';
 
 interface PlayersListProps {
   players: Array<Player> | undefined;
@@ -41,13 +40,10 @@ export default function PlayersList({
             <Skeleton loading={loading} active avatar>
               <List.Item.Meta
                 avatar={
-                  <Avatar
-                    size="large"
-                    src={
-                      player.image
-                        ? getBackendImage(player.image)
-                        : DEFAULT_AVATAR
-                    }
+                  <PlayerAvatar
+                    name={player.name}
+                    image={player.image}
+                    role="player"
                   />
                 }
                 title={player.name}

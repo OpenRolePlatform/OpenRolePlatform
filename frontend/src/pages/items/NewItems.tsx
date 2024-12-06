@@ -1,5 +1,4 @@
-import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
-import { Plus } from '@phosphor-icons/react';
+import { Plus, X } from '@phosphor-icons/react';
 import {
   App,
   Button,
@@ -198,7 +197,9 @@ export default function NewItems() {
                         title={`Item ${field.name + 1}`}
                         key={field.key}
                         extra={
-                          <CloseOutlined
+                          <X
+                            size={32}
+                            weight="bold"
                             onClick={() => {
                               remove(field.name);
                             }}
@@ -227,7 +228,7 @@ export default function NewItems() {
       <FloatButton
         icon={
           <>
-            <PlusOutlined />
+            <Plus size={32} weight="bold" />
           </>
         }
         onClick={() => setShowDrawer(true)}

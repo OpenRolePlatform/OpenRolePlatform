@@ -1,5 +1,4 @@
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import { SmileySad } from '@phosphor-icons/react';
+import { BookOpenText, SmileySad } from '@phosphor-icons/react';
 import {
   Avatar,
   Button,
@@ -105,7 +104,10 @@ export default function CampaignsList() {
                             src={getBackendImage(campaign.image)}
                           />
                         ) : (
-                          <Avatar size="large" icon={<MenuBookIcon />} />
+                          <Avatar
+                            size="large"
+                            icon={<BookOpenText weight="duotone" />}
+                          />
                         )
                       }
                       title={campaign.name}
@@ -144,7 +146,10 @@ export default function CampaignsList() {
                             src={getBackendImage(campaign.image)}
                           />
                         ) : (
-                          <MenuBookIcon style={{ height: '100%' }} />
+                          <BookOpenText
+                            weight="duotone"
+                            style={{ height: '100%' }}
+                          />
                         )
                       }
                       onClick={() => setSelectedCampaign(campaign._id)}

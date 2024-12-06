@@ -1,4 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { Plus } from '@phosphor-icons/react';
 import {
   App,
   Button,
@@ -180,7 +180,7 @@ export default function NewCharacter() {
                 <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
               ) : (
                 <span style={{ border: 0, background: 'none' }}>
-                  <PlusOutlined />
+                  <Plus size={32} weight="bold" />
                   <div style={{ marginTop: 8 }}>Upload</div>
                 </span>
               )}
@@ -200,7 +200,7 @@ export default function NewCharacter() {
       <FloatButton
         icon={
           <>
-            <PlusOutlined />
+            <Plus size={32} weight="bold" />
           </>
         }
         onClick={() => setShowDrawer(true)}

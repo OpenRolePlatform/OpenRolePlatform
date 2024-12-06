@@ -1,61 +1,61 @@
-import { Avatar, Dropdown, MenuProps } from 'antd';
+import { Button, Drawer, Dropdown, MenuProps } from 'antd';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MASTER_AVATAR } from '../assets/Images';
-import { getBackendImage } from '../utils/images';
+import PlayerDetails from '../pages/player/PlayerDetails';
+import { PlayerAvatar } from './PlayerAvatar';
 import { usePlayer } from './PlayerContext';
-
-function getInitials(name: string) {
-  const spited = name.split(' ');
-  let initials = spited[0][0];
-  if (spited.length > 1) initials = initials.concat(spited[1][0]);
-  return initials;
-}
-
-function generateBackground(name: string) {
-  let hash = 0;
-  let i;
-
-  for (i = 0; i < name.length; i += 1) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  // name.charCodeAt() return an int between 0 and 65535
-  // left shift (<<)  operator moves to left by number of specified
-  // bites after <<. The whole for loop will create a color hash
-  // based on username length
-  let color = '#';
-  for (i = 0; i < 3; i += 1) {
-    const value = (hash >> (i * 8)) & 0xff;
-    color += `00${value.toString(16)}`.slice(-2);
-  }
-
-  return color;
-}
 
 function PlayerMenu() {
   const navigate = useNavigate();
 
   const playerContext = usePlayer();
 
-  const items: MenuProps['items'] = [
-    {
-      key: 'name',
-      label:
-        playerContext.role === 'player' ? playerContext.player?.name : 'Master',
-      disabled: true,
-    },
-    { type: 'divider' },
-    {
-      key: 'toDM',
-      label: 'Change to DM',
-    },
-    {
-      key: 'exit',
-      label: 'Exit',
-    },
-  ];
+  const [items, setItems] = useState<MenuProps['items']>([]);
+
+  const [openDetails, setOpenDetails] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (playerContext.role === 'player') {
+      setItems([
+        {
+          key: 'name',
+          label: playerContext.player?.name,
+          disabled: true,
+        },
+        { type: 'divider' },
+        {
+          key: 'profile',
+          label: 'Profile',
+        },
+        {
+          key: 'toDM',
+          label: 'Change to DM',
+        },
+        {
+          key: 'exit',
+          label: 'Exit',
+        },
+      ]);
+    } else
+      setItems([
+        {
+          key: 'name',
+          label: 'Master',
+          disabled: true,
+        },
+        { type: 'divider' },
+        {
+          key: 'exit',
+          label: 'Exit',
+        },
+      ]);
+  }, [playerContext.role, playerContext.player]);
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
     switch (key) {
+      case 'profile':
+        setOpenDetails(true);
+        break;
       case 'exit':
         playerContext.logout();
         navigate('/');
@@ -68,31 +68,33 @@ function PlayerMenu() {
     }
   };
 
-  function getAvatar() {
-    if (playerContext.role === 'dm') return MASTER_AVATAR;
-    else if (playerContext?.player?.image)
-      return getBackendImage(playerContext.player.image);
-    return getInitials(playerContext?.player?.name);
-  }
-
   return (
     <>
       {playerContext.role && (
-        <Dropdown menu={{ items, onClick }}>
-          <Avatar
+        <>
+          <Dropdown menu={{ items, onClick }}>
+            <div>
+              <PlayerAvatar
+                name={playerContext?.player?.name}
+                image={playerContext?.player?.image}
+                role={playerContext.role}
+              />
+            </div>
+          </Dropdown>
+          <Drawer
+            placement="bottom"
             size="large"
-            style={{
-              backgroundColor:
-                playerContext.role === 'player'
-                  ? generateBackground(playerContext?.player?.name)
-                  : 'white',
-            }}
-            src={getAvatar()}
+            open={openDetails}
+            onClose={() => setOpenDetails(false)}
+            extra={
+              <Button variant="filled" onClick={() => {}}>
+                Edit Player
+              </Button>
+            }
           >
-            {playerContext.role === 'player' &&
-              getInitials(playerContext?.player?.name)}
-          </Avatar>
-        </Dropdown>
+            <PlayerDetails id={playerContext.player?._id} />
+          </Drawer>
+        </>
       )}
     </>
   );

@@ -1,4 +1,3 @@
-import { PlusOutlined } from '@ant-design/icons';
 import { Plus } from '@phosphor-icons/react';
 import {
   App,
@@ -124,7 +123,7 @@ const NewPlayer: React.FC<{ players: Array<Player>; refresh: () => void }> = ({
                 <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
               ) : (
                 <span style={{ border: 0, background: 'none' }}>
-                  <PlusOutlined />
+                  <Plus size={32} weight="bold" />
                   <div style={{ marginTop: 8 }}>Upload</div>
                 </span>
               )}
