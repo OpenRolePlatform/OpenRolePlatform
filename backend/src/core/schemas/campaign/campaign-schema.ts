@@ -8,8 +8,8 @@ export const CampaignSchema = new Schema(
     description: String,
     creation_date: { type: Date, default: Date.now },
     image: String,
-    player: [{ type: Schema.Types.ObjectId, ref: "Player" }],
-    dm: { type: Schema.Types.ObjectId, ref: "Player" },
+    status: { type: String, default: "active" },
+    players: [{ type: String, ref: "Player", unique: true }],
   },
   { versionKey: false }
 );

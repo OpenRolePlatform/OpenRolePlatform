@@ -1,12 +1,13 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LayoutWrap from './components/Layout';
-import CampaignDetails from './pages/campaing/CampaignDetails';
+import CampaignDetailsPage from './pages/campaing/CampaignDetailsPage';
 import Campaigns from './pages/campaing/Campaigns';
-import NewCampaign from './pages/campaing/NewCampaign';
 import Character from './pages/character/Character';
 import Characters from './pages/characters/Characters';
 import Dashboard from './pages/Dashboard';
+import Items from './pages/items/Items';
 import MainPage from './pages/MainPage';
+import Notes from './pages/Notes';
 import './styles/layout.scss';
 
 function App() {
@@ -16,12 +17,13 @@ function App() {
         <Route element={<LayoutWrap />}>
           <Route index element={<MainPage />} />
           <Route path="/dm" element={<Dashboard />} />
-          {/* Campaings routes */}
+          {/* Campaigns routes */}
           <Route path="/campaigns">
             <Route index element={<Campaigns />} />
-            <Route path=":campaignID" element={<CampaignDetails />} />
-            <Route path="new" element={<NewCampaign />} />
+            <Route path=":campaignID" element={<CampaignDetailsPage />} />
           </Route>
+          <Route path="/items" element={<Items />} />
+          <Route path="/notes" element={<Notes />} />
           {/* Characters routes */}
           <Route path="/characters">
             <Route index element={<Characters />} />

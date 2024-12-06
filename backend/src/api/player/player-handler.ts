@@ -1,6 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
-import { _getPlayerDetails } from "./routes/get-player-details";
+import { MessageModel, MessageType } from "../WebsocketTypes";
+import { _enrollPlayer } from "./routes/enroll-player";
+import {
+  _getPlayerCampaigns,
+  _getPlayerDetails,
+} from "./routes/get-player-details";
 import { _getAllPlayers } from "./routes/get-players";
 import { _postPlayer } from "./routes/post-player";
 import { _putPlayer } from "./routes/put-player";
@@ -35,6 +40,22 @@ export const getPlayer = async (req: any, res: any) => {
   }
 };
 
+export const getPlayerCampaigns = async (req: any, res: any) => {
+  try {
+    const player = await _getPlayerCampaigns(req.params.playerID);
+    if (!player)
+      return res.status(StatusCodes.NOT_FOUND).send("Player not found.");
+    else res.status(StatusCodes.OK).send(player);
+  } catch (error) {
+    console.error("Error while trying to obtain the player details.", error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send(
+        "Error while trying to obtain the player details: " + error.message
+      );
+  }
+};
+
 //post campaign
 export const postPlayer = async (req: any, res: any) => {
   try {
@@ -51,8 +72,8 @@ export const postPlayer = async (req: any, res: any) => {
     //player created
     res.status(StatusCodes.CREATED).send(newPlayer);
     WebSocketService.Instance.broadcast({
-      type: "New",
-      model: "player",
+      type: MessageType.New,
+      model: MessageModel.player,
       data: newPlayer,
     });
   } catch (error) {
@@ -75,8 +96,8 @@ export const putPlayer = async (req: any, res: any) => {
       return res.status(StatusCodes.NOT_FOUND).send("Player not found.");
     res.status(StatusCodes.OK).send("Player updated correctly.");
     WebSocketService.Instance.broadcast({
-      type: "Update",
-      model: "player",
+      type: MessageType.Update,
+      model: MessageModel.player,
       data: updatedPlayer,
     });
   } catch (error) {
@@ -84,5 +105,34 @@ export const putPlayer = async (req: any, res: any) => {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send("Error while trying to update the player: " + error.message);
+  }
+};
+
+export const enrollPlayer = async (req: any, res: any) => {
+  try {
+    const [updatedPlayer, updatedCampaign] = await _enrollPlayer(
+      req.params.playerID,
+      req.params.campaignID
+    );
+    if (!updatedPlayer)
+      return res.status(StatusCodes.NOT_FOUND).send(updatedPlayer);
+    res.status(StatusCodes.OK).send(updatedPlayer);
+    WebSocketService.Instance.broadcast({
+      type: MessageType.Update,
+      model: MessageModel.player,
+      data: updatedPlayer,
+    });
+    WebSocketService.Instance.broadcast({
+      type: MessageType.Update,
+      model: MessageModel.campaign,
+      data: updatedCampaign,
+    });
+  } catch (error) {
+    console.error("Error while trying to update the player.", error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send(
+        "Error while trying to update the charplayeracter. " + error.message
+      );
   }
 };

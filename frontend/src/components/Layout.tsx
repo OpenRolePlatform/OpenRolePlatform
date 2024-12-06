@@ -1,14 +1,11 @@
-import { App, ConfigProvider, Layout, Menu, theme } from 'antd';
+import { App, ConfigProvider, Layout, Menu, MenuProps, theme } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
+import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../utils/theme';
+import { usePlayer } from './PlayerContext';
+import PlayerMenu from './PlayerMenu';
 import { ThemeToggle } from './ThemeToggle';
-
-const MenuRoutes = [
-  { key: '/', label: 'Home' },
-  { key: '/campaigns', label: 'Campaigns' },
-  { key: '/characters', label: 'Characters' },
-];
 
 const ComponentsTheme = {
   Layout: {
@@ -24,6 +21,9 @@ const ComponentsTheme = {
   Menu: {
     darkItemBg: 'rgb(0,0,0)',
   },
+  Drawer: {
+    //colorBgElevated: 'rgb(243,244,245)',
+  },
 };
 
 const ThemeTokens = {
@@ -32,14 +32,43 @@ const ThemeTokens = {
   borderRadius: 8,
 };
 
+export const BREAKPOINTS = { mobile: 0, tablet: 576, desktop: 1280 };
+
+const DmRoutes = [
+  { key: '/', label: 'Home' },
+  { key: '/campaigns', label: 'Campaigns' },
+  { key: '/characters', label: 'Characters' },
+  { key: '/items', label: 'Items' },
+  { key: '/notes', label: 'Notes' },
+];
+
+type MenuItem = Required<MenuProps>['items'][number];
+
+const PlayerRoutes = [{ key: '/characters', label: 'Characters' }];
+
 function LayoutWrap() {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentTheme, updateTheme } = useTheme();
-
   const handleNavigate = (route: string) => {
     if (location.pathname !== 'route') navigate(route);
   };
+
+  const [menuRoutes, setMenuRoutes] = useState<MenuItem[]>([]);
+
+  const playerContext = usePlayer();
+
+  useEffect(() => {
+    if (playerContext.role === 'dm') setMenuRoutes(DmRoutes);
+    else if (playerContext.role === 'player') setMenuRoutes(PlayerRoutes);
+    else setMenuRoutes([]);
+  }, [playerContext.role]);
+
+  useEffect(() => {
+    if (location.pathname !== '/' && !playerContext.role) {
+      navigate('/');
+    }
+  }, [location, navigate, playerContext.role]);
 
   return (
     <ConfigProvider
@@ -75,10 +104,11 @@ function LayoutWrap() {
               mode="horizontal"
               defaultSelectedKeys={['/']}
               selectedKeys={[location.pathname]}
-              items={MenuRoutes}
+              items={menuRoutes}
               onClick={(menuItem) => handleNavigate(menuItem.key)}
               style={{ flex: 1, minWidth: 0 }}
             />
+            <PlayerMenu />
             <ThemeToggle
               currentTheme={currentTheme}
               updateTheme={updateTheme}

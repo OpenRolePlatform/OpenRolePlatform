@@ -1,5 +1,4 @@
-import ModeNightRoundedIcon from '@mui/icons-material/ModeNightRounded';
-import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
+import { Moon, SunDim } from '@phosphor-icons/react';
 import { Button } from 'antd';
 import { ThemeHook } from '../utils/theme';
 
@@ -18,9 +17,9 @@ export function ThemeToggle(props: ThemeHook) {
       className={props.currentTheme === 'dark' ? 'light-theme-icon' : ''}
     >
       {props.currentTheme === 'dark' ? (
-        <WbSunnyRoundedIcon />
+        <SunDim size={32} />
       ) : (
-        <ModeNightRoundedIcon />
+        <Moon size={32} />
       )}
     </Button>
   );

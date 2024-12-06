@@ -12,9 +12,6 @@ const delay = 0;
 // initialize express app
 const app = express();
 
-//database connection
-new ConnectionsManager();
-
 function setCorsHeaders(req: any, res: any, next: () => void) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -49,3 +46,6 @@ const wss = new WebSocket.Server({
 });
 
 new WebSocketService(wss).init();
+
+//database connection
+new ConnectionsManager();

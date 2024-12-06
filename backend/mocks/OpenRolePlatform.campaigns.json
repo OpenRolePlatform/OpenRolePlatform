@@ -1,0 +1,62 @@
+[
+  {
+    "_id": "La_Guerra_de_los_Dioses",
+    "name": "La Guerra de los Dioses",
+    "description": "Una épica batalla entre las fuerzas celestiales y los mortales. Los jugadores deberán alinear a reinos, forjar alianzas con deidades y enfrentarse a criaturas mitológicas para evitar la destrucción del mundo.",
+    "creation_date": {
+      "$date": "2023-05-15T00:00:00.000Z"
+    },
+    "image": "/images/guerra_de_los_dioses.jpeg",
+    "players": ["Biel", "jose"]
+  },
+  {
+    "_id": "El_Ultimo_Refugio",
+    "name": "El Último Refugio",
+    "description": "En un futuro post-apocalíptico, la humanidad vive en las ruinas de una civilización que alguna vez fue poderosa. Los jugadores deben explorar las ruinas, descubrir secretos olvidados y luchar por sobrevivir en un mundo devastado.",
+    "creation_date": {
+      "$date": "2022-09-20T00:00:00.000Z"
+    },
+    "image": "/images/ultimo_refugio.jpeg",
+    "players": ["Biel", "Maria", "jose", "Paco", "Cabrooonn"]
+  },
+  {
+    "_id": "El_Laberinto_de_los_Ancestros",
+    "name": "El Laberinto de los Ancestros",
+    "description": "En esta campaña, los jugadores entrarán en un misterioso laberinto lleno de trampas, criaturas y artefactos ancestrales. Deberán desentrañar antiguos secretos y salir con vida mientras enfrentan pruebas que desafían su mente y cuerpo.",
+    "creation_date": {
+      "$date": "2024-02-01T00:00:00.000Z"
+    },
+    "image": "/images/laberinto_ancestros.jpeg",
+    "players": []
+  },
+  {
+    "_id": "Cuentos_de_la_Ciudad_Sombria",
+    "name": "Cuentos de la Ciudad Sombría",
+    "description": "Los jugadores se adentrarán en una ciudad gobernada por mafias, sectas oscuras y fuerzas sobrenaturales. El misterio y la traición están en cada esquina mientras los personajes luchan por encontrar respuestas a los oscuros secretos de la ciudad.",
+    "creation_date": {
+      "$date": "2021-11-10T00:00:00.000Z"
+    },
+    "image": "/images/ciudad_sombría.jpeg",
+    "players": []
+  },
+  {
+    "_id": "El_Reino_de_la_Luna_Roja",
+    "name": "El Reino de la Luna Roja",
+    "description": "Un reino que solo aparece una vez cada mil años bajo la luz de una luna roja. Los jugadores deberán navegar por este misterioso y peligroso lugar, enfrentándose a criaturas míticas y descubriendo el propósito detrás de este fenómeno cósmico.",
+    "creation_date": {
+      "$date": "2023-07-30T00:00:00.000Z"
+    },
+    "image": "/images/reino_luna_roja.jpeg",
+    "players": []
+  },
+  {
+    "_id": "La_camana_sin_imagen",
+    "name": "La camaña sin imagen",
+    "description": "Esta es una capaña que ha perdido su imagen, el objetivo es no encontrarla nunca",
+    "creation_date": {
+      "$date": "2024-11-17T17:36:45.411Z"
+    },
+    "image": "undefined",
+    "players": []
+  }
+]

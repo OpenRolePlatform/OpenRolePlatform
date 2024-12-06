@@ -37,6 +37,8 @@
     "backend-spells",
     "backend-campaign",
     "backend-player",
+    "frontend-players",
+    "frontend-campaigns",
     "backend-deploy"
   ]
 }
