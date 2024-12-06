@@ -2,12 +2,14 @@ import {
   Collapse,
   Descriptions,
   Flex,
+  Image,
   Skeleton,
   Space,
   Tag,
   Typography,
 } from 'antd';
 import SkeletonAvatar from 'antd/es/skeleton/Avatar';
+import { CAMPAIGN_ICON } from '../../assets/Images';
 import PlayersList from '../../components/PlayersList';
 import { Campaign } from '../../models/CampaignModels';
 import { Player } from '../../models/PlayerModels';
@@ -45,10 +47,10 @@ export default function CampaignDetails({ id }: { id: string }) {
               align="start"
               style={{ height: '100%' }}
             >
-              <img
+              <Image
                 className="campaign-logo"
-                src={getBackendImage(campaign.data().image)}
-                alt="logo"
+                src={getBackendImage(campaign.data().image!)}
+                fallback={CAMPAIGN_ICON}
               />
             </Space>
             <Space direction="vertical">

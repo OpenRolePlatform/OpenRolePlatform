@@ -1,5 +1,6 @@
 export function getBackendImage(filename: string) {
-  return `http://localhost:3001/upload/${filename}`;
+  const url = new URL(window.location.href);
+  return `http://${url.hostname}:3001/upload/${filename}`;
 }
 
 export function getClassImage(className: string) {

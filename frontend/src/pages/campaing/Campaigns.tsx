@@ -7,6 +7,7 @@ import {
   ConfigProvider,
   Drawer,
   Flex,
+  Image,
   List,
   message,
   Row,
@@ -18,6 +19,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMount } from 'react-use';
 import useBreakpoint from 'use-breakpoint';
+import { CAMPAIGN_ICON } from '../../assets/Images';
 import { BREAKPOINTS } from '../../components/Layout';
 import { Campaign } from '../../models/CampaignModels';
 import { getCampaigns, selectCampaign } from '../../services/CampaignServices';
@@ -140,17 +142,13 @@ export default function CampaignsList() {
                       hoverable
                       style={{ height: '100%' }}
                       cover={
-                        campaign.image ? (
-                          <img
-                            /*  style={{ maxHeight: 300 }} */
-                            src={getBackendImage(campaign.image)}
+                        <>
+                          <Image
+                            src={getBackendImage(campaign.image!)}
+                            fallback={CAMPAIGN_ICON}
+                            preview={false}
                           />
-                        ) : (
-                          <BookOpenText
-                            weight="duotone"
-                            style={{ height: '100%' }}
-                          />
-                        )
+                        </>
                       }
                       onClick={() => setSelectedCampaign(campaign._id)}
                     >
