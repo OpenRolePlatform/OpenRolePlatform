@@ -1,35 +1,22 @@
-import { Plus } from '@phosphor-icons/react';
+import { FileArrowUp, Plus } from '@phosphor-icons/react';
 import {
-  App,
   Button,
   Drawer,
   FloatButton,
   Form,
   FormProps,
-  GetProp,
   Input,
+  message,
   Upload,
-  UploadProps,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useState } from 'react';
 import { newCampaign } from '../../services/CampaignServices';
-
-type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-
-const getBase64 = (img: FileType, callback: (url: string) => void) => {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result as string));
-  reader.readAsDataURL(img);
-};
+import { GetFieldFile } from '../../utils/images';
 
 export default function NewCampaign() {
   const [form] = Form.useForm();
-
-  const [imageUrl, setImageUrl] = useState<string>('');
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
-
-  const { message } = App.useApp();
 
   const onFinish: FormProps['onFinish'] = async (values) => {
     const formData = new FormData();
@@ -44,12 +31,6 @@ export default function NewCampaign() {
     } catch (error: any) {
       message.error(error.message);
     }
-  };
-
-  const handleChange: UploadProps['onChange'] = (info) => {
-    getBase64(info.file as FileType, (url) => {
-      setImageUrl(url);
-    });
   };
 
   const onFinishFailed: FormProps['onFinishFailed'] = (errorInfo) => {
@@ -97,25 +78,17 @@ export default function NewCampaign() {
           <Form.Item
             label="Upload image"
             name="image"
-            getValueFromEvent={({ file }) => file}
+            getValueFromEvent={GetFieldFile}
           >
             <Upload
+              multiple={false}
               accept="image/png, image/jpeg"
               maxCount={1}
-              listType="picture-card"
-              showUploadList={false}
               customRequest={(options: any) => {}}
               beforeUpload={() => false}
-              onChange={handleChange}
+              listType="picture"
             >
-              {imageUrl ? (
-                <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
-              ) : (
-                <span style={{ border: 0, background: 'none' }}>
-                  <Plus size={32} weight="bold" />
-                  <div style={{ marginTop: 8 }}>Upload</div>
-                </span>
-              )}
+              <Button icon={<FileArrowUp size={16} />}>Click to upload</Button>
             </Upload>
           </Form.Item>
           <Form.Item

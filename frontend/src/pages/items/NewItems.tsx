@@ -1,4 +1,4 @@
-import { Plus, X } from '@phosphor-icons/react';
+import { FileArrowUp, Plus, X } from '@phosphor-icons/react';
 import {
   App,
   Button,
@@ -10,24 +10,16 @@ import {
   Form,
   FormListFieldData,
   FormProps,
-  GetProp,
   Input,
+  InputNumber,
   Select,
   Space,
   Upload,
-  UploadProps,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useState } from 'react';
 import { newItem } from '../../services/ItemsServices';
-
-type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-
-const getBase64 = (img: FileType, callback: (url: string) => void) => {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result as string));
-  reader.readAsDataURL(img);
-};
+import { GetFieldFile } from '../../utils/images';
 
 const ItemTypes = [
   { label: 'Weapon', value: 'weapon' },
@@ -37,10 +29,33 @@ const ItemTypes = [
   { label: 'Misc', value: 'misc' },
 ];
 
+const DamageTypes = [
+  { label: 'Acid', value: 'acid' },
+  { label: 'Bludgeoning', value: 'bludgeoning' },
+  { label: 'Cold', value: 'cold' },
+  { label: 'Fire', value: 'fire' },
+  { label: 'Force', value: 'force' },
+  { label: 'Lightning', value: 'lightning' },
+  { label: 'Necrotic', value: 'necrotic' },
+  { label: 'Piercing', value: 'piercing' },
+  { label: 'Poison', value: 'poison' },
+  { label: 'Psychic', value: 'psychic' },
+  { label: 'Radiant', value: 'radiant' },
+  { label: 'Slashing', value: 'slashing' },
+  { label: 'Thunder', value: 'thunder' },
+];
+
+const DicesTypes = [
+  { label: 'D4', value: 4 },
+  { label: 'D6', value: 6 },
+  { label: 'D8', value: 8 },
+  { label: 'D10', value: 10 },
+  { label: 'D12', value: 12 },
+  { label: 'D20', value: 20 },
+];
+
 export default function NewItems() {
   const [form] = Form.useForm();
-
-  const [imageUrl, setImageUrl] = useState<string>('');
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
 
   const { message } = App.useApp();
@@ -54,12 +69,6 @@ export default function NewItems() {
     } catch (error: any) {
       message.error(error.message);
     }
-  };
-
-  const handleChange: UploadProps['onChange'] = (info) => {
-    getBase64(info.file as FileType, (url) => {
-      setImageUrl(url);
-    });
   };
 
   const onFinishFailed: FormProps['onFinishFailed'] = (errorInfo) => {
@@ -81,68 +90,95 @@ export default function NewItems() {
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          label="Type"
-          name={[field.name, 'type']}
-          rules={[
-            {
-              required: true,
-              message: "Type can't be empty",
-            },
-          ]}
-        >
-          <Select options={ItemTypes} placeholder="Select a type" showSearch />
-        </Form.Item>
+        <Flex gap={16} align="end" wrap>
+          <Form.Item
+            layout="horizontal"
+            label="Type"
+            name={[field.name, 'type']}
+            style={{ flex: 1 }}
+            rules={[
+              {
+                required: true,
+                message: "Type can't be empty",
+              },
+            ]}
+          >
+            <Select
+              options={ItemTypes}
+              placeholder="Select a type"
+              showSearch
+            />
+          </Form.Item>
+
+          <Form.Item
+            layout="horizontal"
+            name={[field.name, 'equipable']}
+            valuePropName="checked"
+            rules={[
+              {
+                required: false,
+              },
+            ]}
+          >
+            <Checkbox>Equipable</Checkbox>
+          </Form.Item>
+        </Flex>
         <Form.Item>
-          <Flex justify="space-between" align="center">
+          <Flex wrap gap={16}>
+            <Form.Item label="Bonus" name={[field.name, 'bonus']}>
+              <InputNumber defaultValue={0} />
+            </Form.Item>
             <Form.Item
-              noStyle
-              layout="horizontal"
-              name={[field.name, 'equipable']}
-              valuePropName="checked"
-              rules={[
-                {
-                  required: false,
-                },
-              ]}
+              label="Dices"
+              name={[field.name, 'damage', 'damage_dice_quantity']}
             >
-              <Checkbox>Equipable</Checkbox>
+              <InputNumber defaultValue={1} />
+            </Form.Item>
+            <Form.Item
+              label="Dices"
+              name={[field.name, 'damage', 'damage_dice_sides']}
+            >
+              <Select
+                options={DicesTypes}
+                placeholder="Select a dice"
+                showSearch
+              />
+            </Form.Item>
+            <Form.Item
+              label="Damage addition"
+              name={[field.name, 'damage', 'damage_addition']}
+            >
+              <InputNumber defaultValue={0} />
+            </Form.Item>
+            <Form.Item
+              label="Damage type"
+              name={[field.name, 'damage', 'damage_type']}
+            >
+              <Select
+                options={DamageTypes}
+                placeholder="Select a type of damage"
+                showSearch
+              />
             </Form.Item>
           </Flex>
         </Form.Item>
-        <Form.Item
-          label="Description"
-          name={[field.name, 'description']}
-          rules={[
-            {
-              required: true,
-              message: 'Please enter the item description',
-            },
-          ]}
-        >
+        <Form.Item label="Description" name={[field.name, 'description']}>
           <TextArea />
         </Form.Item>
         <Form.Item
           label="Upload image"
           name={[field.name, 'image']}
-          getValueFromEvent={({ file }) => file}
+          getValueFromEvent={GetFieldFile}
         >
           <Upload
+            multiple={false}
             accept="image/png, image/jpeg"
             maxCount={1}
-            listType="picture-card"
-            showUploadList={false}
             customRequest={(options: any) => {}}
             beforeUpload={() => false}
-            onChange={handleChange}
+            listType="picture"
           >
-            {form.getFieldValue([field.name + 'image'])}
-            {
-              <span style={{ border: 0, background: 'none' }}>
-                <Plus weight="bold" size={16} />
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </span>
-            }
+            <Button icon={<FileArrowUp size={16} />}>Click to upload</Button>
           </Upload>
         </Form.Item>
       </>
@@ -177,8 +213,9 @@ export default function NewItems() {
           style={{ maxWidth: 600 }}
           autoComplete="off"
           onFinish={onFinish}
-          layout="vertical"
+          layout="horizontal"
           onFinishFailed={onFinishFailed}
+          initialValues={{ items: [{}] }}
         >
           <Form.List name="items">
             {(fields, { add, remove }) => (
@@ -197,12 +234,13 @@ export default function NewItems() {
                         title={`Item ${field.name + 1}`}
                         key={field.key}
                         extra={
-                          <X
-                            size={32}
-                            weight="bold"
+                          <Button
+                            icon={<X size={16} weight="bold" />}
                             onClick={() => {
                               remove(field.name);
                             }}
+                            type="text"
+                            danger
                           />
                         }
                       >
@@ -217,8 +255,13 @@ export default function NewItems() {
                     ))}
                   </>
                 )}
-                <Button type="dashed" onClick={() => add()} block>
-                  + Add Item
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<Plus size={16} weight="bold" />}
+                >
+                  Add Item
                 </Button>
               </div>
             )}

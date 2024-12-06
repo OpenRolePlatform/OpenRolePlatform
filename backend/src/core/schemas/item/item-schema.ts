@@ -1,16 +1,5 @@
 import { Schema } from "mongoose";
-import { Damage } from "src/core/models/damage-model";
 import { Owner, ReqBool, ReqName, ReqString } from "../common";
-
-const DamageSchema = new Schema<Damage>(
-  {
-    damage_dice_quantity: Number,
-    damage_dice_sides: Number,
-    damage_addition: Number,
-    damage_type: String,
-  },
-  { versionKey: false }
-);
 
 export const ItemSchema = new Schema(
   {
@@ -22,7 +11,12 @@ export const ItemSchema = new Schema(
     equipped: ReqBool,
     type: ReqString,
     bonus: Number,
-    damage: DamageSchema,
+    damage: {
+      damage_dice_quantity: Number,
+      damage_dice_sides: Number,
+      damage_addition: Number,
+      damage_type: String,
+    },
     amount: Number,
     image: String,
   },
@@ -39,5 +33,3 @@ export const ItemInstanceSchema = new Schema(
   },
   { versionKey: false }
 );
-
-//export default mongoose.model("Item", ItemSchema);

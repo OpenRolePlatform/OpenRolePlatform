@@ -9,3 +9,8 @@ export function getClassImage(className: string) {
 export function getItemImage(type: string) {
   return `/img/items/${type}.png`;
 }
+
+export const GetFieldFile = (e: any) => {
+  if (Array.isArray(e)) return e;
+  return e?.fileList;
+};
