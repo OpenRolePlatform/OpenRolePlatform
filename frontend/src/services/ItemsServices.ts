@@ -1,6 +1,9 @@
-export async function getPlayers() {
+import axios, { AxiosError } from 'axios';
+import { Item } from '../models/ItemsModels';
+
+export async function getItems() {
   try {
-    const response = await fetch(`/api/player`, {
+    const response = await fetch(`/api/items`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -9,18 +12,18 @@ export async function getPlayers() {
     if (response.ok) {
       if (response.status === 200) return await response.json();
     } else {
-      console.error('Error getting the campaigns.');
+      console.error('Error getting the items.');
       throw new Error(response.statusText);
     }
   } catch (error) {
-    console.error('Error at character stats.' + error);
+    console.error('Error getting the items.' + error);
     throw error;
   }
 }
 
-export async function getPlayerDetails(id: string) {
+export async function getItemData() {
   try {
-    const response = await fetch(`/api/player/${id}`, {
+    const response = await fetch(`/api/items/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -38,35 +41,34 @@ export async function getPlayerDetails(id: string) {
   }
 }
 
-export async function getPlayerCampaigns(id: string) {
+export async function newItem(item: Item) {
   try {
-    const response = await fetch(`/api/player/${id}/campaigns`, {
-      method: 'GET',
+    const response = await axios.post(`/api/items`, item, {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
       },
     });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error getting player campaigns.');
-      throw new Error(response.statusText);
+    if (response.status === 200) return await response.data;
+  } catch (error: Error | AxiosError) {
+    if (error.response) {
+      console.error('Error creating the new campaign');
+      throw new Error(error.response.status);
     }
-  } catch (error) {
-    console.error('Error at character stats.' + error);
+    console.error(error);
     throw error;
   }
 }
-export async function newPlayer(player: FormData) {
+
+export async function bulkItemsCreate(items: FormData) {
   try {
-    const response = await fetch(`/api/player`, {
+    const response = await fetch(`/api/items`, {
       method: 'POST',
-      body: player,
+      body: items,
     });
     if (response.ok) {
       if (response.status === 200) return await response.json();
     } else {
-      console.error('Error creating the new player');
+      console.error('Error creating the new campaign');
       throw new Error(response.statusText);
     }
   } catch (error) {
@@ -75,15 +77,16 @@ export async function newPlayer(player: FormData) {
   }
 }
 
-export async function enrollCampaign(player: string, campaign: string) {
+export async function updateItem(itemID: string, item: FormData) {
   try {
-    const response = await fetch(`/api/player/${player}/enroll/${campaign}`, {
+    const response = await fetch(`/api/items/${itemID}`, {
       method: 'PUT',
+      body: item,
     });
     if (response.ok) {
       if (response.status === 200) return await response.json();
     } else {
-      console.error('Error creating the new player');
+      console.error('Error creating the new campaign');
       throw new Error(response.statusText);
     }
   } catch (error) {

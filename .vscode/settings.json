@@ -38,6 +38,7 @@
     "backend-campaign",
     "backend-player",
     "frontend-players",
-    "frontend-campaigns"
+    "frontend-campaigns",
+    "backend-deploy"
   ]
 }

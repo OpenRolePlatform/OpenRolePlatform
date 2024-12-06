@@ -21,4 +21,5 @@ playerRouter.get("/:playerID/campaigns", getPlayerCampaigns);
 playerRouter.post("/", upload.single("image"), postPlayer);
 playerRouter.put("/:playerID", upload.single("image"), putPlayer);
 playerRouter.put("/:playerID/enroll/:campaignID", enrollPlayer);
+
 export default playerRouter;

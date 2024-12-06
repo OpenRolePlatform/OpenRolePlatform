@@ -1,8 +1,6 @@
 //react imports
-import { useEffect, useState } from 'react';
-//@mui imports
-//@mui icons imports
 import { Button, Flex, List, Typography } from 'antd';
+import { useEffect, useState } from 'react';
 
 import { Hexagon, Plus } from '@phosphor-icons/react';
 import { Hex } from '../../assets/Icons';

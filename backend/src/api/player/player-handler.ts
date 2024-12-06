@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
+import { MessageModel, MessageType } from "../WebsocketTypes";
 import { _enrollPlayer } from "./routes/enroll-player";
 import {
   _getPlayerCampaigns,
@@ -71,8 +72,8 @@ export const postPlayer = async (req: any, res: any) => {
     //player created
     res.status(StatusCodes.CREATED).send(newPlayer);
     WebSocketService.Instance.broadcast({
-      type: "New",
-      model: "player",
+      type: MessageType.New,
+      model: MessageModel.player,
       data: newPlayer,
     });
   } catch (error) {
@@ -95,8 +96,8 @@ export const putPlayer = async (req: any, res: any) => {
       return res.status(StatusCodes.NOT_FOUND).send("Player not found.");
     res.status(StatusCodes.OK).send("Player updated correctly.");
     WebSocketService.Instance.broadcast({
-      type: "Update",
-      model: "player",
+      type: MessageType.Update,
+      model: MessageModel.player,
       data: updatedPlayer,
     });
   } catch (error) {
@@ -117,13 +118,13 @@ export const enrollPlayer = async (req: any, res: any) => {
       return res.status(StatusCodes.NOT_FOUND).send(updatedPlayer);
     res.status(StatusCodes.OK).send(updatedPlayer);
     WebSocketService.Instance.broadcast({
-      type: "Update",
-      model: "player",
+      type: MessageType.Update,
+      model: MessageModel.player,
       data: updatedPlayer,
     });
     WebSocketService.Instance.broadcast({
-      type: "Update",
-      model: "campaign",
+      type: MessageType.Update,
+      model: MessageModel.campaign,
       data: updatedCampaign,
     });
   } catch (error) {

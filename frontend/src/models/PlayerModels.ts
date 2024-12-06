@@ -5,6 +5,7 @@ export interface Player {
   name: string;
   description?: string;
   image?: string;
+  creation_date?: Date;
   campaigns: {
     playing: Array<Campaign>;
     dm: Array<Campaign>;

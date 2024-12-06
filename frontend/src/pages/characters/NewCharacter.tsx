@@ -1,28 +1,19 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { FileArrowUp, Plus } from '@phosphor-icons/react';
 import {
-  App,
   Button,
   Drawer,
   FloatButton,
   Form,
   FormProps,
-  GetProp,
   Input,
+  message,
   Select,
   Upload,
-  UploadProps,
 } from 'antd';
 import { useState } from 'react';
 import { usePlayer } from '../../components/PlayerContext';
 import { newCharacter } from '../../services/CharacterServices';
-
-type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-
-const getBase64 = (img: FileType, callback: (url: string) => void) => {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result as string));
-  reader.readAsDataURL(img);
-};
+import { GetFieldFile } from '../../utils/images';
 
 const ClassesOptions = [
   { label: 'Barbarian', value: 'barbarian' },
@@ -65,12 +56,9 @@ const RacesOptions = [
 ];
 
 export default function NewCharacter() {
-  const { message } = App.useApp();
   const playerContext = usePlayer();
 
   const [form] = Form.useForm();
-
-  const [imageUrl, setImageUrl] = useState<string>('');
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
 
   const onFinish: FormProps['onFinish'] = async (values) => {
@@ -86,12 +74,6 @@ export default function NewCharacter() {
     } catch (error: any) {
       message.error(error.message);
     }
-  };
-
-  const handleChange: UploadProps['onChange'] = (info) => {
-    getBase64(info.file as FileType, (url) => {
-      setImageUrl(url);
-    });
   };
 
   const onFinishFailed: FormProps['onFinishFailed'] = (errorInfo) => {
@@ -165,25 +147,17 @@ export default function NewCharacter() {
           <Form.Item
             label="Upload image"
             name="image"
-            getValueFromEvent={({ file }) => file}
+            getValueFromEvent={GetFieldFile}
           >
             <Upload
+              multiple={false}
               accept="image/png, image/jpeg"
               maxCount={1}
-              listType="picture-card"
-              showUploadList={false}
               customRequest={(options: any) => {}}
               beforeUpload={() => false}
-              onChange={handleChange}
+              listType="picture"
             >
-              {imageUrl ? (
-                <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
-              ) : (
-                <span style={{ border: 0, background: 'none' }}>
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>Upload</div>
-                </span>
-              )}
+              <Button icon={<FileArrowUp size={16} />}>Click to upload</Button>
             </Upload>
           </Form.Item>
           <Form.Item
@@ -200,7 +174,7 @@ export default function NewCharacter() {
       <FloatButton
         icon={
           <>
-            <PlusOutlined />
+            <Plus size={32} weight="bold" />
           </>
         }
         onClick={() => setShowDrawer(true)}
