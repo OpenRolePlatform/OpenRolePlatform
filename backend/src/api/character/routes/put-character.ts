@@ -11,8 +11,12 @@ const CharacterModel = () =>
  * @returns the updated character data
  */
 export async function _putCharacter(id: string, updateCharacter: Character) {
-  let character = await CharacterModel().findByIdAndUpdate(id, {
-    $set: { ...updateCharacter },
-  });
+  let character = await CharacterModel().findByIdAndUpdate(
+    id,
+    {
+      $set: { ...updateCharacter },
+    },
+    { new: true }
+  );
   return character;
 }

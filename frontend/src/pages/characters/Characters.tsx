@@ -1,40 +1,31 @@
 import { Avatar, Card, Col, List, Row, Skeleton } from 'antd';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMount } from 'react-use';
+import { useGetSetState, useMount } from 'react-use';
 import useBreakpoint from 'use-breakpoint';
 import { DEFAULT_AVATAR } from '../../assets/Images';
 import { BREAKPOINTS } from '../../components/Layout';
 import { usePlayer } from '../../components/PlayerContext';
 import { Character } from '../../models/CharacterModels';
 import { getCharacters } from '../../services/CharacterServices';
+import { useDynamicList } from '../../services/useDynamicList';
 import { getBackendImage } from '../../utils/images';
 import NewCharacter from './NewCharacter';
 
 export default function Characters() {
   const navigate = useNavigate();
   const { breakpoint } = useBreakpoint(BREAKPOINTS);
-  const [loading, setLoading] = useState<boolean>(true);
   const playerContext = usePlayer();
+  const [query, setQuery] = useGetSetState({});
 
-  const [characters, setCharacters] = useState<Array<Character>>([
-    { name: '', owner: '' },
-    { name: '', owner: '' },
-    { name: '', owner: '' },
-  ]);
+  const characters = useDynamicList<Character>(
+    'character',
+    query(),
+    getCharacters,
+  );
 
-  useMount(async () => {
-    try {
-      const data = await getCharacters(
-        playerContext.role === 'player'
-          ? { owner: playerContext.player?._id }
-          : undefined,
-      );
-      setCharacters(data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
+  useMount(() => {
+    if (playerContext.role === 'player')
+      setQuery({ owner: playerContext.player?._id });
   });
 
   return (
@@ -43,10 +34,10 @@ export default function Characters() {
         <List
           itemLayout="horizontal"
           size="large"
-          dataSource={characters}
+          dataSource={characters.data}
           renderItem={(character) => (
             <List.Item onClick={() => navigate(`/characters/${character._id}`)}>
-              <Skeleton loading={loading} active avatar>
+              <Skeleton loading={characters.loading} active avatar>
                 <List.Item.Meta
                   avatar={
                     character.image ? (
@@ -66,7 +57,7 @@ export default function Characters() {
         />
       ) : (
         <Row align="middle" gutter={[12, 12]}>
-          {characters.map((character, index) => (
+          {characters.data.map((character, index) => (
             <Col
               key={`col-${index}`}
               xs={{ flex: '100%' }}
@@ -75,7 +66,7 @@ export default function Characters() {
               lg={{ flex: '20%' }}
               xl={{ flex: '20%' }}
             >
-              {loading ? (
+              {characters.loading ? (
                 <Card
                   style={{ height: '100%' }}
                   cover={<Skeleton.Node style={{ width: '100%' }} active />}

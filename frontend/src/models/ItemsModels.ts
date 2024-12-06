@@ -6,7 +6,7 @@ export interface Damage {
 }
 
 export interface Item {
-  _id?: string; // Identificador único del ítem
+  _id: string; // Identificador único del ítem
   name: string; // Nombre del ítem
   description: string; // Descripción del ítem
   type: 'weapon' | 'armor' | 'potion' | 'accessory' | 'misc'; // Tipo de ítem

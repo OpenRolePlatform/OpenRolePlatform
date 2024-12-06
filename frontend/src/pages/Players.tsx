@@ -1,39 +1,18 @@
 import { User } from '@phosphor-icons/react';
-import { App, Button, Drawer } from 'antd';
+import { Button, Drawer } from 'antd';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useMount } from 'react-use';
 import { usePlayer } from '../components/PlayerContext';
 import PlayersList from '../components/PlayersList';
 import { Player } from '../models/PlayerModels';
 import { getPlayers } from '../services/PlayerServices';
+import { useDynamicList } from '../services/useDynamicList';
 import NewPlayer from './NewPlayer';
 
 export default function Players() {
-  const navigate = useNavigate();
+  const playerContext = usePlayer();
+  const players = useDynamicList<Player>('player', {}, getPlayers);
 
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
-
-  const { message } = App.useApp();
-
-  const playerContext = usePlayer();
-
-  const [loading, setLoading] = useState<boolean>(true);
-  const [players, setPlayers] = useState<Array<Player>>([]);
-
-  const loadPlayers = async () => {
-    try {
-      const data = await getPlayers();
-      setPlayers(data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useMount(async () => {
-    await loadPlayers();
-  });
 
   return (
     <>
@@ -42,11 +21,11 @@ export default function Players() {
         size="large"
         title="Select player"
         open={showDrawer}
-        extra={<NewPlayer players={players} refresh={loadPlayers} />}
+        extra={<NewPlayer players={players.data} />}
         onClose={() => setShowDrawer(false)}
       >
         <PlayersList
-          players={players}
+          players={players.data}
           actions={(player) => [
             <>
               <Button onClick={() => playerContext.selectPlayer(player)}>
@@ -54,7 +33,7 @@ export default function Players() {
               </Button>
             </>,
           ]}
-          loading={loading}
+          loading={players.loading}
         />
       </Drawer>
       <Button

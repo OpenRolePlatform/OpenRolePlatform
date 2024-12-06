@@ -14,7 +14,7 @@ export interface ExampleCampaign {
 }
 
 export interface Campaign {
-  _id?: string;
+  _id: string;
   name: string;
   description: string;
   creation_date: Date;

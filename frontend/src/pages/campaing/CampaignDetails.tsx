@@ -8,10 +8,6 @@ import {
   Typography,
 } from 'antd';
 import SkeletonAvatar from 'antd/es/skeleton/Avatar';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import useBreakpoint from 'use-breakpoint';
-import { BREAKPOINTS } from '../../components/Layout';
 import PlayersList from '../../components/PlayersList';
 import { Campaign } from '../../models/CampaignModels';
 import { Player } from '../../models/PlayerModels';
@@ -19,40 +15,13 @@ import {
   getCampaignData,
   getCampaignPlayers,
 } from '../../services/CampaignServices';
+import { useDynamicList } from '../../services/useDynamicList';
+import { useDynamicObject } from '../../services/useDynamicObject';
 import { getBackendImage } from '../../utils/images';
 
 export default function CampaignDetails({ id }: { id: string }) {
-  const navigate = useNavigate();
-  const { breakpoint } = useBreakpoint(BREAKPOINTS);
-
-  const [campaign, setCampaign] = useState<Campaign>();
-  const [players, setPlayers] = useState<Array<Player>>();
-
-  const [loadingPlayers, setLoadingPlayers] = useState<boolean>(false);
-
-  async function loadPlayers() {
-    setLoadingPlayers(true);
-    try {
-      const playersData = await getCampaignPlayers(id);
-      setPlayers(playersData);
-    } catch (error) {
-      console.log(error);
-    }
-    setLoadingPlayers(false);
-  }
-
-  async function loadCampaignDetails() {
-    try {
-      const data = await getCampaignData(id);
-      setCampaign(data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useEffect(() => {
-    loadCampaignDetails();
-  }, [id]);
+  const campaign = useDynamicObject<Campaign>(id, 'campaign', getCampaignData);
+  const players = useDynamicList<Player>('player', id, getCampaignPlayers);
 
   function getStatus(status: string) {
     switch (status) {
@@ -68,7 +37,7 @@ export default function CampaignDetails({ id }: { id: string }) {
 
   return (
     <>
-      {campaign ? (
+      {!campaign.loading ? (
         <Space direction="vertical" style={{ width: '100%' }}>
           <Flex gap={'1rem'}>
             <Space
@@ -78,15 +47,15 @@ export default function CampaignDetails({ id }: { id: string }) {
             >
               <img
                 className="campaign-logo"
-                src={getBackendImage(campaign.image)}
+                src={getBackendImage(campaign.data().image)}
                 alt="logo"
               />
             </Space>
             <Space direction="vertical">
               <Typography.Title level={4}>
-                <b>{campaign.name}</b>
+                <b>{campaign.data.name}</b>
               </Typography.Title>
-              {campaign.description}
+              {campaign.data().description}
             </Space>
           </Flex>
           <Descriptions
@@ -94,14 +63,16 @@ export default function CampaignDetails({ id }: { id: string }) {
               {
                 key: 'creation_date',
                 label: 'Creation date',
-                children: new Date(campaign.creation_date).toDateString(),
+                children: new Date(
+                  campaign.data().creation_date,
+                ).toDateString(),
               },
               {
                 key: 'status',
                 label: 'Status',
                 children: (
-                  <Tag color={getStatus(campaign.status)}>
-                    {campaign.status}
+                  <Tag color={getStatus(campaign.data().status)}>
+                    {campaign.data().status}
                   </Tag>
                 ),
               },
@@ -112,15 +83,18 @@ export default function CampaignDetails({ id }: { id: string }) {
             style={{ width: '100%' }}
             size="large"
             collapsible="header"
-            onChange={() => {
-              if (!players) loadPlayers();
+            onChange={(key) => {
+              if (key.length > 0) players.refetch();
             }}
             items={[
               {
                 key: '1',
                 label: 'Players',
                 children: (
-                  <PlayersList players={players} loading={loadingPlayers} />
+                  <PlayersList
+                    players={players.data}
+                    loading={players.loading}
+                  />
                 ),
               },
             ]}

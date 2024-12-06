@@ -5,10 +5,7 @@ import { Player } from '../models/PlayerModels';
 import { newPlayer } from '../services/PlayerServices';
 import { GetFieldFile } from '../utils/images';
 
-const NewPlayer: React.FC<{ players: Array<Player>; refresh: () => void }> = ({
-  players,
-  refresh,
-}) => {
+const NewPlayer: React.FC<{ players: Array<Player> }> = ({ players }) => {
   const [form] = Form.useForm();
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
 
@@ -17,7 +14,6 @@ const NewPlayer: React.FC<{ players: Array<Player>; refresh: () => void }> = ({
       await newPlayer(values);
       message.success('Player created');
       setShowDrawer(false);
-      refresh();
       form.resetFields();
     } catch (error: any) {
       message.error(error.message);

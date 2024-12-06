@@ -115,7 +115,6 @@ export function useCharacter(id: string): CharacterService {
     setLoading(true);
     try {
       await updateCharacter(id, newCharacter);
-      setCharacter(newCharacter);
     } catch (error) {
       setError(JSON.stringify(error));
     } finally {
