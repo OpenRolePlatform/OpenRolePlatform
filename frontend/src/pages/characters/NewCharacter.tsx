@@ -62,12 +62,8 @@ export default function NewCharacter() {
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
 
   const onFinish: FormProps['onFinish'] = async (values) => {
-    const formData = new FormData();
-    for (const name in values) {
-      if (values[name]) formData.append(name, values[name]);
-    }
     try {
-      await newCharacter(formData);
+      await newCharacter(values);
       message.success('Character created');
       setShowDrawer(false);
       form.resetFields();

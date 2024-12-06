@@ -1,6 +1,12 @@
-import { Lightning, Shield } from '@phosphor-icons/react';
+import {
+  CaretCircleDown,
+  CaretCircleUp,
+  Lightning,
+  Shield,
+} from '@phosphor-icons/react';
 import {
   Button,
+  Card,
   Col,
   ConfigProvider,
   Flex,
@@ -8,6 +14,7 @@ import {
   Row,
   Segmented,
   Space,
+  Statistic,
 } from 'antd';
 import { ChangeEvent, useState } from 'react';
 import {
@@ -18,13 +25,77 @@ import {
 } from '../../assets/Images';
 import { Stat } from '../../models/CharacterModels';
 import { CharacterService } from '../../services/useCharacter';
-import { getBonusValue } from '../../utils/data';
+import { getBonusValue, getBonusValueNum } from '../../utils/data';
 import { getBackendImage } from '../../utils/images';
 
 const stats_img_style = {
   height: '100%',
   width: '100%',
 };
+
+export function StatsCard({
+  character,
+  stat,
+}: {
+  character: CharacterService;
+  stat: Stat;
+}) {
+  return (
+    <Card
+      actions={[
+        <Button
+          type="link"
+          size="large"
+          icon={<CaretCircleUp size={32} weight="duotone" />}
+          style={{ width: '50%' }}
+        />,
+        <InputNumber
+          variant="borderless"
+          size="large"
+          controls={false}
+          name={stat}
+          value={character.stats()[stat]}
+          onChange={(value) =>
+            character.updateStats({ [stat]: Number(value ?? 0) })
+          }
+          rootClassName="number-field"
+          style={{ width: '50%' }}
+        />,
+        <Button
+          type="link"
+          size="large"
+          icon={<CaretCircleDown size={32} weight="duotone" />}
+          style={{ width: '50%' }}
+        />,
+      ]}
+    >
+      <Statistic
+        title={stat}
+        value={getBonusValueNum(character.stats()[stat])}
+        prefix={getBonusValueNum(character.stats()[stat]) > 0 && '+'}
+      />
+    </Card>
+  );
+}
+
+export function StatsCardGroup(props: {
+  character: CharacterService;
+  statsList: Array<Stat>;
+}) {
+  const { character } = props;
+
+  return (
+    <>
+      <Space direction="vertical">
+        <Col style={{ height: '100%' }}>
+          {props.statsList.map((stat) => (
+            <StatsCard character={character} stat={stat} />
+          ))}
+        </Col>
+      </Space>
+    </>
+  );
+}
 
 export function StatsColumn(props: {
   character: CharacterService;

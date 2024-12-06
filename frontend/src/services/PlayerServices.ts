@@ -1,75 +1,61 @@
+import axios, { AxiosError } from 'axios';
+import { Player } from '../models/PlayerModels';
+
 export async function getPlayers() {
   try {
-    const response = await fetch(`/api/player`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error getting the campaigns.');
-      throw new Error(response.statusText);
+    const response = await axios.get(`/api/player`);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error getting the players.', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
-    console.error('Error at character stats.' + error);
+    console.error(error);
     throw error;
   }
 }
 
 export async function getPlayerDetails(id: string) {
   try {
-    const response = await fetch(`/api/player/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error at character stats.');
-      throw new Error(response.statusText);
+    const response = await axios.get(`/api/player/${id}`);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error getting the player details.', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
-    console.error('Error at character stats.' + error);
+    console.error(error);
     throw error;
   }
 }
 
 export async function getPlayerCampaigns(id: string) {
   try {
-    const response = await fetch(`/api/player/${id}/campaigns`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error getting player campaigns.');
-      throw new Error(response.statusText);
+    const response = await axios.get(`/api/player/${id}/campaigns`);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error getting the player campaigns.', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
-    console.error('Error at character stats.' + error);
+    console.error(error);
     throw error;
   }
 }
-export async function newPlayer(player: FormData) {
+
+export async function newPlayer(player: Player) {
   try {
-    const response = await fetch(`/api/player`, {
-      method: 'POST',
-      body: player,
+    const response = await axios.post(`/api/player`, player, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error creating the new player');
-      throw new Error(response.statusText);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error creating new player', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
     console.error(error);
     throw error;
   }
@@ -77,16 +63,15 @@ export async function newPlayer(player: FormData) {
 
 export async function enrollCampaign(player: string, campaign: string) {
   try {
-    const response = await fetch(`/api/player/${player}/enroll/${campaign}`, {
-      method: 'PUT',
-    });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error creating the new player');
-      throw new Error(response.statusText);
+    const response = await axios.put(
+      `/api/player/${player}/enroll/${campaign}`,
+    );
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error enrolling a campaign.', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
     console.error(error);
     throw error;
   }

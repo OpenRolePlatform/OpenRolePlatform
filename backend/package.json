@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon",
+    "serve": "node --env-file=../.env ./dist/index.js",
     "build": "tsc"
   },
   "nodemonConfig": {
     "watch": [
       "src"
     ],
-    "exec": "tsc && node --env-file=../.env ./dist/index.js",
+    "exec": "tsc && node ./dist/index.js",
     "ext": "ts,js,json"
   },
   "author": "",

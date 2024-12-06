@@ -1,76 +1,61 @@
+import axios, { AxiosError } from 'axios';
+import { Campaign } from '../models/CampaignModels';
+
 export async function getCampaigns() {
   try {
-    const response = await fetch(`/api/campaign`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error getting the campaigns.');
-      throw new Error(response.statusText);
+    const response = await axios.get(`/api/campaign`);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error getting the campaigns.', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
-    console.error('Error at character stats.' + error);
+    console.error(error);
     throw error;
   }
 }
 
 export async function getCampaignData(id: string) {
   try {
-    const response = await fetch(`/api/campaign/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error at character stats.');
-      throw new Error(response.statusText);
+    const response = await axios.get(`/api/campaign/${id}`);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error getting the campaign data.', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
-    console.error('Error at character stats.' + error);
+    console.error(error);
     throw error;
   }
 }
 
 export async function getCampaignPlayers(id: string) {
   try {
-    const response = await fetch(`/api/campaign/${id}/players`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error at character stats.');
-      throw new Error(response.statusText);
+    const response = await axios.get(`/api/campaign/${id}/players`);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error getting the campaign players.', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
-    console.error('Error at character stats.' + error);
+    console.error(error);
     throw error;
   }
 }
 
-export async function newCampaign(campaign: FormData) {
+export async function newCampaign(campaign: Campaign) {
   try {
-    const response = await fetch(`/api/campaign`, {
-      method: 'POST',
-      body: campaign,
+    const response = await axios.post(`/api/campaign`, campaign, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error creating the new campaign');
-      throw new Error(response.statusText);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error creating a new campaign', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
     console.error(error);
     throw error;
   }
@@ -78,16 +63,17 @@ export async function newCampaign(campaign: FormData) {
 
 export async function selectCampaign(name: string) {
   try {
-    const response = await fetch(`/api/campaign/${name}`, {
-      method: 'POST',
+    const response = await axios.post(`/api/campaign/${name}`, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
-    if (response.ok) {
-      return;
-    } else {
-      console.error('Error loading the campaign');
-      throw new Error(response.statusText);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error loading the campaign', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
     console.error(error);
     throw error;
   }
@@ -95,20 +81,14 @@ export async function selectCampaign(name: string) {
 
 export async function getLoadedCampaign() {
   try {
-    const response = await fetch(`/api/campaign/loaded`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error getting the loaded campaign.');
-      throw new Error(response.statusText);
+    const response = await axios.get(`/api/campaign/loaded`);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error getting the loaded campaign.', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
-    console.error('Error at character stats.' + error);
+    console.error(error);
     throw error;
   }
 }

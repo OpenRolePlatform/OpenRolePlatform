@@ -3,40 +3,28 @@ import { Item } from '../models/ItemsModels';
 
 export async function getItems() {
   try {
-    const response = await fetch(`/api/items`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error getting the items.');
-      throw new Error(response.statusText);
+    const response = await axios.get(`/api/items`);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error getting the items.', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
-    console.error('Error getting the items.' + error);
+    console.error(error);
     throw error;
   }
 }
 
-export async function getItemData() {
+export async function getItemData(itemID: string) {
   try {
-    const response = await fetch(`/api/items/`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error at character stats.');
-      throw new Error(response.statusText);
+    const response = await axios.get(`/api/items/${itemID}`);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error getting the items data.', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
-    console.error('Error at character stats.' + error);
+    console.error(error);
     throw error;
   }
 }
@@ -48,48 +36,30 @@ export async function newItem(item: Item) {
         'Content-Type': 'multipart/form-data',
       },
     });
-    if (response.status === 200) return await response.data;
-  } catch (error: Error | AxiosError) {
-    if (error.response) {
-      console.error('Error creating the new campaign');
-      throw new Error(error.response.status);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error creating new items', error.response);
+      throw new Error(error.response?.statusText);
     }
     console.error(error);
     throw error;
   }
 }
 
-export async function bulkItemsCreate(items: FormData) {
+export async function updateItem(itemID: string, item: Partial<Item>) {
   try {
-    const response = await fetch(`/api/items`, {
-      method: 'POST',
-      body: items,
+    const response = await axios.put(`/api/items/${itemID}`, item, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error creating the new campaign');
-      throw new Error(response.statusText);
+    return response.data;
+  } catch (error: unknown | AxiosError) {
+    if (error instanceof AxiosError) {
+      console.error('Error updating items', error.response);
+      throw new Error(error.response?.statusText);
     }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-
-export async function updateItem(itemID: string, item: FormData) {
-  try {
-    const response = await fetch(`/api/items/${itemID}`, {
-      method: 'PUT',
-      body: item,
-    });
-    if (response.ok) {
-      if (response.status === 200) return await response.json();
-    } else {
-      console.error('Error creating the new campaign');
-      throw new Error(response.statusText);
-    }
-  } catch (error) {
     console.error(error);
     throw error;
   }

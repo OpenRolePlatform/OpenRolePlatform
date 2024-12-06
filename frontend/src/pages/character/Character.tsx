@@ -4,14 +4,13 @@ import { useParams } from 'react-router-dom';
 import './Character.scss';
 
 //components imports
+import { Seal, Sparkle } from '@phosphor-icons/react';
 import { Button, Drawer, Flex, InputNumber, Row } from 'antd';
 import { NameBorder } from '../../assets/Images.ts';
-import SkillsMenu from './SkillsMenu.tsx';
-import { GeneralStats, StatsColumn } from './StatsComponents.tsx';
-
-import { Seal, Sparkle } from '@phosphor-icons/react';
 import { Stat } from '../../models/CharacterModels.ts';
 import { useCharacter } from '../../services/useCharacter.ts';
+import SkillsMenu from './SkillsMenu.tsx';
+import { GeneralStats, StatsColumn } from './StatsComponents.tsx';
 
 const STATS_LEFT: Array<Stat> = ['strength', 'dexterity', 'constitution'];
 const STATS_RIGHT: Array<Stat> = ['intelligence', 'wisdom', 'charisma'];

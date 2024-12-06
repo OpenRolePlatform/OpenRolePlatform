@@ -19,12 +19,8 @@ export default function NewCampaign() {
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
 
   const onFinish: FormProps['onFinish'] = async (values) => {
-    const formData = new FormData();
-    for (const name in values) {
-      if (values[name]) formData.append(name, values[name]);
-    }
     try {
-      await newCampaign(formData);
+      await newCampaign(values);
       message.success('Campaign created');
       setShowDrawer(false);
       form.resetFields();

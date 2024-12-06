@@ -11,6 +11,6 @@ export function getItemImage(type: string) {
 }
 
 export const GetFieldFile = (e: any) => {
-  if (Array.isArray(e)) return e;
-  return e?.fileList;
+  if (Array.isArray(e)) return e?.fileList;
+  return e?.file;
 };

@@ -8,7 +8,7 @@ import {
   Skills,
   Stats,
 } from '../models/CharacterModels';
-import { getCharacter, updateCharacter } from './CharacterServices';
+import { getCharacterDetails, updateCharacter } from './CharacterServices';
 
 const initStats: Stats = {
   strength: 0,
@@ -100,7 +100,7 @@ export function useCharacter(id: string): CharacterService {
   useMount(async () => {
     setLoading(true);
     try {
-      const character = await getCharacter(id);
+      const character = await getCharacterDetails(id);
       setCharacter(character);
       setLoading(false);
     } catch (_error) {

@@ -13,12 +13,8 @@ const NewPlayer: React.FC<{ players: Array<Player>; refresh: () => void }> = ({
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
 
   const onFinish: FormProps['onFinish'] = async (values) => {
-    const formData = new FormData();
-    for (const name in values) {
-      if (values[name]) formData.append(name, values[name]);
-    }
     try {
-      await newPlayer(formData);
+      await newPlayer(values);
       message.success('Player created');
       setShowDrawer(false);
       refresh();

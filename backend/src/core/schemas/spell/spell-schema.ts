@@ -1,21 +1,12 @@
 import { Schema } from "mongoose";
-import { Damage } from "src/core/models/damage-model";
-import { ReqBool, ReqName, ReqNumber, ReqOwner, ReqString } from "../common";
-
-const DamageSchema = new Schema<Damage>(
-  {
-    damage_dice_quantity: Number,
-    damage_dice_sides: Number,
-    damage_addition: Number,
-    damage_type: String,
-  },
-  { versionKey: false }
-);
+import { Owner, ReqBool, ReqName, ReqNumber, ReqString } from "../common";
 
 export const SpellSchema = new Schema(
   {
-    owner: ReqOwner,
+    _id: String,
     name: ReqName,
+    owner: Owner,
+    description: String,
     class: ReqString,
     level: ReqNumber,
     school: ReqString,
@@ -28,15 +19,17 @@ export const SpellSchema = new Schema(
       somatic: ReqBool,
       material: ReqBool,
     },
-    description: String,
     equipable: ReqBool,
     equipped: ReqBool,
     type: ReqString,
     bonus: Number,
-    damage: DamageSchema,
+    damage: {
+      damage_dice_quantity: Number,
+      damage_dice_sides: Number,
+      damage_addition: Number,
+      damage_type: String,
+    },
     hidden: ReqBool,
   },
   { versionKey: false }
 );
-
-//export default mongoose.model("Spell", SpellSchema);
