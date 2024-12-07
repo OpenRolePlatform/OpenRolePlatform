@@ -1,55 +1,47 @@
 import {
+  Col,
   Collapse,
   Descriptions,
   Flex,
+  Row,
   Skeleton,
   Space,
+  Tag,
   Typography,
 } from 'antd';
 import SkeletonAvatar from 'antd/es/skeleton/Avatar';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import CampaignsList from '../../components/CampaignsList';
 import { PlayerAvatar } from '../../components/PlayerAvatar';
+import { usePlayer } from '../../components/PlayerContext';
 import { Campaign } from '../../models/CampaignModels';
 import { Player } from '../../models/PlayerModels';
 import {
   getPlayerCampaigns,
   getPlayerDetails,
 } from '../../services/PlayerServices';
+import { useDynamicList } from '../../services/useDynamicList';
+import { useDynamicObject } from '../../services/useDynamicObject';
 
 export default function PlayerDetails({ id }: { id: string }) {
-  const [player, setPlayer] = useState<Player>();
-  const [campaigns, setCampaigns] = useState<Array<Campaign>>();
+  const playerContext = usePlayer();
 
-  const [loadingCampaigns, setLoadingCampaigns] = useState<boolean>(false);
-
-  async function loadCampaigns() {
-    setLoadingCampaigns(true);
-    try {
-      const campaignsData = await getPlayerCampaigns(id);
-      setCampaigns(campaignsData);
-    } catch (error) {
-      console.log(error);
-    }
-    setLoadingCampaigns(false);
-  }
-
-  async function loadPlayerDetails() {
-    try {
-      const data = await getPlayerDetails(id);
-      setPlayer(data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const player = useDynamicObject<Player>(id, 'player', getPlayerDetails);
+  const campaigns = useDynamicList<Campaign>(
+    'campaign',
+    getPlayerCampaigns,
+    id,
+  );
 
   useEffect(() => {
-    loadPlayerDetails();
+    if (id) {
+      player.refetch(id);
+    }
   }, [id]);
 
   return (
     <>
-      {player ? (
+      {!player.loading ? (
         <Space direction="vertical" style={{ width: '100%' }}>
           <Flex gap={'1rem'}>
             <Space
@@ -59,23 +51,32 @@ export default function PlayerDetails({ id }: { id: string }) {
             >
               <PlayerAvatar
                 role="player"
-                image={player.image}
-                name={player.name}
+                image={player.data().image}
+                name={player.data().name}
               />
             </Space>
-            <Space direction="vertical">
-              <Typography.Title level={4}>
-                <b>{player.name}</b>
-              </Typography.Title>
-              {player.description}
-            </Space>
+            <Col>
+              <Row align="middle" gutter={8}>
+                <Col>
+                  <Typography.Title level={4}>
+                    <b>{player.data().name}</b>
+                  </Typography.Title>
+                </Col>
+                <Col>
+                  {playerContext?.player?._id === id && (
+                    <Tag color="success">It's you!</Tag>
+                  )}
+                </Col>
+              </Row>
+              {player.data().description}
+            </Col>
           </Flex>
           <Descriptions
             items={[
               {
                 key: 'creation_date',
                 label: 'Creation date',
-                children: new Date(player.creation_date).toDateString(),
+                children: new Date(player.data().creation_date!).toDateString(),
               },
             ]}
           />
@@ -84,8 +85,8 @@ export default function PlayerDetails({ id }: { id: string }) {
             style={{ width: '100%' }}
             size="large"
             collapsible="header"
-            onChange={() => {
-              if (!campaigns) loadCampaigns();
+            onChange={(key) => {
+              if (key.length > 0) campaigns.refetch();
             }}
             items={[
               {
@@ -93,8 +94,8 @@ export default function PlayerDetails({ id }: { id: string }) {
                 label: 'Enrolled Campaigns',
                 children: (
                   <CampaignsList
-                    campaigns={campaigns}
-                    loading={loadingCampaigns}
+                    campaigns={campaigns.data}
+                    loading={campaigns.loading}
                   />
                 ),
               },

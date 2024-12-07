@@ -1,8 +1,10 @@
 import {
+  Col,
   Collapse,
   Descriptions,
   Flex,
   Image,
+  Row,
   Skeleton,
   Space,
   Tag,
@@ -23,7 +25,7 @@ import { getBackendImage } from '../../utils/images';
 
 export default function CampaignDetails({ id }: { id: string }) {
   const campaign = useDynamicObject<Campaign>(id, 'campaign', getCampaignData);
-  const players = useDynamicList<Player>('player', id, getCampaignPlayers);
+  const players = useDynamicList<Player>('player', getCampaignPlayers, id);
 
   function getStatus(status: string) {
     switch (status) {
@@ -41,25 +43,21 @@ export default function CampaignDetails({ id }: { id: string }) {
     <>
       {!campaign.loading ? (
         <Space direction="vertical" style={{ width: '100%' }}>
-          <Flex gap={'1rem'}>
-            <Space
-              direction="vertical"
-              align="start"
-              style={{ height: '100%' }}
-            >
+          <Row gutter={8}>
+            <Col xs={{ flex: '150px' }} sm={{ flex: '150px' }}>
               <Image
                 className="campaign-logo"
                 src={getBackendImage(campaign.data().image!)}
                 fallback={CAMPAIGN_ICON}
               />
-            </Space>
-            <Space direction="vertical">
+            </Col>
+            <Col xs={24} sm={24} md={16} lg={16} xl={16}>
               <Typography.Title level={4}>
-                <b>{campaign.data.name}</b>
+                <b>{campaign.data().name}</b>
               </Typography.Title>
               {campaign.data().description}
-            </Space>
-          </Flex>
+            </Col>
+          </Row>
           <Descriptions
             items={[
               {

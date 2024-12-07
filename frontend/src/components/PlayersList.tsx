@@ -1,7 +1,10 @@
-import { SmileySad } from '@phosphor-icons/react';
-import { ConfigProvider, List, Skeleton, Space } from 'antd';
+import { List as ListIcon, SmileySad } from '@phosphor-icons/react';
+import { Button, ConfigProvider, Drawer, List, Skeleton, Space } from 'antd';
+import { useState } from 'react';
 import { Player } from '../models/PlayerModels';
+import PlayerDetails from '../pages/player/PlayerDetails';
 import { PlayerAvatar } from './PlayerAvatar';
+import { usePlayer } from './PlayerContext';
 
 interface PlayersListProps {
   players: Array<Player> | undefined;
@@ -21,6 +24,9 @@ export default function PlayersList({
   actions,
   loading,
 }: PlayersListProps) {
+  const [selectedPlyer, setSelectedPlayer] = useState<string>();
+  const playerContext = usePlayer();
+
   return (
     <ConfigProvider renderEmpty={EmptyPlayers}>
       <List
@@ -36,7 +42,21 @@ export default function PlayersList({
           ]
         }
         renderItem={(player) => (
-          <List.Item actions={actions ? actions(player) : []}>
+          <List.Item
+            actions={
+              actions
+                ? [
+                    ...actions(player),
+                    <>
+                      <Button
+                        icon={<ListIcon size={16} weight="bold" />}
+                        onClick={() => setSelectedPlayer(player._id)}
+                      />
+                    </>,
+                  ]
+                : []
+            }
+          >
             <Skeleton loading={loading} active avatar>
               <List.Item.Meta
                 avatar={
@@ -52,6 +72,21 @@ export default function PlayersList({
           </List.Item>
         )}
       />
+      <Drawer
+        placement="bottom"
+        size="large"
+        open={selectedPlyer}
+        onClose={() => setSelectedPlayer(undefined)}
+        extra={
+          playerContext.player?._id === selectedPlyer && (
+            <Button variant="filled" onClick={() => {}}>
+              Edit Player
+            </Button>
+          )
+        }
+      >
+        <PlayerDetails id={selectedPlyer!} />
+      </Drawer>
     </ConfigProvider>
   );
 }

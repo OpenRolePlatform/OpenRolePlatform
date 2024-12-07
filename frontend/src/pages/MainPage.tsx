@@ -1,19 +1,37 @@
-import { Button, Divider, Flex, Space, Typography } from 'antd';
+import { User } from '@phosphor-icons/react';
+import {
+  Button,
+  Col,
+  Divider,
+  Drawer,
+  Flex,
+  Image,
+  Row,
+  Space,
+  Tag,
+  Typography,
+} from 'antd';
 import Title from 'antd/es/typography/Title';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MasterIcon } from '../assets/Icons';
-import { mainLogo } from '../assets/Images';
+import { CAMPAIGN_ICON, mainLogo } from '../assets/Images';
 import { useCampaign } from '../components/CampaignContext';
 import { usePlayer } from '../components/PlayerContext';
-import { enrollCampaign } from '../services/PlayerServices';
+import PlayersList from '../components/PlayersList';
+import { Player } from '../models/PlayerModels';
+import { enrollCampaign, getPlayers } from '../services/PlayerServices';
+import { useDynamicList } from '../services/useDynamicList';
 import { getBackendImage } from '../utils/images';
-import Players from './Players';
+import NewPlayer from './NewPlayer';
 
 export default function MainPage() {
   const navigate = useNavigate();
   const playerContext = usePlayer();
   const campaignContext = useCampaign();
+
+  const players = useDynamicList<Player>('player', getPlayers);
+  const [showDrawer, setShowDrawer] = useState<boolean>(false);
 
   useEffect(() => {
     if (campaignContext.campaign) {
@@ -64,7 +82,17 @@ export default function MainPage() {
               Enter as Dungeon Master
             </Button>
             <Divider>or</Divider>
-            <Players />
+            <Button
+              icon={<User />}
+              onClick={() => setShowDrawer(true)}
+              shape="round"
+              size="large"
+              block
+              type="text"
+              variant="filled"
+            >
+              Enter as Player
+            </Button>
           </Space>
         )}
         {/* DM content */}
@@ -94,29 +122,23 @@ export default function MainPage() {
                 style={{ width: '80%' }}
               >
                 <Divider />
-
-                <Flex gap={'1rem'}>
-                  <Space
-                    direction="vertical"
-                    align="start"
-                    style={{ height: '100%' }}
-                  >
-                    <img
+                <Row gutter={8}>
+                  <Col xs={{ flex: '150px' }} sm={{ flex: '150px' }}>
+                    <Image
                       className="campaign-logo"
-                      src={getBackendImage(campaignContext.campaign.image)}
-                      alt="logo"
+                      src={getBackendImage(campaignContext.campaign.image!)}
+                      fallback={CAMPAIGN_ICON}
                     />
-                  </Space>
-                  <Space direction="vertical">
+                  </Col>
+                  <Col xs={24} sm={24} md={16} lg={16} xl={16}>
                     <Typography.Title level={4}>
                       <b>{campaignContext.campaign.name}</b>
                     </Typography.Title>
                     {campaignContext.campaign.description}
-                  </Space>
-                </Flex>
+                  </Col>
+                </Row>
 
-                <br />
-                <Space direction="vertical" align="center">
+                <Col>
                   <Button
                     shape="round"
                     size="large"
@@ -132,8 +154,18 @@ export default function MainPage() {
                     Enroll Campaign
                   </Button>
                   <Divider>or</Divider>
-                  <Players />
-                </Space>
+                  <Button
+                    icon={<User />}
+                    onClick={() => setShowDrawer(true)}
+                    shape="round"
+                    size="large"
+                    block
+                    type="text"
+                    variant="filled"
+                  >
+                    Change to other Player
+                  </Button>
+                </Col>
               </Space>
             ) : (
               <Space
@@ -148,6 +180,35 @@ export default function MainPage() {
             )}
           </>
         )}
+        <Drawer
+          placement="bottom"
+          size="large"
+          title="Select player"
+          open={showDrawer}
+          extra={<NewPlayer players={players.data} />}
+          onClose={() => setShowDrawer(false)}
+        >
+          <PlayersList
+            players={players.data}
+            actions={(player) => [
+              <>
+                {playerContext.player?._id !== player._id ? (
+                  <Button
+                    onClick={() => {
+                      playerContext.selectPlayer(player);
+                      setShowDrawer(false);
+                    }}
+                  >
+                    Select Player
+                  </Button>
+                ) : (
+                  <Tag color="success">It's you!</Tag>
+                )}
+              </>,
+            ]}
+            loading={players.loading}
+          />
+        </Drawer>
       </Flex>
     </>
   );

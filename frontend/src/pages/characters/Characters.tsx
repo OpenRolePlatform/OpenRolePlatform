@@ -19,8 +19,8 @@ export default function Characters() {
 
   const characters = useDynamicList<Character>(
     'character',
-    query(),
     getCharacters,
+    query(),
   );
 
   useMount(() => {

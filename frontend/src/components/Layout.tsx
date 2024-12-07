@@ -3,6 +3,7 @@ import { Content, Header } from 'antd/es/layout/layout';
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../utils/theme';
+import { useCampaign } from './CampaignContext';
 import { usePlayer } from './PlayerContext';
 import PlayerMenu from './PlayerMenu';
 import { ThemeToggle } from './ThemeToggle';
@@ -37,6 +38,10 @@ export const BREAKPOINTS = { mobile: 0, tablet: 576, desktop: 1280 };
 const DmRoutes = [
   { key: '/', label: 'Home' },
   { key: '/campaigns', label: 'Campaigns' },
+];
+
+const DmFullRoutes = [
+  { key: '/campaigns', label: 'Campaigns' },
   { key: '/characters', label: 'Characters' },
   { key: '/items', label: 'Items' },
   { key: '/notes', label: 'Notes' },
@@ -58,11 +63,16 @@ function LayoutWrap() {
 
   const playerContext = usePlayer();
 
+  const campaignContext = useCampaign();
+
   useEffect(() => {
-    if (playerContext.role === 'dm') setMenuRoutes(DmRoutes);
-    else if (playerContext.role === 'player') setMenuRoutes(PlayerRoutes);
+    if (!campaignContext.campaign && playerContext.role === 'dm')
+      setMenuRoutes(DmRoutes);
+    else if (playerContext.role === 'dm') setMenuRoutes(DmFullRoutes);
+    else if (campaignContext.campaign && playerContext.role === 'player')
+      setMenuRoutes(PlayerRoutes);
     else setMenuRoutes([]);
-  }, [playerContext.role]);
+  }, [playerContext.role, campaignContext.campaign]);
 
   useEffect(() => {
     if (location.pathname !== '/' && !playerContext.role) {

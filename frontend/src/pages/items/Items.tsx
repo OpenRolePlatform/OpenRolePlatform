@@ -5,7 +5,7 @@ import { useDynamicList } from '../../services/useDynamicList';
 import NewItems from './NewItems';
 
 export default function Items() {
-  const items = useDynamicList<Item>('item', {}, getItems);
+  const items = useDynamicList<Item>('item', getItems);
 
   return (
     <>

@@ -1,12 +1,14 @@
 import { BookOpenText, SmileySad } from '@phosphor-icons/react';
-import { Avatar, ConfigProvider, List, Skeleton, Space } from 'antd';
+import { Avatar, ConfigProvider, List, Skeleton, Space, Tag } from 'antd';
 import { Campaign } from '../models/CampaignModels';
 import { getBackendImage } from '../utils/images';
+import { useCampaign } from './CampaignContext';
 
 interface CampaignsListProps {
   campaigns: Array<Campaign> | undefined;
   actions?: (campaign: Campaign) => React.ReactNode[];
   loading: boolean;
+  extra?: (campaign: Campaign) => React.ReactNode;
 }
 const EmptyCampaigns = () => {
   return (
@@ -21,39 +23,22 @@ export default function CampaignsList({
   campaigns,
   actions,
   loading,
+  extra,
 }: CampaignsListProps) {
+  const campaignContext = useCampaign();
+
   return (
     <ConfigProvider renderEmpty={EmptyCampaigns}>
       <List
         itemLayout="vertical"
         size="large"
-        dataSource={
-          campaigns ?? [
-            [
-              { name: '', image: '' },
-              { name: '', image: '' },
-              { name: '', image: '' },
-            ],
-          ]
-        }
+        loading={loading}
+        dataSource={campaigns}
         renderItem={(campaign) => (
           <>
             <List.Item
-              actions={actions ? actions(campaign) : []}
-              /* extra={
-                loading
-                  ? []
-                  : [
-                      <Flex style={{ width: '100%' }} justify="end">
-                        <Button
-                          variant="filled"
-                          onClick={() => loadCampaign(campaign._id)}
-                        >
-                          Load Campaign
-                        </Button>
-                      </Flex>,
-                    ]
-              } */
+              actions={actions && !loading ? actions(campaign) : []}
+              extra={extra && !loading ? extra(campaign) : []}
             >
               <Skeleton loading={loading} title={false} active avatar>
                 <List.Item.Meta
@@ -71,6 +56,11 @@ export default function CampaignsList({
                     )
                   }
                   title={campaign.name}
+                  description={
+                    campaignContext.campaign?._id === campaign._id && (
+                      <Tag color="success">Loaded Campaign</Tag>
+                    )
+                  }
                 />
                 {campaign.description}
               </Skeleton>

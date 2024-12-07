@@ -19,8 +19,8 @@ export interface DynamicList<T> {
  */
 export function useDynamicList<T extends { _id: string }>(
   model: string | string,
-  query: any,
-  request: (query: any) => Promise<T[]>,
+  request: (query?: any) => Promise<T[]>,
+  query?: any,
 ): DynamicList<T> {
   const [list, { set, push, updateAt, removeAt }] = useList<T>([]);
 

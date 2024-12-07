@@ -1,6 +1,5 @@
-import { BookOpenText, SmileySad } from '@phosphor-icons/react';
+import { List, SmileySad } from '@phosphor-icons/react';
 import {
-  Avatar,
   Button,
   Card,
   Col,
@@ -8,21 +7,24 @@ import {
   Drawer,
   Flex,
   Image,
-  List,
   message,
   Row,
   Skeleton,
   Space,
+  Tag,
 } from 'antd';
 import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMount } from 'react-use';
 import useBreakpoint from 'use-breakpoint';
 import { CAMPAIGN_ICON } from '../../assets/Images';
+import { useCampaign } from '../../components/CampaignContext';
+import CampaignsList from '../../components/CampaignsList';
 import { BREAKPOINTS } from '../../components/Layout';
+import { usePlayer } from '../../components/PlayerContext';
 import { Campaign } from '../../models/CampaignModels';
 import { getCampaigns, selectCampaign } from '../../services/CampaignServices';
+import { useDynamicList } from '../../services/useDynamicList';
 import { getBackendImage } from '../../utils/images';
 import CampaignDetails from './CampaignDetails';
 import NewCampaign from './NewCampaign';
@@ -37,29 +39,14 @@ const EmptyCampaigns = () => {
   );
 };
 
-export default function CampaignsList() {
+export default function Campaigns() {
   const navigate = useNavigate();
   const { breakpoint } = useBreakpoint(BREAKPOINTS);
-  const [loading, setLoading] = useState<boolean>(true);
+  const campaignContext = useCampaign();
+  const playerContext = usePlayer();
 
+  const campaigns = useDynamicList<Campaign>('campaign', getCampaigns);
   const [selectedCampaign, setSelectedCampaign] = useState<string>();
-
-  const [campaigns, setCampaigns] = useState<Array<Campaign>>([
-    { name: '', description: '', image: '', creation_date: new Date() },
-    { name: '', description: '', image: '', creation_date: new Date() },
-    { name: '', description: '', image: '', creation_date: new Date() },
-  ]);
-
-  useMount(async () => {
-    try {
-      const data = await getCampaigns();
-      setCampaigns(data);
-      setLoading(false);
-    } catch (error) {
-      setCampaigns([]);
-      console.log(error);
-    }
-  });
 
   const loadCampaign = async (name: string) => {
     try {
@@ -76,52 +63,21 @@ export default function CampaignsList() {
       <ErrorBoundary>
         <ConfigProvider renderEmpty={EmptyCampaigns}>
           {breakpoint === 'mobile' ? (
-            <List
-              itemLayout="horizontal"
-              size="large"
-              dataSource={campaigns}
-              renderItem={(campaign) => (
-                <List.Item
-                  extra={
-                    loading
-                      ? []
-                      : [
-                          <Flex style={{ width: '100%' }} justify="end">
-                            <Button
-                              variant="filled"
-                              onClick={() => loadCampaign(campaign._id)}
-                            >
-                              Load Campaign
-                            </Button>
-                          </Flex>,
-                        ]
-                  }
-                >
-                  <Skeleton loading={loading} title={false} active avatar>
-                    <List.Item.Meta
-                      avatar={
-                        campaign.image ? (
-                          <Avatar
-                            size="large"
-                            src={getBackendImage(campaign.image)}
-                          />
-                        ) : (
-                          <Avatar
-                            size="large"
-                            icon={<BookOpenText weight="duotone" />}
-                          />
-                        )
-                      }
-                      title={campaign.name}
-                    />
-                    {campaign.description}
-                  </Skeleton>
-                </List.Item>
+            <CampaignsList
+              campaigns={campaigns.data}
+              loading={campaigns.loading}
+              extra={(campaign) => (
+                <Flex style={{ width: '100%' }} justify="end">
+                  <Button
+                    icon={<List size={32} weight="bold" />}
+                    onClick={() => setSelectedCampaign(campaign._id)}
+                  />
+                </Flex>
               )}
             />
           ) : (
             <Row align="stretch" gutter={[12, 12]}>
-              {campaigns.map((campaign, index) => (
+              {campaigns.data.map((campaign, index) => (
                 <Col
                   key={`col-${index}`}
                   xs={{ flex: '100%' }}
@@ -130,7 +86,7 @@ export default function CampaignsList() {
                   lg={{ flex: '20%' }}
                   xl={{ flex: '20%' }}
                 >
-                  {loading ? (
+                  {campaigns.loading ? (
                     <Card
                       style={{ height: '100%' }}
                       cover={<Skeleton.Node style={{ width: '100%' }} active />}
@@ -153,6 +109,9 @@ export default function CampaignsList() {
                       onClick={() => setSelectedCampaign(campaign._id)}
                     >
                       <h3>{campaign.name}</h3>
+                      {campaignContext.campaign?._id === campaign._id && (
+                        <Tag color="success">Loaded Campaign</Tag>
+                      )}
                     </Card>
                   )}
                 </Col>
@@ -167,12 +126,20 @@ export default function CampaignsList() {
         open={selectedCampaign !== undefined}
         onClose={() => setSelectedCampaign(undefined)}
         extra={
-          <Button
-            variant="filled"
-            onClick={() => loadCampaign(selectedCampaign)}
-          >
-            Load Campaign
-          </Button>
+          <>
+            {campaignContext.campaign?._id !== selectedCampaign ? (
+              playerContext.role === 'dm' && (
+                <Button
+                  variant="filled"
+                  onClick={() => loadCampaign(selectedCampaign)}
+                >
+                  Load Campaign
+                </Button>
+              )
+            ) : (
+              <Tag color="success">Loaded Campaign</Tag>
+            )}
+          </>
         }
       >
         {selectedCampaign && (

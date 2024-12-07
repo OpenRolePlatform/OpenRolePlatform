@@ -10,7 +10,7 @@ import NewPlayer from './NewPlayer';
 
 export default function Players() {
   const playerContext = usePlayer();
-  const players = useDynamicList<Player>('player', {}, getPlayers);
+  const players = useDynamicList<Player>('player', getPlayers);
 
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
 
