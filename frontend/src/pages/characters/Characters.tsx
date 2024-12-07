@@ -1,14 +1,19 @@
-import { Avatar, Card, Col, List, Row, Skeleton } from 'antd';
+import { List } from '@phosphor-icons/react';
+import { Button, Card, Col, Drawer, Image, Row, Skeleton, Tag } from 'antd';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetSetState, useMount } from 'react-use';
 import useBreakpoint from 'use-breakpoint';
 import { DEFAULT_AVATAR } from '../../assets/Images';
+import { useSelectedCharacter } from '../../components/CharacterContext';
+import CharactersList from '../../components/CharactersList';
 import { BREAKPOINTS } from '../../components/Layout';
 import { usePlayer } from '../../components/PlayerContext';
 import { Character } from '../../models/CharacterModels';
 import { getCharacters } from '../../services/CharacterServices';
 import { useDynamicList } from '../../services/useDynamicList';
 import { getBackendImage } from '../../utils/images';
+import CharacterDetails from './CharacterDetails';
 import NewCharacter from './NewCharacter';
 
 export default function Characters() {
@@ -22,6 +27,8 @@ export default function Characters() {
     getCharacters,
     query(),
   );
+  const [selectedCharacter, setSelectedCharacter] = useState<string>();
+  const characterContext = useSelectedCharacter();
 
   useMount(() => {
     if (playerContext.role === 'player')
@@ -31,29 +38,15 @@ export default function Characters() {
   return (
     <>
       {breakpoint === 'mobile' ? (
-        <List
-          itemLayout="horizontal"
-          size="large"
-          dataSource={characters.data}
-          renderItem={(character) => (
-            <List.Item onClick={() => navigate(`/characters/${character._id}`)}>
-              <Skeleton loading={characters.loading} active avatar>
-                <List.Item.Meta
-                  avatar={
-                    character.image ? (
-                      <Avatar
-                        size="large"
-                        src={getBackendImage(character.image)}
-                      />
-                    ) : (
-                      <Avatar size="large" src={DEFAULT_AVATAR} />
-                    )
-                  }
-                  title={character.name}
-                />
-              </Skeleton>
-            </List.Item>
-          )}
+        <CharactersList
+          characters={characters.data}
+          loading={characters.loading}
+          actions={(character) => [
+            <Button
+              icon={<List size={16} weight="bold" />}
+              onClick={() => setSelectedCharacter(character._id)}
+            />,
+          ]}
         />
       ) : (
         <Row align="middle" gutter={[12, 12]}>
@@ -75,22 +68,59 @@ export default function Characters() {
                 </Card>
               ) : (
                 <Card
+                  hoverable
+                  style={{ height: '100%' }}
                   cover={
-                    character.image ? (
-                      <img src={getBackendImage(character.image)} />
-                    ) : (
-                      <img src={DEFAULT_AVATAR} />
-                    )
+                    <Image
+                      style={{ borderRadius: '10px 10px 0 0' }}
+                      src={getBackendImage(character.image!)}
+                      fallback={DEFAULT_AVATAR}
+                      preview={false}
+                    />
                   }
-                  onClick={() => navigate(`/characters/${character._id}`)}
+                  onClick={() => setSelectedCharacter(character._id)}
                 >
                   <h3>{character.name}</h3>
+                  {characterContext.character()._id === character._id && (
+                    <Tag color="success">Your Character</Tag>
+                  )}
                 </Card>
               )}
             </Col>
           ))}
         </Row>
       )}
+      <Drawer
+        placement="bottom"
+        size="large"
+        open={selectedCharacter}
+        onClose={() => setSelectedCharacter(undefined)}
+        extra={
+          characterContext.character()?._id !== selectedCharacter ? (
+            playerContext.role !== 'dm' && (
+              <Button
+                variant="filled"
+                onClick={() => {
+                  characterContext.selectCharacter(selectedCharacter!);
+                }}
+              >
+                Select character
+              </Button>
+            )
+          ) : (
+            <Button
+              variant="filled"
+              onClick={() => {
+                navigate(`/characters/${characterContext.character()?._id}`);
+              }}
+            >
+              Start Playing
+            </Button>
+          )
+        }
+      >
+        <CharacterDetails id={selectedCharacter!} />
+      </Drawer>
       <NewCharacter />
     </>
   );

@@ -14,24 +14,13 @@ import {
   Row,
   Segmented,
   Space,
-  Statistic,
+  Typography,
 } from 'antd';
-import { ChangeEvent, useState } from 'react';
-import {
-  AVATAR_BORDER,
-  DEFAULT_AVATAR,
-  HpBorders,
-  StatsBackground,
-} from '../../assets/Images';
+import { useState } from 'react';
+import { HpBorders } from '../../assets/Images';
 import { Stat } from '../../models/CharacterModels';
 import { CharacterService } from '../../services/useCharacter';
 import { getBonusValue, getBonusValueNum } from '../../utils/data';
-import { getBackendImage } from '../../utils/images';
-
-const stats_img_style = {
-  height: '100%',
-  width: '100%',
-};
 
 export function StatsCard({
   character,
@@ -41,39 +30,56 @@ export function StatsCard({
   stat: Stat;
 }) {
   return (
-    <Card
-      actions={[
-        <Button
-          type="link"
-          size="large"
-          icon={<CaretCircleUp size={32} weight="duotone" />}
-          style={{ width: '50%' }}
-        />,
-        <InputNumber
-          variant="borderless"
-          size="large"
-          controls={false}
-          name={stat}
-          value={character.stats()[stat]}
-          onChange={(value) =>
-            character.updateStats({ [stat]: Number(value ?? 0) })
-          }
-          rootClassName="number-field"
-          style={{ width: '50%' }}
-        />,
-        <Button
-          type="link"
-          size="large"
-          icon={<CaretCircleDown size={32} weight="duotone" />}
-          style={{ width: '50%' }}
-        />,
-      ]}
-    >
-      <Statistic
-        title={stat}
-        value={getBonusValueNum(character.stats()[stat])}
-        prefix={getBonusValueNum(character.stats()[stat]) > 0 && '+'}
-      />
+    <Card size="small" title={stat.toUpperCase()}>
+      <Row gutter={12} align="stretch" justify="space-between">
+        <Col span={14}>
+          <Typography.Title
+            level={2}
+            style={{ textAlign: 'center', whiteSpace: 'nowrap' }}
+          >
+            {getBonusValueNum(character.stats()[stat]) > 0 && '+'}
+            {getBonusValueNum(character.stats()[stat])}
+          </Typography.Title>
+        </Col>
+        <Col span={10}>
+          <Space.Compact direction="vertical">
+            <Button
+              size="large"
+              icon={<CaretCircleUp size={32} weight="duotone" />}
+              onClick={() =>
+                character.updateStats({
+                  [stat]: character.character().stats[stat] + 1,
+                })
+              }
+            />
+            <InputNumber
+              //variant="borderless"
+              //size="large"
+              controls={false}
+              name={stat}
+              style={{
+                borderRadius: 0,
+                maxWidth: 40,
+              }}
+              max={20}
+              min={0}
+              value={character.stats()[stat]}
+              onChange={(value) =>
+                character.updateStats({ [stat]: Number(value ?? 0) })
+              }
+            />
+            <Button
+              size="large"
+              icon={<CaretCircleDown size={32} weight="duotone" />}
+              onClick={() =>
+                character.updateStats({
+                  [stat]: character.character().stats[stat] + 1,
+                })
+              }
+            />
+          </Space.Compact>
+        </Col>
+      </Row>
     </Card>
   );
 }
@@ -86,48 +92,13 @@ export function StatsCardGroup(props: {
 
   return (
     <>
-      <Space direction="vertical">
-        <Col style={{ height: '100%' }}>
-          {props.statsList.map((stat) => (
-            <StatsCard character={character} stat={stat} />
-          ))}
-        </Col>
-      </Space>
-    </>
-  );
-}
-
-export function StatsColumn(props: {
-  character: CharacterService;
-  statsList: Array<Stat>;
-}) {
-  const { character } = props;
-
-  return (
-    <>
-      <Col style={{ width: '25%', height: '100%' }}>
+      <Row gutter={[8, 8]} align="stretch">
         {props.statsList.map((stat) => (
-          <Flex justify="center" align="middle">
-            <img
-              src={StatsBackground[stat]}
-              style={stats_img_style}
-              alt={stat}
-            />
-            <p className="bonus">{getBonusValue(character.stats()[stat])}</p>
-            <InputNumber
-              variant="borderless"
-              inputMode="numeric"
-              name={stat}
-              formatter={(value) => `${value < 10 ? ` ${value}` : value}`}
-              value={character.stats()[stat]}
-              onChange={(value) =>
-                character.updateStats({ [stat]: value ?? 0 })
-              }
-              className="stat-field number-field"
-            />
-          </Flex>
+          <Col xs={8} sm={8} md={4} lg={4} xl={4} xxl={4}>
+            <StatsCard character={character} stat={stat} />
+          </Col>
         ))}
-      </Col>
+      </Row>
     </>
   );
 }
@@ -136,36 +107,30 @@ export function AltStats(props: { character: CharacterService }) {
   const { character } = props;
 
   return (
-    <Space.Compact block style={{ padding: '8px 0', justifyContent: 'center' }}>
-      {/*  <img src={ais_img[1]} alt="initiative" /> */}
+    <Space.Compact style={{ padding: '8px 0', justifyContent: 'center' }}>
       <InputNumber
         className="number-field"
         size="large"
         controls={false}
         disabled
-        variant="borderless"
         value={getBonusValue(character.stats().dexterity)}
       />
-
       <InputNumber
         className="number-field"
         suffix={<Shield color="currentColor" size="1.5rem" />}
         size="large"
         controls={false}
         formatter={(value) => `${value > 0 ? `+${value}` : value}`}
-        variant="borderless"
         name="ac"
         onChange={(value) => character.updateOther({ ac: value ?? 0 })}
         value={character.other().ac}
       />
-
       <InputNumber
         className="number-field"
         size="large"
         controls={false}
         suffix={<Lightning color="currentColor" size="1.5rem" />}
         formatter={(value) => `${value > 0 ? `+${value}` : value}`}
-        variant="borderless"
         name="movement"
         onChange={(value) => character.updateOther({ movement: value ?? 0 })}
         value={character.other().movement}
@@ -363,37 +328,12 @@ export function HpMenu(props: { character: CharacterService }) {
   );
 }
 
-export function GeneralStats(props: {
-  character: CharacterService;
-  handleUpdate: (event: ChangeEvent<HTMLInputElement>) => void;
-}) {
+export function GeneralStats(props: { character: CharacterService }) {
   const { character } = props;
 
   return (
     <>
       <Col style={{ width: '50%' }}>
-        {/* character image and border */}
-        <Flex justify="center" align="middle">
-          <img
-            src={
-              character.character().image
-                ? getBackendImage(character.character().image!)
-                : DEFAULT_AVATAR
-            }
-            style={{ width: '90%', height: '90%', marginTop: '5%' }}
-            alt="character"
-          />
-          <img
-            src={AVATAR_BORDER}
-            style={{
-              position: 'absolute',
-              width: '100%',
-            }}
-            alt="character"
-          />
-        </Flex>
-
-        <AltStats character={character} />
         <HpMenu character={character} />
       </Col>
     </>

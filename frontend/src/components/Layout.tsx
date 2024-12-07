@@ -41,6 +41,7 @@ const DmRoutes = [
 ];
 
 const DmFullRoutes = [
+  { key: '/dm', label: 'Dashboard' },
   { key: '/campaigns', label: 'Campaigns' },
   { key: '/characters', label: 'Characters' },
   { key: '/items', label: 'Items' },

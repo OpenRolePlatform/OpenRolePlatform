@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { newCampaign } from '../../services/CampaignServices';
 import { GetFieldFile } from '../../utils/images';
 
-export default function NewCampaign() {
+export default function EditCampaign() {
   const [form] = Form.useForm();
 
   const [showDrawer, setShowDrawer] = useState<boolean>(false);

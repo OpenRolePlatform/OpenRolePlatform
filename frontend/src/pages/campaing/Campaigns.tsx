@@ -7,7 +7,6 @@ import {
   Drawer,
   Flex,
   Image,
-  message,
   Row,
   Skeleton,
   Space,
@@ -15,7 +14,6 @@ import {
 } from 'antd';
 import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import useBreakpoint from 'use-breakpoint';
 import { CAMPAIGN_ICON } from '../../assets/Images';
 import { useCampaign } from '../../components/CampaignContext';
@@ -23,7 +21,7 @@ import CampaignsList from '../../components/CampaignsList';
 import { BREAKPOINTS } from '../../components/Layout';
 import { usePlayer } from '../../components/PlayerContext';
 import { Campaign } from '../../models/CampaignModels';
-import { getCampaigns, selectCampaign } from '../../services/CampaignServices';
+import { getCampaigns } from '../../services/CampaignServices';
 import { useDynamicList } from '../../services/useDynamicList';
 import { getBackendImage } from '../../utils/images';
 import CampaignDetails from './CampaignDetails';
@@ -40,23 +38,12 @@ const EmptyCampaigns = () => {
 };
 
 export default function Campaigns() {
-  const navigate = useNavigate();
   const { breakpoint } = useBreakpoint(BREAKPOINTS);
   const campaignContext = useCampaign();
   const playerContext = usePlayer();
 
   const campaigns = useDynamicList<Campaign>('campaign', getCampaigns);
   const [selectedCampaign, setSelectedCampaign] = useState<string>();
-
-  const loadCampaign = async (name: string) => {
-    try {
-      await selectCampaign(name);
-      message.success('Campaign loaded');
-      navigate('/characters');
-    } catch (error: any) {
-      message.error(error.message);
-    }
-  };
 
   return (
     <>
@@ -100,6 +87,7 @@ export default function Campaigns() {
                       cover={
                         <>
                           <Image
+                            style={{ borderRadius: '10px 10px 0 0' }}
                             src={getBackendImage(campaign.image!)}
                             fallback={CAMPAIGN_ICON}
                             preview={false}
@@ -131,7 +119,9 @@ export default function Campaigns() {
               playerContext.role === 'dm' && (
                 <Button
                   variant="filled"
-                  onClick={() => loadCampaign(selectedCampaign)}
+                  onClick={() =>
+                    campaignContext.loadCampaign(selectedCampaign!)
+                  }
                 >
                   Load Campaign
                 </Button>

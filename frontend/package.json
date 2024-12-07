@@ -11,6 +11,7 @@
     "preview": "vite preview --host"
   },
   "dependencies": {
+    "@dice-roller/rpg-dice-roller": "^5.5.0",
     "@mdxeditor/editor": "^3.19.3",
     "@phosphor-icons/react": "^2.1.7",
     "@uidotdev/usehooks": "^2.4.1",

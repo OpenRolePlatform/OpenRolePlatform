@@ -1,9 +1,10 @@
 import axios, { AxiosError } from 'axios';
 import { Item } from '../models/ItemsModels';
 
-export async function getItems() {
+export async function getItems(query: any) {
   try {
-    const response = await axios.get(`/api/items`);
+    const params = new URLSearchParams(query);
+    const response = await axios.get(`/api/items`, { params });
     return response.data;
   } catch (error: unknown | AxiosError) {
     if (error instanceof AxiosError) {

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useGetSetState, useMount } from 'react-use';
+import { useEffect, useState } from 'react';
+import { useGetSetState } from 'react-use';
 import useWebSocket from 'react-use-websocket';
 
 export interface DynamicObject<T> {
@@ -51,7 +51,9 @@ export function useDynamicObject<T extends { _id: string }>(
   };
 
   // Hook start
-  useMount(() => fetch());
+  useEffect(() => {
+    fetch();
+  }, [id]);
 
   return {
     // data

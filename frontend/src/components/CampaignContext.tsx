@@ -1,12 +1,16 @@
+import { message } from 'antd';
 import { createContext, ReactNode, useContext, useState } from 'react';
 import { useMount } from 'react-use';
 import useWebSocket from 'react-use-websocket';
 import { Campaign } from '../models/CampaignModels';
-import { getLoadedCampaign } from '../services/CampaignServices';
+import {
+  getLoadedCampaign,
+  selectCampaign,
+} from '../services/CampaignServices';
 
 interface CampaignContextType {
   campaign: Campaign | undefined;
-  selectCampaign: (newCampaign: Campaign) => void;
+  loadCampaign: (id: string) => void;
 }
 
 const CampaignContext = createContext<CampaignContextType | undefined>(
@@ -51,8 +55,13 @@ export const CampaignProvider: React.FC<CampaignProviderProps> = ({
     },
   });
 
-  async function selectCampaign(newCampaign: Campaign) {
-    setCampaign(newCampaign);
+  async function loadCampaign(id: string) {
+    try {
+      await selectCampaign(id);
+      message.success('Campaign loaded');
+    } catch (error: any) {
+      message.error(error.message);
+    }
   }
 
   useMount(() => {
@@ -61,7 +70,7 @@ export const CampaignProvider: React.FC<CampaignProviderProps> = ({
 
   const context = {
     campaign,
-    selectCampaign,
+    loadCampaign,
   };
 
   return (

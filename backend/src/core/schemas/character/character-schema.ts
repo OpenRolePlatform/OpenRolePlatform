@@ -18,6 +18,11 @@ export const CharacterSchema = new Schema(
       unique: false,
     },
     name: ReqName,
+    race: String,
+    class: String,
+    level: { type: Number, default: 0 },
+    creation_date: Date,
+
     image: String,
     stats: {
       strength: StatNumber,
