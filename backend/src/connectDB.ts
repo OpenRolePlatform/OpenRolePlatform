@@ -6,6 +6,7 @@ import { Campaign } from "./core/models/campaign/campaign-model";
 import { CampaignSchema } from "./core/schemas/campaign/campaign-schema";
 import { CharacterSchema } from "./core/schemas/character/character-schema";
 import { ItemSchema } from "./core/schemas/item/item-schema";
+import { NotesSchema } from "./core/schemas/notes/notes-schema";
 import { PlayerSchema } from "./core/schemas/player/player-schema";
 import { SpellSchema } from "./core/schemas/spell/spell-schema";
 
@@ -105,6 +106,7 @@ export class ConnectionsManager {
       this._campaignDB.model("Spell", SpellSchema);
       this._campaignDB.model("Item", ItemSchema);
       this._campaignDB.model("Player", PlayerSchema);
+      this._campaignDB.model("Notes", NotesSchema);
       this._loadedCampaign = campaign;
       return true;
     }

@@ -31,6 +31,7 @@ import '@mdxeditor/editor/style.css';
 import { FloppyDisk } from '@phosphor-icons/react';
 import { Flex } from 'antd';
 import { useRef, useState } from 'react';
+import { updateNotes } from '../services/NotesServices';
 
 export default function Notes() {
   const ref = useRef<MDXEditorMethods>(null);
@@ -50,7 +51,7 @@ export default function Notes() {
   }
 
   async function saveNote() {
-    console.log(text);
+    await updateNotes('Master', text);
   }
 
   return (

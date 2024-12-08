@@ -21,9 +21,9 @@ services:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     env_file:
       - ./.env
-    environment:
-      - DATABASE_HOST=database
-      - DATABASE_PORT=27017
+    # environment:
+    #   - DATABASE_HOST=database
+    #   - DATABASE_PORT=27017
     volumes:
       - ./.env:/usr/src/.env
     depends_on:

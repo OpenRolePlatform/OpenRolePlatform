@@ -56,7 +56,7 @@ export const getPlayerCampaigns = async (req: any, res: any) => {
   }
 };
 
-//post campaign
+//post methods
 export const postPlayer = async (req: any, res: any) => {
   try {
     let body = req.body;
