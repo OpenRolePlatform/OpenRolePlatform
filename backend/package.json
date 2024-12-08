@@ -4,7 +4,9 @@
   "description": "Backend for OpenRolePlatform",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon"
+    "start": "nodemon",
+    "serve": "node --env-file=../.env ./dist/index.js",
+    "build": "tsc"
   },
   "nodemonConfig": {
     "watch": [
@@ -19,11 +21,16 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
-    "mongoose": "^8.7.1"
+    "express-ws": "^5.0.2",
+    "http-status-codes": "^2.3.0",
+    "mongoose": "^8.7.1",
+    "multer": "^1.4.4",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/express-ws": "^3.0.5",
     "@types/node": "^22.7.5",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",

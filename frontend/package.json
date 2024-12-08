@@ -6,19 +6,28 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --host"
   },
   "dependencies": {
+    "@dice-roller/rpg-dice-roller": "^5.5.0",
+    "@mdxeditor/editor": "^3.19.3",
+    "@phosphor-icons/react": "^2.1.7",
+    "@uidotdev/usehooks": "^2.4.1",
     "antd": "^5.21.3",
+    "axios": "^1.7.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0",
-    "sass": "^1.79.5"
+    "react-use": "^17.5.1",
+    "react-use-websocket": "^4.9.0",
+    "sass": "^1.79.5",
+    "use-breakpoint": "^4.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
+    "@types/node": "^22.7.5",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.8.1",
@@ -33,6 +42,6 @@
     "prettier": "^3.3.3",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.7.0",
-    "vite": "^5.4.8"
+    "vite": "^5.4.11"
   }
 }

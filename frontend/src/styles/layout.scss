@@ -1,0 +1,49 @@
+:root {
+  height: 100vh;
+  width: 100vw;
+  .layout {
+    min-height: 100vh;
+  }
+  .header {
+    color: var(--ant-menu-dark-item-hover-color);
+  }
+  .light-theme-icon {
+    &:hover {
+      color: var(--ant-color-bg-mask) !important;
+    }
+  }
+
+  .logo {
+    max-width: 40vw;
+    max-height: 40vh;
+    border-radius: 999rem;
+    border: 1px solid var(--ant-color-border);
+  }
+  .campaign-logo {
+    border-radius: 999rem;
+    border: 1px solid var(--ant-color-border);
+  }
+}
+
+.bonus {
+  position: absolute;
+  color: black;
+  align-self: center;
+  font-size: 7vw;
+}
+
+.stat-field {
+  position: absolute;
+  transform: translate(0, 9vw);
+  align-self: center;
+  font-size: 3.5vw;
+  width: 65px;
+}
+
+.number-field {
+  input {
+    color: var(--ant-color-text) !important;
+    text-align: center !important;
+    cursor: text !important;
+  }
+}

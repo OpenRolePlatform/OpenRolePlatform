@@ -1,0 +1,49 @@
+services:
+  frontend:
+    build: frontend/.
+    ports:
+      - "${FRONTEND_PORT}:4173"
+    env_file:
+      - ./.env
+    environment:
+      - API_URL=http://backend:${BACKEND_PORT}
+      - WS_URL=ws://backend:${BACKEND_PORT}
+    volumes:
+      - ./.env:/usr/src/.env
+    depends_on:
+      - backend
+    networks:
+      - frontend
+
+  backend:
+    build: backend/.
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    env_file:
+      - ./.env
+    # environment:
+    #   - DATABASE_HOST=database
+    #   - DATABASE_PORT=27017
+    volumes:
+      - ./.env:/usr/src/.env
+    depends_on:
+      - database
+    networks:
+      - frontend
+      - backend
+
+  database:
+    image: mongo:8.0
+    ports:
+      - "${DATABASE_PORT}:27017"
+    volumes:
+      - ./data:/data/db
+    networks:
+      - backend
+
+networks:
+  frontend:
+    driver: bridge
+
+  backend:
+    driver: bridge

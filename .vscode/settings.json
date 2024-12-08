@@ -15,7 +15,7 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -27,5 +27,18 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
     }
-  }
+  },
+  "conventionalCommits.scopes": [
+    "backend",
+    "frontend",
+    "backend-websockets",
+    "backend-items",
+    "backend-character",
+    "backend-spells",
+    "backend-campaign",
+    "backend-player",
+    "frontend-players",
+    "frontend-campaigns",
+    "backend-deploy"
+  ]
 }
