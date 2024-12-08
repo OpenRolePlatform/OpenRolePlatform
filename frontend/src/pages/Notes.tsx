@@ -51,10 +51,7 @@ export default function Notes() {
   }
 
   async function saveNote() {
-    console.log('pre');
-    console.log(text);
-    await updateNotes('Master', text);
-    console.log('post');
+    await updateNotes('Master', { owner: 'Master', text: text });
   }
 
   return (

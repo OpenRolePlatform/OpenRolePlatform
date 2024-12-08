@@ -36,6 +36,7 @@ export const getNote = async (req: any, res: any) => {
 export const postNotes = async (req: any, res: any) => {
   try {
     const newNotes = await _postNotes(req.params.playerID, req.body);
+    console.log(newNotes);
     if (!newNotes)
       return res
         .status(StatusCodes.BAD_REQUEST)

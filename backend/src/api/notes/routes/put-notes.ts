@@ -1,18 +1,15 @@
+import { Notes } from "src/core/models/notes/notes-model";
 import { ConnectionsManager } from "../../../connectDB";
 
 const NotesModel = () => ConnectionsManager.Instance.db.model("Notes");
 
-export async function _putNotes(owner: String, text: String) {
-  return await NotesModel().findOneAndUpdate(
+export async function _putNotes(id: String, notes: Notes) {
+  let res = await NotesModel().findByIdAndUpdate(
+    id,
     {
-      _id: owner,
+      $set: { ...notes },
     },
-    {
-      text: text,
-    },
-    {
-      upsert: true,
-      new: true,
-    }
+    { new: true }
   );
+  return res;
 }
