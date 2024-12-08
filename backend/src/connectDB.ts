@@ -36,6 +36,7 @@ export class ConnectionsManager {
       this._db = db;
       this._db.model("Campaign", CampaignSchema);
       this._db.model("Player", PlayerSchema);
+      this._db.model("Notes", NotesSchema);
     });
 
     WebSocketService.Instance.broadcast({

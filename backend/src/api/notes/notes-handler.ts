@@ -53,7 +53,9 @@ export const postNotes = async (req: any, res: any) => {
 //put methods
 export const putNotes = async (req: any, res: any) => {
   try {
-    await _putNotes(req.params.playerID, req.body);
+    console.log(req.params.playerID);
+    console.log(req.body);
+    console.log(await _putNotes(req.params.playerID, req.body.text));
     res.status(StatusCodes.OK).send("Notes updated correctly.");
   } catch (error) {
     console.error("Error while trying to update the notes.", error);
