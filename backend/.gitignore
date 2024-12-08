@@ -1,3 +1,5 @@
 node_modules
 dist
 upload
+mocks
+upload/images
