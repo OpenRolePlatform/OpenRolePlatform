@@ -4,12 +4,13 @@ import { ConnectionsManager } from "../../../connectDB";
 const NotesModel = () => ConnectionsManager.Instance.campaignDB.model("Notes");
 
 export async function _putNotes(id: String, notes: Notes) {
-  let res = await NotesModel().findByIdAndUpdate(
-    id,
+  let res = await NotesModel().findOneAndUpdate(
     {
-      $set: { ...notes },
+      _id: id,
     },
-    { new: true }
+    notes,
+    { new: true, upsert: true }
   );
+
   return res;
 }

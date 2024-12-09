@@ -97,10 +97,10 @@ export function CharacterCard(props: { id: string }) {
                         <Typography.Title
                           level={5}
                           italic
-                          style={{ color: '#3f8600' }}
+                          style={{ color: '#50b8e7' }}
                           type="secondary"
                         >
-                          Movement
+                          Move
                         </Typography.Title>
                       </>
                     }

@@ -9,8 +9,6 @@ import {
   frontmatterPlugin,
   headingsPlugin,
   imagePlugin,
-  InsertCodeBlock,
-  InsertImage,
   InsertTable,
   InsertThematicBreak,
   linkDialogPlugin,
@@ -25,17 +23,36 @@ import {
   tablePlugin,
   thematicBreakPlugin,
   toolbarPlugin,
-  UndoRedo,
+  UndoRedo
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 import { FloppyDisk } from '@phosphor-icons/react';
-import { Flex } from 'antd';
+import { Flex, message } from 'antd';
 import { useRef, useState } from 'react';
-import { updateNotes } from '../services/NotesServices';
+import { useGetSetState, useMount } from 'react-use';
+import { usePlayer } from '../components/PlayerContext';
+import { Note } from '../models/NotesModels';
+import { getNotes, updateNotes } from '../services/NotesServices';
 
 export default function Notes() {
   const ref = useRef<MDXEditorMethods>(null);
-  const [text, setText] = useState('# Hello world');
+
+  const [text, setText] = useGetSetState<Note>({text:""});
+  const [loading, setLoading] = useState(true);
+
+  const playerContext = usePlayer();
+
+  useMount(async ()=>{
+    if (playerContext.player?._id || playerContext.role) {
+      try {
+        let data = await getNotes(playerContext.player?._id || playerContext.role)
+        setText(data);
+      } catch (error) {
+        console.log(error);
+      }
+      setLoading(false)
+    }
+  })
 
   async function imageUploadHandler(image: File) {
     const formData = new FormData();
@@ -51,15 +68,22 @@ export default function Notes() {
   }
 
   async function saveNote() {
-    await updateNotes('Master', { owner: 'Master', text: text });
+    console.log(text());
+    try {
+      await updateNotes(playerContext.player?._id ?? playerContext.role, text());
+      message.success("Notes updated")
+    } catch (error) {
+      message.error("Error updating the Notes")
+    }
   }
 
   return (
     <>
+    {!loading &&
       <MDXEditor
         ref={ref}
-        markdown={text}
-        onChange={(newText) => setText(newText)}
+        markdown={text().text}
+        onChange={(newText) => setText({text:newText})}
         plugins={[
           toolbarPlugin({
             toolbarContents: () => (
@@ -76,13 +100,11 @@ export default function Notes() {
                     <InsertThematicBreak />
                     <Separator />
                     <CreateLink />
-                    <InsertImage />
                     <InsertTable />
                     <Separator />
-                    <InsertCodeBlock />
                   </Flex>
 
-                  <Button color="blue" onClick={saveNote}>
+                  <Button color="blue" onClick={()=> saveNote()}>
                     <FloppyDisk size={24} />
                   </Button>
                 </Flex>
@@ -115,6 +137,7 @@ export default function Notes() {
           markdownShortcutPlugin(),
         ]}
       />
+    }
     </>
   );
 }

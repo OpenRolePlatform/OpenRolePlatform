@@ -63,6 +63,8 @@ export async function newPlayer(player: Player) {
 
 export async function enrollCampaign(player: string, campaign: string) {
   try {
+    console.log(player);
+    console.log(campaign);
     const response = await axios.put(
       `/api/player/${player}/enroll/${campaign}`,
     );

@@ -1,16 +1,13 @@
 import { ConnectionsManager } from "../../../connectDB";
 import { Notes } from "../../../core/models/notes/notes-model";
-import { normalizeString } from "../../../stringNormalizer";
 
 const NotesModel = () => ConnectionsManager.Instance.campaignDB.model("Notes");
 
 export async function _postNotes(owner: string, notes: Notes) {
-  let id = normalizeString(owner);
-
-  const matchingId = await NotesModel().findById(id);
+  const matchingId = await NotesModel().findById(owner);
   if (matchingId) return;
   return await NotesModel().create({
-    _id: id,
+    _id: owner,
     ...notes,
   });
 }

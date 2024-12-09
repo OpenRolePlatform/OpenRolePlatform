@@ -8,4 +8,5 @@ const NotesModel = () => ConnectionsManager.Instance.campaignDB.model("Notes");
  */
 export async function _getNotes(id: string) {
   return await NotesModel().findById(id);
+  //return await NotesModel().findById(id);
 }
