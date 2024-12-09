@@ -97,7 +97,7 @@ export default function Campaigns() {
                       onClick={() => setSelectedCampaign(campaign._id)}
                     >
                       <h3>{campaign.name}</h3>
-                      {campaignContext.campaign?._id === campaign._id && (
+                      {campaignContext.campaign()?._id === campaign._id && (
                         <Tag color="success">Loaded Campaign</Tag>
                       )}
                     </Card>
@@ -115,7 +115,7 @@ export default function Campaigns() {
         onClose={() => setSelectedCampaign(undefined)}
         extra={
           <>
-            {campaignContext.campaign?._id !== selectedCampaign ? (
+            {campaignContext.campaign()?._id !== selectedCampaign ? (
               playerContext.role === 'dm' && (
                 <Button
                   variant="filled"

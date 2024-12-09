@@ -38,7 +38,7 @@ export default function MainPage() {
       if (playerContext.role === 'dm') navigate('/characters');
       else if (
         playerContext.role === 'player' &&
-        campaignContext.campaign.players.includes(playerContext.player?._id)
+        campaignContext.campaign()?.players.includes(playerContext.player?._id)
       )
         navigate('/characters');
     }
@@ -126,7 +126,7 @@ export default function MainPage() {
                   <Col xs={{ flex: '150px' }} sm={{ flex: '150px' }}>
                     <Image
                       className="campaign-logo"
-                      src={getBackendImage(campaignContext.campaign.image!)}
+                      src={getBackendImage(campaignContext.campaign()?.image!)}
                       fallback={CAMPAIGN_ICON}
                     />
                   </Col>
@@ -134,7 +134,7 @@ export default function MainPage() {
                     <Typography.Title level={4}>
                       <b>{campaignContext.campaign.name}</b>
                     </Typography.Title>
-                    {campaignContext.campaign.description}
+                    {campaignContext.campaign()?.description}
                   </Col>
                 </Row>
 
@@ -147,7 +147,7 @@ export default function MainPage() {
                     onClick={() =>
                       enrollCampaign(
                         playerContext.player?._id,
-                        campaignContext.campaign?._id,
+                        campaignContext.campaign()?._id,
                       )
                     }
                   >

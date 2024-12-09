@@ -29,7 +29,7 @@ import {
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 import { FloppyDisk } from '@phosphor-icons/react';
-import { Flex } from 'antd';
+import { Flex, message } from 'antd';
 import { useRef, useState } from 'react';
 import { useGetSetState, useMount } from 'react-use';
 import { usePlayer } from '../components/PlayerContext';
@@ -73,12 +73,16 @@ export default function Notes() {
 
   async function saveNote() {
     console.log(text());
-    
-    if (notesAreNew) {
-      await createNotes(playerContext.player?._id ?? playerContext.role, text());
-    }
-    else {
-      await updateNotes(playerContext.player?._id ?? playerContext.role, text());
+    try {
+      if (notesAreNew) {
+        await createNotes(playerContext.player?._id ?? playerContext.role, text());
+      }
+      else {
+        await updateNotes(playerContext.player?._id ?? playerContext.role, text());
+      }
+      message.success("Notes updated")
+    } catch (error) {
+      message.error("Error updating the Notes")
     }
   }
 

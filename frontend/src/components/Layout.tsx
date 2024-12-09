@@ -73,10 +73,10 @@ function LayoutWrap() {
     if (!campaignContext.campaign && playerContext.role === 'dm')
       setMenuRoutes(DmRoutes);
     else if (playerContext.role === 'dm') setMenuRoutes(DmFullRoutes);
-    else if (campaignContext.campaign && playerContext.role === 'player')
+    else if (campaignContext.campaign() && playerContext.role === 'player')
       setMenuRoutes(PlayerRoutes);
     else setMenuRoutes([]);
-  }, [playerContext.role, campaignContext.campaign]);
+  }, [playerContext.role, campaignContext.campaign()]);
 
   useEffect(() => {
     if (location.pathname !== '/' && !playerContext.role) {

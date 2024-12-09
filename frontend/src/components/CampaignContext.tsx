@@ -1,6 +1,6 @@
 import { message } from 'antd';
-import { createContext, ReactNode, useContext, useState } from 'react';
-import { useMount } from 'react-use';
+import { createContext, ReactNode, useContext } from 'react';
+import { useGetSetState, useMount } from 'react-use';
 import useWebSocket from 'react-use-websocket';
 import { Campaign } from '../models/CampaignModels';
 import {
@@ -9,7 +9,7 @@ import {
 } from '../services/CampaignServices';
 
 interface CampaignContextType {
-  campaign: Campaign | undefined;
+  campaign:()=> Campaign | undefined;
   loadCampaign: (id: string) => void;
 }
 
@@ -24,7 +24,7 @@ interface CampaignProviderProps {
 export const CampaignProvider: React.FC<CampaignProviderProps> = ({
   children,
 }) => {
-  const [campaign, setCampaign] = useState<Campaign>();
+  const [campaign, setCampaign] = useGetSetState<Campaign>();
 
   async function load() {
     try {

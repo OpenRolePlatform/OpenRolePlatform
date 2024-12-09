@@ -57,7 +57,7 @@ export default function CampaignsList({
                   }
                   title={campaign.name}
                   description={
-                    campaignContext.campaign?._id === campaign._id && (
+                    campaignContext.campaign()?._id === campaign._id && (
                       <Tag color="success">Loaded Campaign</Tag>
                     )
                   }
