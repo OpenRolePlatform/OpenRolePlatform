@@ -2,7 +2,7 @@ import { ConnectionsManager } from "../../../connectDB";
 import { Notes } from "../../../core/models/notes/notes-model";
 import { normalizeString } from "../../../stringNormalizer";
 
-const NotesModel = () => ConnectionsManager.Instance.db.model("Notes");
+const NotesModel = () => ConnectionsManager.Instance.campaignDB.model("Notes");
 
 export async function _postNotes(owner: string, notes: Notes) {
   let id = normalizeString(owner);
