@@ -73,7 +73,7 @@ export function StatsCard({
               icon={<CaretCircleDown size={32} weight="duotone" />}
               onClick={() =>
                 character.updateStats({
-                  [stat]: character.character().stats[stat] + 1,
+                  [stat]: character.character().stats[stat] - 1,
                 })
               }
             />

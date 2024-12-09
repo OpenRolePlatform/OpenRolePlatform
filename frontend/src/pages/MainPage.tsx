@@ -34,7 +34,7 @@ export default function MainPage() {
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
 
   useEffect(() => {
-    if (campaignContext.campaign) {
+    if (campaignContext.campaign()?._id) {
       if (playerContext.role === 'dm') navigate('/characters');
       else if (
         playerContext.role === 'player' &&
@@ -115,7 +115,7 @@ export default function MainPage() {
         {playerContext.role === 'player' && (
           <>
             {/* Campaign loaded or not content */}
-            {campaignContext.campaign ? (
+            {campaignContext.campaign()?._id ? (
               <Space
                 direction="vertical"
                 align="center"
@@ -132,7 +132,7 @@ export default function MainPage() {
                   </Col>
                   <Col xs={24} sm={24} md={16} lg={16} xl={16}>
                     <Typography.Title level={4}>
-                      <b>{campaignContext.campaign.name}</b>
+                      <b>{campaignContext.campaign()?.name}</b>
                     </Typography.Title>
                     {campaignContext.campaign()?.description}
                   </Col>

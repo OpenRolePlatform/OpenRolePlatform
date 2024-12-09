@@ -53,6 +53,12 @@ export const CampaignProvider: React.FC<CampaignProviderProps> = ({
         }
       }
     },
+    onClose: (event)=>{
+      if (campaign())
+      setCampaign({
+        _id: undefined
+      });
+    }
   });
 
   async function loadCampaign(id: string) {
