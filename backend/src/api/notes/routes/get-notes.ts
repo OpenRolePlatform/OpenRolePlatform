@@ -1,6 +1,6 @@
 import { ConnectionsManager } from "../../../connectDB";
 
-const NotesModel = () => ConnectionsManager.Instance.db.model("Notes");
+const NotesModel = () => ConnectionsManager.Instance.campaignDB.model("Notes");
 /**
  * Get the notes of the players
  * @param id players id to get the notes of
