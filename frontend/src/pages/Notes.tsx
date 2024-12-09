@@ -9,8 +9,6 @@ import {
   frontmatterPlugin,
   headingsPlugin,
   imagePlugin,
-  InsertCodeBlock,
-  InsertImage,
   InsertTable,
   InsertThematicBreak,
   linkDialogPlugin,
@@ -25,7 +23,7 @@ import {
   tablePlugin,
   thematicBreakPlugin,
   toolbarPlugin,
-  UndoRedo,
+  UndoRedo
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 import { FloppyDisk } from '@phosphor-icons/react';
@@ -102,10 +100,8 @@ export default function Notes() {
                     <InsertThematicBreak />
                     <Separator />
                     <CreateLink />
-                    <InsertImage />
                     <InsertTable />
                     <Separator />
-                    <InsertCodeBlock />
                   </Flex>
 
                   <Button color="blue" onClick={()=> saveNote()}>
