@@ -1,4 +1,4 @@
-export interface Notes {
-  owner: string;
+export interface Note {
+  
   text: string;
 }

@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { Notes } from '../models/NotesModels';
+import { Note } from '../models/NotesModels';
 
 export async function getNotes(owner: string) {
   try {
@@ -15,9 +15,9 @@ export async function getNotes(owner: string) {
   }
 }
 
-export async function updateNotes(owner: string, notes: Notes) {
+export async function updateNotes(owner: string, notes: Note) {
   try {
-    const response = await axios.post(`/api/notes/${owner}`, notes, {
+    const response = await axios.put(`/api/notes/${owner}`, notes, {
       headers: {
         'Content-Type': 'application/json',
       },

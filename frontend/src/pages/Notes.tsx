@@ -30,12 +30,34 @@ import {
 import '@mdxeditor/editor/style.css';
 import { FloppyDisk } from '@phosphor-icons/react';
 import { Flex } from 'antd';
-import { useRef, useState } from 'react';
-import { updateNotes } from '../services/NotesServices';
+import { useRef } from 'react';
+import { useGetSetState, useMount } from 'react-use';
+import { usePlayer } from '../components/PlayerContext';
+import { Note } from '../models/NotesModels';
+import { getNotes, updateNotes } from '../services/NotesServices';
 
 export default function Notes() {
   const ref = useRef<MDXEditorMethods>(null);
-  const [text, setText] = useState('# Hello world');
+
+  const [text, setText] = useGetSetState<Note>({text:""});
+  const playerContext = usePlayer();
+
+  async function getSavedNotes  () {
+    try {
+      let data = await getNotes(playerContext.player?._id ?? playerContext.role);
+      setText(data);
+      console.log("setted notes");
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useMount( () =>{
+    if (playerContext.player?._id || playerContext.role === "dm") {
+     getSavedNotes()
+    }
+  })
 
   async function imageUploadHandler(image: File) {
     const formData = new FormData();
@@ -51,15 +73,18 @@ export default function Notes() {
   }
 
   async function saveNote() {
-    await updateNotes('Master', { owner: 'Master', text: text });
+    console.log(text());
+    await updateNotes(playerContext.player?._id || playerContext.role, text() );
   }
 
   return (
     <>
-      <MDXEditor
+
+      {text !== undefined && <MDXEditor
         ref={ref}
-        markdown={text}
-        onChange={(newText) => setText(newText)}
+        markdown={text().text}
+        onChange={(newText) => {
+        setText({text:newText})}}
         plugins={[
           toolbarPlugin({
             toolbarContents: () => (
@@ -82,7 +107,7 @@ export default function Notes() {
                     <InsertCodeBlock />
                   </Flex>
 
-                  <Button color="blue" onClick={saveNote}>
+                  <Button color="blue" onClick={()=> saveNote()}>
                     <FloppyDisk size={24} />
                   </Button>
                 </Flex>
@@ -114,7 +139,7 @@ export default function Notes() {
           }),
           markdownShortcutPlugin(),
         ]}
-      />
+      />}
     </>
   );
 }
