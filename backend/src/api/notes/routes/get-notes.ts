@@ -7,8 +7,6 @@ const NotesModel = () => ConnectionsManager.Instance.db.model("Notes");
  * @returns Notes of the players
  */
 export async function _getNotes(id: string) {
-  return await NotesModel().findOne({
-    owner: id,
-  });
+  return await NotesModel().findById(id);
   //return await NotesModel().findById(id);
 }
