@@ -50,7 +50,10 @@ const DmFullRoutes = [
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const PlayerRoutes = [{ key: '/characters', label: 'Characters' }];
+const PlayerRoutes = [
+  { key: '/characters', label: 'Characters'},
+  { key: '/notes', label: 'Notes' } 
+];
 
 function LayoutWrap() {
   const navigate = useNavigate();

@@ -30,32 +30,31 @@ import {
 import '@mdxeditor/editor/style.css';
 import { FloppyDisk } from '@phosphor-icons/react';
 import { Flex } from 'antd';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useGetSetState, useMount } from 'react-use';
 import { usePlayer } from '../components/PlayerContext';
 import { Note } from '../models/NotesModels';
-import { getNotes, updateNotes } from '../services/NotesServices';
+import { createNotes, getNotes, updateNotes } from '../services/NotesServices';
 
 export default function Notes() {
   const ref = useRef<MDXEditorMethods>(null);
 
   const [text, setText] = useGetSetState<Note>({text:""});
+  const [notesAreNew, setNotesAreNew] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   const playerContext = usePlayer();
 
-  async function getSavedNotes  () {
-    try {
-      let data = await getNotes(playerContext.player?._id ?? playerContext.role);
-      setText(data);
-      console.log("setted notes");
-
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useMount( () =>{
-    if (playerContext.player?._id || playerContext.role === "dm") {
-     getSavedNotes()
+  useMount(async ()=>{
+    if (playerContext.player?._id || playerContext.role) {
+      try {
+        let data = await getNotes(playerContext.player?._id || playerContext.role)
+        setText(data);
+      } catch (error) {
+        setNotesAreNew(true)
+        console.log(error);
+      }
+      setLoading(false)
     }
   })
 
@@ -74,17 +73,22 @@ export default function Notes() {
 
   async function saveNote() {
     console.log(text());
-    await updateNotes(playerContext.player?._id || playerContext.role, text() );
+    
+    if (notesAreNew) {
+      await createNotes(playerContext.player?._id ?? playerContext.role, text());
+    }
+    else {
+      await updateNotes(playerContext.player?._id ?? playerContext.role, text());
+    }
   }
 
   return (
     <>
-
-      {text !== undefined && <MDXEditor
+    {!loading &&
+      <MDXEditor
         ref={ref}
         markdown={text().text}
-        onChange={(newText) => {
-        setText({text:newText})}}
+        onChange={(newText) => setText({text:newText})}
         plugins={[
           toolbarPlugin({
             toolbarContents: () => (
@@ -139,7 +143,8 @@ export default function Notes() {
           }),
           markdownShortcutPlugin(),
         ]}
-      />}
+      />
+    }
     </>
   );
 }
