@@ -23,6 +23,9 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   const [role, setRole] = useState<Role>();
 
   function selectPlayer(newPlayer: Player) {
+
+    console.log('selectPlayer called with:', newPlayer);
+
     if (role === 'dm') deleteDM();
     setPlayer(newPlayer);
     setRole('player');
@@ -31,6 +34,9 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   }
 
   function selectDM() {
+
+    console.log('selectDM called');
+
     if (role === 'player') deletePlayer();
     setRole('dm');
     localStorage.setItem('role', 'dm');
@@ -50,14 +56,29 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   async function load() {
     // get the role that was doing
     const currentRole = localStorage.getItem('role');
+
+    console.log('load() - currentRole from localStorage:', currentRole);
+
     // select DM role
-    if (currentRole === 'dm') selectDM();
-    // select Player role
+    if (currentRole === 'dm') 
+    {
+
+      console.log('Selecting DM role');
+      
+      selectDM();
+    }
+      // select Player role
     else if (currentRole === 'player') {
       const savedPlayer = localStorage.getItem('player');
+
+      console.log('Found savedPlayer ID:', savedPlayer);
+
       if (savedPlayer) {
         try {
           const playerInfo = await getPlayerDetails(savedPlayer);
+
+          console.log('Player info loaded:', playerInfo);
+
           selectPlayer(playerInfo);
         } catch (error) {
           console.error(error);
@@ -67,6 +88,9 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
   }
 
   function logout() {
+
+    console.log('logout called, current role:', role);
+    
     if (role === 'dm') deleteDM();
     else deletePlayer();
   }

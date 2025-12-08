@@ -10,6 +10,9 @@ import MainPage from './pages/MainPage';
 import Notes from './pages/Notes';
 import './styles/layout.scss';
 
+import MapEditorPage from './pages/maps/MapEditorPage';
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -29,6 +32,9 @@ function App() {
             <Route index element={<Characters />} />
             <Route path=":characterID" element={<Character />} />
           </Route>
+
+          <Route path="/map-editor" element={<MapEditorPage />} />
+
         </Route>
       </Routes>
     </BrowserRouter>

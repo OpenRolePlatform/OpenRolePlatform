@@ -38,6 +38,7 @@ export const BREAKPOINTS = { mobile: 0, tablet: 576, desktop: 1280 };
 const DmRoutes = [
   { key: '/', label: 'Home' },
   { key: '/campaigns', label: 'Campaigns' },
+  { key: '/map-editor', label: 'Map Editor' },
 ];
 
 const DmFullRoutes = [
@@ -46,6 +47,7 @@ const DmFullRoutes = [
   { key: '/characters', label: 'Characters' },
   { key: '/items', label: 'Items' },
   { key: '/notes', label: 'Notes' },
+  { key: '/map-editor', label: 'Map Editor' },
 ];
 
 type MenuItem = Required<MenuProps>['items'][number];
