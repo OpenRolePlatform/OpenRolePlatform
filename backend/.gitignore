@@ -3,3 +3,4 @@ dist
 upload
 mocks
 upload/images
+/generated/prisma

@@ -1,16 +1,24 @@
-import { ConnectionsManager } from "../../../connectDB";
+import { prisma } from "../../../connectDB";
+import { PlayerAdapter } from "../../../core/adapters/player-adapter";
 
-const PlayerModel = () => ConnectionsManager.Instance.db.model("Player");
-/**
- * Get the details of the players
- * @param id players id to get details of
- * @returns Details of the players
- */
-export async function _getPlayerDetails(id: string) {
-  return await PlayerModel().findById(id);
-}
+export const _getPlayerDetails = async (id: string) => {
+  const player = await prisma.player.findUnique({
+    where: { id },
+    include: {
+      campaignsPlaying: {
+        include: {
+          campaign: {
+            include: { players: { include: { player: true } }, characters: true }
+          }
+        }
+      },
+      campaignsDM: {
+        include: { players: { include: { player: true } }, characters: true }
+      },
+      characters: true
+    }
+  });
 
-export async function _getPlayerCampaigns(id: string) {
-  let player = await PlayerModel().findById(id).populate("campaigns");
-  return player.campaigns;
-}
+  if (!player) return null;
+  return PlayerAdapter.toFrontend(player);
+};

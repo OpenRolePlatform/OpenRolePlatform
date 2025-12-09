@@ -1,51 +1,30 @@
-import { ConnectionsManager } from "../../../connectDB";
-import { Item } from "../../../core/models/item/item-model";
-import { normalizeString } from "../../../stringNormalizer";
+import { prisma } from "../../../connectDB";
+import { ItemAdapter } from "../../../core/adapters/item-adapter";
+import { ItemInputSchema } from "../../../core/validation/zod-schemas";
 
-const ItemModel = () => ConnectionsManager.Instance.campaignDB.model("Item");
-const CharacterModel = () =>
-  ConnectionsManager.Instance.campaignDB.model("Character");
+export const _postItem = async (data: any) => {
 
-export async function _postItems(items: Item | Array<Item>) {
-  if (Array.isArray(items)) {
-    let createdItems: Array<Item> = [];
-    for (const item of items) {
-      let newItem = await addItem(item);
-      createdItems.push(newItem);
+  const parseIfString = (val: any) => {
+    if (typeof val === 'string') {
+      try { return JSON.parse(val); } catch (e) { return val; }
     }
-    return createdItems;
-  } else return await addItem(items);
-}
+    return val;
+  };
 
-export async function addItem(newItem: Item) {
-  let id = normalizeString(newItem.name);
-  const matchingNames = await ItemModel().find({ name: newItem.name });
-  const matchingId = await ItemModel().findById(id);
+  if (data.damage) {
+    data.damage = parseIfString(data.damage);
+  }
 
-  if (matchingNames.length > 0 || matchingId) return;
-  let item;
-  // Set the id and creation_date
-  if (newItem.owner) {
-    let character = await CharacterModel().findById(newItem.owner);
-    if (character) {
-      item = await ItemModel().create({ _id: id, ...newItem });
+  const validated = ItemInputSchema.parse(data);
+
+  const { meta, systemData } = ItemAdapter.toDatabase(validated);
+
+  const newItem = await prisma.item.create({
+    data: {
+      ...meta,
+      systemData: systemData
     }
-  } else item = await ItemModel().create({ _id: id, ...newItem });
-  return item;
-}
+  });
 
-export async function updateItem(owner: String, name: String, item: Item) {
-  await ItemModel().findOneAndUpdate(
-    {
-      owner: owner,
-      name: name,
-    },
-    {
-      ...item,
-    },
-    {
-      upsert: true,
-      new: true,
-    }
-  );
-}
+  return ItemAdapter.toFrontend(newItem);
+};

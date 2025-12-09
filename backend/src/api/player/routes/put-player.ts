@@ -1,16 +1,33 @@
-import { ConnectionsManager } from "../../../connectDB";
-import { Player } from "../../../core/models/player-model";
+import { prisma } from "../../../connectDB";
+import { PlayerAdapter } from "../../../core/adapters/player-adapter";
+import { PlayerInputSchema } from "../../../core/validation/zod-schemas";
 
-const PlayerModel = () => ConnectionsManager.Instance.db.model("Player");
+export const _putPlayer = async (id: string, data: any) => {
+  const validated = PlayerInputSchema.partial().parse(data);
 
-/**
- * Update one players
- * @param id id of the players to update
- * @param player new data of the players
- * @returns the updated players data
- */
-export async function _putPlayer(id: string, player: Player) {
-  return await PlayerModel().findByIdAndUpdate(id, player, {
-    new: true,
+  const existing = await prisma.player.findUnique({ where: { id } });
+  if (!existing) return null;
+
+  const dbData = PlayerAdapter.toDatabase(validated as any);
+
+  const updatedPlayer = await prisma.player.update({
+    where: { id },
+    data: dbData,
+    include: {
+      campaignsPlaying: {
+        include: {
+          campaign: {
+            include: { players: { include: { player: true } }, characters: true }
+          }
+        }
+      },
+      campaignsDM: {
+        include: { players: { include: { player: true } }, characters: true }
+      },
+      characters: true
+    }
   });
-}
+
+  // @ts-ignore
+  return PlayerAdapter.toFrontend(updatedPlayer);
+};

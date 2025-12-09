@@ -1,10 +1,12 @@
-import { ConnectionsManager } from "../../../connectDB";
+import { prisma } from "../../../connectDB";
+import { ItemAdapter } from "../../../core/adapters/item-adapter";
 
-const ItemModel = () => ConnectionsManager.Instance.campaignDB.model("Item");
-
-export async function _getOneItem(owner: String, name: String) {
-  return await ItemModel().findOne({
-    owner: owner,
-    name: name,
+export const _getOneItem = async (id: string) => {
+  const item = await prisma.item.findUnique({
+    where: { id }
   });
-}
+
+  if (!item) return null;
+
+  return ItemAdapter.toFrontend(item);
+};

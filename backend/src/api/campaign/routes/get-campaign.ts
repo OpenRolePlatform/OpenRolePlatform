@@ -1,16 +1,18 @@
-import { ConnectionsManager } from "../../../connectDB";
-const CampaignModel = () => ConnectionsManager.Instance.db.model("Campaign");
+import { prisma } from "../../../connectDB";
+import { CampaignAdapter } from "../../../core/adapters/campaign-adapter";
 
-/**
- * Get the details of the campaign
- * @param id campaign id to get details of
- * @returns Details of the campaign
- */
-export async function _getCampaign(id: string) {
-  return await CampaignModel().findById(id);
-}
+export const _getCampaign = async (id: string) => {
+  const campaign = await prisma.campaign.findUnique({
+    where: { id },
+    include: {
+      players: {
+        include: { player: true }
+      },
+      characters: true
+    }
+  });
 
-export async function _getCampaignPlayers(id: string) {
-  let campaign = await CampaignModel().findById(id).populate("players");
-  return campaign.players;
-}
+  if (!campaign) return null;
+
+  return CampaignAdapter.toFrontend(campaign);
+};

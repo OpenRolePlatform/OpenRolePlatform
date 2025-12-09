@@ -4,8 +4,10 @@
   "description": "Backend for OpenRolePlatform",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon",
-    "serve": "node --env-file=../.env ./dist/index.js",
+    "db:wait" : "node wait-for-db.js",
+    "db:init": "npx prisma db push && npx ts-node prisma/seed.ts",
+    "start": "npm run db:init && nodemon",
+    "serve": "npm run db:init && node --env-file=../.env ./dist/index.js",
     "build": "tsc"
   },
   "nodemonConfig": {
@@ -18,21 +20,26 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.1.0",
+    "@prisma/client": "^7.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-ws": "^5.0.2",
     "http-status-codes": "^2.3.0",
-    "mongoose": "^8.7.1",
     "multer": "^1.4.4",
-    "ws": "^8.18.0"
+    "pg": "^8.16.3",
+    "ws": "^8.18.0",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/express-ws": "^3.0.5",
     "@types/node": "^22.7.5",
+    "@types/pg": "^8.15.6",
     "nodemon": "^3.1.7",
+    "prisma": "^7.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   }

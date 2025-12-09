@@ -1,12 +1,11 @@
-import { ConnectionsManager } from "../../../connectDB";
+import { prisma } from "../../../connectDB";
+import { NoteAdapter } from "../../../core/adapters/note-adapter";
 
-const NotesModel = () => ConnectionsManager.Instance.campaignDB.model("Notes");
-/**
- * Get the notes of the players
- * @param id players id to get the notes of
- * @returns Notes of the players
- */
-export async function _getNotes(id: string) {
-  return await NotesModel().findById(id);
-  //return await NotesModel().findById(id);
-}
+export const _getNotes = async (ownerId: string) => {
+  const notes = await prisma.note.findMany({
+    where: { playerId: ownerId },
+    orderBy: { updatedAt: 'desc' }
+  });
+
+  return notes.map(NoteAdapter.toFrontend);
+};

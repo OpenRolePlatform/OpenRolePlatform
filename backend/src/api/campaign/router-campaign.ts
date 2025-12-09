@@ -24,7 +24,6 @@ campaignRouter.get("/:campaignID/players", getCampaignPlayers);
 campaignRouter.post("/", upload.single("image"), postCampaign);
 campaignRouter.put("/:campaignID", upload.single("image"), putCampaign);
 campaignRouter.put("/:campaignID/enroll", enrollPlayers);
-
 //select campaign
 campaignRouter.post("/:campaignID", selectCampaign);
 

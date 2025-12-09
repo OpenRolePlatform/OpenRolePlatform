@@ -1,8 +1,8 @@
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
-import { WebSocket } from "ws";
-import { ConnectionsManager } from "./connectDB";
+import { WebSocket, WebSocketServer } from "ws";
+import { connectDB } from "./connectDB";
 import { WebSocketService } from "./connectWS";
 import { routes } from "./router-main";
 
@@ -35,17 +35,24 @@ app.use("/upload", express.static("upload"));
 
 routes(app);
 
-// start the server
-const server = app.listen(PORT, () => {
-  console.log(`Server is listening at http://localhost:${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await connectDB();
 
-// start websockets
-const wss = new WebSocket.Server({
-  server: server,
-});
+    const server = app.listen(PORT, () => {
+      console.log(`🚀 Server is listening at http://localhost:${PORT}`);
+    });
 
-new WebSocketService(wss).init();
+    const wss = new WebSocketServer({
+      server: server,
+    });
 
-//database connection
-new ConnectionsManager();
+    new WebSocketService(wss).init();
+
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+startServer();

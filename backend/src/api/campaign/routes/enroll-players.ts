@@ -1,29 +1,35 @@
-import { Model } from "mongoose";
-import { _enrollPlayer } from "../../../api/player/routes/enroll-player";
-import { ConnectionsManager } from "../../../connectDB";
-import { Player } from "../../../core/models/player-model";
+import { prisma } from "../../../connectDB";
+import { CampaignAdapter } from "../../../core/adapters/campaign-adapter";
+import { PlayerAdapter } from "../../../core/adapters/player-adapter";
 
-const PlayerModel = () =>
-  ConnectionsManager.Instance.db.model("Player") as Model<Player>;
+export const _enrollPlayers = async (campaignId: string, playerIds: string[]) => {
+  await prisma.$transaction(
+    playerIds.map(pid =>
+      prisma.playersOnCampaigns.upsert({
+        where: { playerId_campaignId: { campaignId, playerId: pid } },
+        create: { campaignId, playerId: pid },
+        update: {}
+      })
+    )
+  );
 
-const CampaignModel = () => ConnectionsManager.Instance.db.model("Campaign");
-/**
- * Update one character
- * @param campaignID id of the character to update
- * @param character new data of the character
- * @returns the updated character data
- */
-export async function _enrollPlayers(
-  campaignID: string,
-  playersIDs: Array<string>
-) {
-  let players: Array<Player> = [];
-  let campaign: any;
-  for (const playerID of playersIDs) {
-    const [player, modCampaign] = await _enrollPlayer(playerID, campaignID);
-    players.push(player);
-    campaign = modCampaign;
-  }
+  const campaign = await prisma.campaign.findUnique({
+    where: { id: campaignId },
+    include: { players: { include: { player: true } }, characters: true }
+  });
 
-  return [players, campaign];
-}
+  const players = await prisma.player.findMany({
+    where: { id: { in: playerIds } },
+    include: {
+      campaignsPlaying: { include: { campaign: true } },
+      campaignsDM: true
+    }
+  });
+
+  if (!campaign) return [null, null];
+
+  return [
+    players.map(PlayerAdapter.toFrontend),
+    CampaignAdapter.toFrontend(campaign)
+  ];
+};

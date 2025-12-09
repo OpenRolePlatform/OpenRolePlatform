@@ -1,18 +1,30 @@
-import { ConnectionsManager } from "../../../connectDB";
-import { Campaign } from "../../../core/models/campaign/campaign-model";
-import { normalizeString } from "../../../stringNormalizer";
-const CampaignModel = () => ConnectionsManager.Instance.db.model("Campaign");
+import { prisma } from "../../../connectDB";
+import { CampaignAdapter } from "../../../core/adapters/campaign-adapter";
+import { CampaignInputSchema } from "../../../core/validation/zod-schemas";
 
-/**
- * Creates a new campaign
- * @param campaign campaign to create
- * @returns return the created campaign if no other campaign with the same id exists, otherwise throws an error
- */
-export async function _postCampaign(campaign: Campaign) {
-  let id = normalizeString(campaign.name);
-  const matchingNames = await CampaignModel().find({ name: campaign.name });
-  const matchingId = await CampaignModel().findById(id);
-  if (matchingNames.length > 0 || matchingId) return;
-  // Set the id and creation_date
-  return await CampaignModel().create({ _id: id, ...campaign });
-}
+export const _postCampaign = async (data: any) => {
+  const validated = CampaignInputSchema.parse(data);
+  const dbData = CampaignAdapter.toDatabase(validated);
+
+  let creatorId = data.creator;
+
+  if (!creatorId) {
+    creatorId = "dm";
+  }
+
+  const newCampaign = await prisma.campaign.create({
+    data: {
+      ...dbData,
+      dm: { connect: { id: creatorId } },
+      players: {
+        create: { playerId: creatorId }
+      }
+    },
+    include: {
+      players: { include: { player: true } },
+      characters: true
+    }
+  });
+
+  return CampaignAdapter.toFrontend(newCampaign);
+};

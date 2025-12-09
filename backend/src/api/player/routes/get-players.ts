@@ -1,11 +1,13 @@
-import { ConnectionsManager } from "../../../connectDB";
+import { prisma } from "../../../connectDB";
+import { PlayerAdapter } from "../../../core/adapters/player-adapter";
 
-const PlayerModel = () => ConnectionsManager.Instance.db.model("Player");
-
-/**
- * Function to get all players in the database
- * @returns returns a list of all player
- */
-export async function _getAllPlayers() {
-  return await PlayerModel().find({});
-}
+export const _getPlayers = async () => {
+  const players = await prisma.player.findMany({
+    orderBy: { name: 'asc' },
+    include: {
+      campaignsPlaying: { include: { campaign: true } },
+      campaignsDM: true
+    }
+  });
+  return players.map(PlayerAdapter.toFrontend);
+};

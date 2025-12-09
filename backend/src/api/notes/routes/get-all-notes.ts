@@ -1,11 +1,10 @@
-import { ConnectionsManager } from "../../../connectDB";
+import { prisma } from "../../../connectDB";
+import { NoteAdapter } from "../../../core/adapters/note-adapter";
 
-const NotesModel = () => ConnectionsManager.Instance.db.model("Notes");
+export const _getAllNotes = async () => {
+  const notes = await prisma.note.findMany({
+    orderBy: { updatedAt: 'desc' }
+  });
 
-/**
- * Function to get all notes in the database
- * @returns returns a list of all notes
- */
-export async function _getAllNotes() {
-  return await NotesModel().find({});
-}
+  return notes.map(NoteAdapter.toFrontend);
+};

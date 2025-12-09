@@ -1,16 +1,23 @@
-import { ConnectionsManager } from "../../../connectDB";
-import { Campaign } from "../../../core/models/campaign/campaign-model";
+import { prisma } from "../../../connectDB";
+import { CampaignAdapter } from "../../../core/adapters/campaign-adapter";
+import { CampaignInputSchema } from "../../../core/validation/zod-schemas";
 
-const CampaignModel = () => ConnectionsManager.Instance.db.model("Campaign");
+export const _putCampaign = async (id: string, data: any) => {
+  const validated = CampaignInputSchema.partial().parse(data);
 
-/**
- * Update one campaign
- * @param id id of the campaign to update
- * @param campaign new data of the campaign
- * @returns the updated campaign data
- */
-export async function _putCampaign(id: string, campaign: Campaign) {
-  return await CampaignModel().findByIdAndUpdate(id, campaign, {
-    new: true,
+  const existing = await prisma.campaign.findUnique({ where: { id } });
+  if (!existing) return null;
+
+  const dbData = CampaignAdapter.toDatabase(validated as any);
+
+  const updatedCampaign = await prisma.campaign.update({
+    where: { id },
+    data: dbData,
+    include: {
+      players: { include: { player: true } },
+      characters: true
+    }
   });
-}
+
+  return CampaignAdapter.toFrontend(updatedCampaign);
+};

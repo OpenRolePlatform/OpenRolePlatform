@@ -1,13 +1,15 @@
-import { ConnectionsManager } from "../../../connectDB";
+import { prisma } from "../../../connectDB";
+import { CharacterAdapter } from "../../../core/adapters/character-adapter";
 
-const CharacterModel = () =>
-  ConnectionsManager.Instance.campaignDB.model("Character");
+export const _getCharacter = async (id: string) => {
+  const character = await prisma.character.findUnique({
+    where: { id },
+    include: {
+      inventory: { include: { item: true } },
+      spellbook: { include: { spell: true } }
+    }
+  });
 
-/**
- * Get the character details
- * @param id id of the character
- * @returns return all the character struct
- */
-export async function _getCharacter(id: string) {
-  return await CharacterModel().findById(id);
-}
+  if (!character) return null;
+  return CharacterAdapter.toFrontend(character);
+};

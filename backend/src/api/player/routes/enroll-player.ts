@@ -1,29 +1,39 @@
-import { Model } from "mongoose";
-import { ConnectionsManager } from "../../../connectDB";
-import { Player } from "../../../core/models/player-model";
+import { prisma } from "../../../connectDB";
+import { CampaignAdapter } from "../../../core/adapters/campaign-adapter";
+import { PlayerAdapter } from "../../../core/adapters/player-adapter";
 
-const PlayerModel = () =>
-  ConnectionsManager.Instance.db.model("Player") as Model<Player>;
+export const _enrollPlayers = async (campaignId: string, playerIds: string[]) => {
+  await prisma.$transaction(
+    playerIds.map(pid =>
+      prisma.playersOnCampaigns.upsert({
+        where: { playerId_campaignId: { campaignId, playerId: pid } },
+        create: { campaignId, playerId: pid },
+        update: {}
+      })
+    )
+  );
 
-const CampaignModel = () => ConnectionsManager.Instance.db.model("Campaign");
-/**
- * Update one character
- * @param playerID id of the character to update
- * @param character new data of the character
- * @returns the updated character data
- */
-export async function _enrollPlayer(playerID: string, campaignID: string) {
-  let player = await PlayerModel().findById(playerID);
-  let campaign = await CampaignModel().findById(campaignID);
+  const campaign = await prisma.campaign.findUnique({
+    where: { id: campaignId },
+    include: {
+      players: { include: { player: true } },
+      characters: true
+    }
+  });
 
-  if (player && campaign) {
-    if (!player?.campaigns.includes(campaign?._id))
-      player?.campaigns.push(campaign?._id);
-    if (!campaign.players.includes(player?._id))
-      campaign.players.push(player?._id);
-  }
+  const players = await prisma.player.findMany({
+    where: { id: { in: playerIds } },
+    include: {
+      campaignsPlaying: { include: { campaign: true } },
+      campaignsDM: true,
+      characters: true
+    }
+  });
 
-  campaign.save();
-  player?.save();
-  return [player, campaign];
-}
+  if (!campaign) return [null, null];
+
+  return [
+    players.map(PlayerAdapter.toFrontend),
+    CampaignAdapter.toFrontend(campaign)
+  ];
+};

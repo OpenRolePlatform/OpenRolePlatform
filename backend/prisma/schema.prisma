@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Player {
+  id           String   @id @default(uuid())
+  name         String   @unique
+  image        String?
+  description  String?
+  creationDate DateTime @default(now()) @map("creation_date")
+
+  characters       Character[]
+  campaignsPlaying PlayersOnCampaigns[]
+  campaignsDM      Campaign[]           @relation("CampaignDM")
+  notes            Note[]
+}
+
+model Campaign {
+  id           String   @id @default(uuid())
+  name         String
+  description  String?
+  image        String?
+  status       String   @default("active")
+  creationDate DateTime @default(now()) @map("creation_date")
+
+  dmId String
+  dm   Player @relation("CampaignDM", fields: [dmId], references: [id])
+
+  settings Json?
+
+  players    PlayersOnCampaigns[]
+  characters Character[]
+}
+
+model PlayersOnCampaigns {
+  playerId   String
+  campaignId String
+  player     Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  joinedAt   DateTime @default(now())
+
+  @@id([playerId, campaignId])
+}
+
+model Character {
+  id    String  @id @default(uuid())
+  name  String
+  image String?
+
+  level      Int     @default(0)
+  class      String?
+  systemType String  @default("DND5E") // TODO: Further Support for other systems
+
+  creationDate DateTime @default(now()) @map("creation_date")
+
+  playerId   String
+  player     Player    @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  campaignId String?
+  campaign   Campaign? @relation(fields: [campaignId], references: [id])
+
+  sheetData Json @db.JsonB
+
+  inventory InventoryItem[]
+  spellbook SpellbookEntry[]
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  text      String   @db.Text
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  updatedAt DateTime @updatedAt
+}
+
+model Item {
+  id          String  @id @default(uuid())
+  name        String
+  description String? @db.Text
+  type        String
+  image       String?
+
+  systemData Json @db.JsonB
+
+  instances InventoryItem[]
+}
+
+model InventoryItem {
+  id String @id @default(uuid())
+
+  characterId String
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  itemId String
+  item   Item   @relation(fields: [itemId], references: [id])
+
+  equipped Boolean @default(false)
+  amount   Int     @default(1)
+
+  customData Json? @db.JsonB
+}
+
+model Spell {
+  id          String  @id @default(uuid())
+  name        String
+  description String? @db.Text
+
+  level  Int
+  school String
+  class  String
+
+  systemData Json @db.JsonB
+
+  knownBy SpellbookEntry[]
+}
+
+model SpellbookEntry {
+  id String @id @default(uuid())
+
+  characterId String
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  spellId String
+  spell   Spell  @relation(fields: [spellId], references: [id])
+
+  prepared Boolean @default(false)
+}

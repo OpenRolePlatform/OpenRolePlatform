@@ -1,20 +1,38 @@
-import { Spell } from "src/core/models/spell/spell-model";
-import { ConnectionsManager } from "../../../connectDB";
+import { prisma } from "../../../connectDB";
+import { SpellAdapter } from "../../../core/adapters/spell-adapter";
+import { SpellInputSchema } from "../../../core/validation/zod-schemas";
 
-const SpellModel = () => ConnectionsManager.Instance.campaignDB.model("Spell");
+export const _putSpell = async (characterID: string, spellName: string, data: any) => {
+  const validated = SpellInputSchema.partial().parse(data);
 
-export async function _putSpell(owner: String, name: String, spell: Spell) {
-  await SpellModel().findOneAndUpdate(
-    {
-      owner: owner,
-      name: name,
-    },
-    {
-      ...spell,
-    },
-    {
-      upsert: true,
-      new: true,
+  const spell = await prisma.spell.findFirst({
+    where: { name: { equals: spellName, mode: 'insensitive' } }
+  });
+
+  if (!spell) throw new Error("Spell not found");
+
+  const { meta, systemData } = SpellAdapter.toDatabase(validated);
+
+  const mergedSystemData = { ...(spell.systemData as object), ...systemData };
+
+  const updatedSpell = await prisma.spell.update({
+    where: { id: spell.id },
+    data: {
+      ...meta,
+      systemData: mergedSystemData
     }
-  );
-}
+  });
+
+  // Local Update: If they send us a petition to update 'prepared' we do it for this player only
+  if (data.prepared !== undefined) {
+    await prisma.spellbookEntry.updateMany({
+      where: {
+        characterId: characterID,
+        spellId: spell.id
+      },
+      data: { prepared: Boolean(data.prepared) }
+    });
+  }
+
+  return SpellAdapter.toFrontend(updatedSpell);
+};

@@ -1,16 +1,25 @@
-import { Notes } from "src/core/models/notes/notes-model";
-import { ConnectionsManager } from "../../../connectDB";
+import { prisma } from "../../../connectDB";
+import { NoteAdapter } from "../../../core/adapters/note-adapter";
 
-const NotesModel = () => ConnectionsManager.Instance.campaignDB.model("Notes");
+export const _putNotes = async (playerId: string, data: any) => {
 
-export async function _putNotes(id: String, notes: Notes) {
-  let res = await NotesModel().findOneAndUpdate(
-    {
-      _id: id,
-    },
-    notes,
-    { new: true, upsert: true }
-  );
+  const existingNote = await prisma.note.findFirst({
+    where: { playerId: playerId }
+  });
 
-  return res;
-}
+  if (existingNote) {
+    const updated = await prisma.note.update({
+      where: { id: existingNote.id },
+      data: { text: data.text }
+    });
+    return NoteAdapter.toFrontend(updated);
+  } else {
+    const newNote = await prisma.note.create({
+      data: {
+        text: data.text,
+        playerId: playerId
+      }
+    });
+    return NoteAdapter.toFrontend(newNote);
+  }
+};

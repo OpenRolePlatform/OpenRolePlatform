@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.1.0",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.15.6"
+  }
+}

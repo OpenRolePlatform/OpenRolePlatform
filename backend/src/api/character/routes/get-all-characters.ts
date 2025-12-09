@@ -1,11 +1,18 @@
-import { ConnectionsManager } from "../../../connectDB";
+import { prisma } from "../../../connectDB";
+import { CharacterAdapter } from "../../../core/adapters/character-adapter";
 
-const CharacterModel = () =>
-  ConnectionsManager.Instance.campaignDB.model("Character");
-/**
- * Get all characters
- * @returns all characters in the campaign
- */
-export async function _getAllCharacters() {
-  return await CharacterModel().find();
-}
+export const _getAllCharacters = async () => {
+  try {
+    const characters = await prisma.character.findMany({
+      include: {
+        inventory: { include: { item: true } },
+        spellbook: { include: { spell: true } }
+      }
+    });
+
+    return characters.map(char => CharacterAdapter.toFrontend(char));
+  } catch (error) {
+    console.error("Error in _getAllCharacters:", error);
+    throw error;
+  }
+};

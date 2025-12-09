@@ -8,7 +8,7 @@ import playerRouter from "./api/player/router-player";
 import spellRouter from "./api/spell/router-spell";
 import upload from "./fileUpload";
 
-import mapRouter from "./api/map/map-router";
+//import mapRouter from "./api/map/map-router";
 
 
 export function routes(app: Application) {
@@ -26,7 +26,7 @@ export function routes(app: Application) {
   app.use("/api/spells", spellRouter);
   app.use("/api/notes", notesRouter);
 
-  app.use("/api/maps", mapRouter);
+  // app.use("/api/maps", mapRouter);
 
 
   app.post("/api/upload", upload.single("image"), (req: any, res: any) => {

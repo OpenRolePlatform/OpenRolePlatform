@@ -1,15 +1,14 @@
-import { ConnectionsManager } from "../../../connectDB";
+import { prisma } from "../../../connectDB";
+import { CharacterAdapter } from "../../../core/adapters/character-adapter";
 
-const CharacterModel = () =>
-  ConnectionsManager.Instance.campaignDB.model("Character");
-
-/**
- * Get all characters of an owner
- * @param owner owner of the characters
- * @returns characters of the owner
- */
-export async function _getCharactersOwner(owner: string) {
-  return await CharacterModel().find({
-    owner: owner,
+export const _getCharactersOwner = async (ownerId: string) => {
+  const characters = await prisma.character.findMany({
+    where: { playerId: ownerId }, // Filtramos por la Foreign Key
+    include: {
+      inventory: { include: { item: true } },
+      spellbook: { include: { spell: true } }
+    }
   });
-}
+
+  return characters.map(char => CharacterAdapter.toFrontend(char));
+};

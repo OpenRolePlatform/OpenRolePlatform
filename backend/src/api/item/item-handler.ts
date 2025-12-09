@@ -1,108 +1,119 @@
 import { StatusCodes } from "http-status-codes";
 import { WebSocketService } from "../../connectWS";
-
-import { _getAllItems } from "./routes/get-all-items";
-import { _getOneItem } from "./routes/get-one-item";
-import { _postItems } from "./routes/post-item";
+import { MessageModel, MessageType } from "../WebsocketTypes";
+import { _postItem } from "./routes/post-item";
 import { _putOneItem } from "./routes/put-one-item";
+import { _getOneItem } from "./routes/get-one-item";
+import { _getAllItems } from "./routes/get-all-items";
 
-//get methods
-export const getOneItem = async (req: any, res: any) => {
-  try {
-    const item = await _getOneItem(req.params.characterID, req.query.name);
-    if (item) {
-      return res.status(StatusCodes.OK).send(item);
-    } else {
-      return res.status(StatusCodes.NOT_FOUND).send("Item not found.");
-    }
-  } catch (error) {
-    console.error("Error while trying to obtain the item.");
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to obtain the item." + error.message);
-  }
-};
-
+//Get methods
 export const getItems = async (req: any, res: any) => {
   try {
-    const items = await _getAllItems(req.params.characterID, req.query, false);
+    const items = await _getAllItems();
     if (items) {
-      return res.status(StatusCodes.OK).send(items);
+      res.status(StatusCodes.OK).send(items);
     } else {
-      return res.status(StatusCodes.NOT_FOUND).send("Items not found.");
+      res.status(StatusCodes.NOT_FOUND).send("Items not found.");
     }
-  } catch (error) {
-    console.error("Error while trying to change the items.");
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to change the items." + error.message);
+  } catch (error: any) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
   }
 };
 
-export const getItemsDB = async (req: any, res: any) => {
+export const getOneItem = async (req: any, res: any) => {
   try {
-    const items = await _getAllItems("*", req.query, true);
-    if (items) {
-      return res.status(StatusCodes.OK).send(items);
+    const id = req.params.itemID || req.query.itemID || req.query._id;
+    const item = await _getOneItem(id);
+
+    if (item) {
+      res.status(StatusCodes.OK).send(item);
     } else {
-      return res.status(StatusCodes.NOT_FOUND).send("Items not found.");
+      res.status(StatusCodes.NOT_FOUND).send("Item not found");
     }
-  } catch (error) {
-    console.error("Error while trying to change the items.");
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to change the items." + error.message);
+  } catch (error: any) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
   }
 };
+
+//Post methods
 
 export const postItems = async (req: any, res: any) => {
   try {
-    let body = req.body;
+    const body = req.body;
+    let itemsInput: any[] = [];
 
-    if (Array.isArray(body.items)) {
-      body = body.items;
-      if (req.files) {
-        for (const file of req.files) {
-          const match = file.fieldname.match(/\[(\d+)\]/);
-          if (match && match[1]) {
-            let index = parseInt(match[1], 10);
-            body[index].image = `images/${file.filename}`;
-          }
+    if (body.items && Array.isArray(body.items)) {
+      itemsInput = body.items;
+    } else if (req.body.items) {
+      itemsInput = Object.values(req.body.items);
+    } else {
+      itemsInput = [body];
+    }
+
+    const createdResults: any[] = [];
+
+    for (let i = 0; i < itemsInput.length; i++) {
+      const itemData = itemsInput[i];
+
+      if (req.files && Array.isArray(req.files)) {
+        const fileMatch = req.files.find((f: any) => f.fieldname.includes(`[${i}][image]`));
+
+        if (fileMatch) {
+          itemData.image = `images/${fileMatch.filename}`;
         }
       }
-    } else if (req.file) {
-      body.image = `images/${req.file.filename}`;
+
+      const newItem = await _postItem(itemData);
+      createdResults.push(newItem);
+
+      WebSocketService.Instance.broadcast({
+        type: MessageType.New,
+        model: MessageModel.item,
+        data: newItem,
+      });
     }
-    let newItems = await _postItems(body);
-    if (!newItems) return res.status(StatusCodes.BAD_REQUEST);
-    res.status(StatusCodes.OK).send(newItems);
-    WebSocketService.Instance.broadcast({
-      type: Array.isArray(newItems) ? "NewArray" : "New",
-      model: "item",
-      data: newItems,
-    });
-  } catch (error) {
-    console.error("Error while trying to update the items.", error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to update the items." + error.message);
+
+    if (createdResults.length === 1 && !req.body.items) {
+      res.status(StatusCodes.OK).send(createdResults[0]);
+    } else {
+      res.status(StatusCodes.OK).send(createdResults);
+    }
+
+  } catch (error: any) {
+    console.error("Error creating item:", error);
+    if (error.name === 'ZodError') {
+      return res.status(StatusCodes.BAD_REQUEST).send(error.issues);
+    }
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
   }
 };
 
-//put methods
+//Put methods
 export const putOneItem = async (req: any, res: any) => {
   try {
-    await _putOneItem(req.params.characterID, req.query.name, req.body);
-    res.status(StatusCodes.OK).send("Item updated correctly.");
+    const itemID = req.params.itemID || req.body._id;
+    const body = req.body;
+
+    if (req.file) {
+      body.image = `images/${req.file.filename}`;
+    }
+
+    const updatedItem = await _putOneItem(itemID, body);
+
+    if (!updatedItem) {
+      return res.status(StatusCodes.NOT_FOUND).send("Item not found");
+    }
+
+    res.status(StatusCodes.OK).send(updatedItem);
+
     WebSocketService.Instance.broadcast({
-      owner: req.params.characterID,
-      name: req.params.name,
-      data: req.body,
+      type: MessageType.Update,
+      model: MessageModel.item,
+      data: updatedItem,
     });
-  } catch (error) {
-    console.error("Error while trying to update the items.");
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send("Error while trying to update the items." + error.message);
+
+  } catch (error: any) {
+    console.error("Error updating item:", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error.message);
   }
 };

@@ -1,13 +1,16 @@
-import { ConnectionsManager } from "../../../connectDB";
-import { Notes } from "../../../core/models/notes/notes-model";
+import { prisma } from "../../../connectDB";
+import { NoteAdapter } from "../../../core/adapters/note-adapter";
+import { NoteInputSchema } from "../../../core/validation/zod-schemas";
 
-const NotesModel = () => ConnectionsManager.Instance.campaignDB.model("Notes");
+export const _postNotes = async (ownerId: string, data: any) => {
+  const validated = NoteInputSchema.pick({ text: true }).parse(data);
 
-export async function _postNotes(owner: string, notes: Notes) {
-  const matchingId = await NotesModel().findById(owner);
-  if (matchingId) return;
-  return await NotesModel().create({
-    _id: owner,
-    ...notes,
+  const newNote = await prisma.note.create({
+    data: {
+      text: validated.text,
+      player: { connect: { id: ownerId } }
+    }
   });
-}
+
+  return NoteAdapter.toFrontend(newNote);
+};

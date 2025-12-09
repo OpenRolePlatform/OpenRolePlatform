@@ -1,10 +1,23 @@
-import { ConnectionsManager } from "../../../connectDB";
+import { prisma } from "../../../connectDB";
+import { SpellAdapter } from "../../../core/adapters/spell-adapter";
 
-const SpellModel = () => ConnectionsManager.Instance.campaignDB.model("Spell");
+export const _getSpell = async (characterID: string, spellName: string) => {
+  if (!spellName) return null;
 
-export async function _getSpell(owner: String, name: String) {
-  return await SpellModel().findOne({
-    owner: owner,
-    name: name,
+  const entry = await prisma.spellbookEntry.findFirst({
+    where: {
+      characterId: characterID,
+      spell: {
+        name: { equals: spellName, mode: 'insensitive' }
+      }
+    },
+    include: {
+      spell: true
+    }
   });
-}
+
+  if (!entry) return null;
+
+  const adapted = SpellAdapter.toFrontend(entry.spell);
+  return { ...adapted, prepared: entry.prepared };
+};

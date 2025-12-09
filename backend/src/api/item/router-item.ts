@@ -2,7 +2,6 @@ import express from "express";
 import upload from "../../fileUpload";
 import {
   getItems,
-  getItemsDB,
   getOneItem,
   postItems,
   putOneItem,
@@ -14,7 +13,7 @@ const itemRouter = express.Router();
 //get methods
 itemRouter.get("/:characterID/one", getOneItem);
 itemRouter.get("/:characterID/all", getItems);
-itemRouter.get("/allDB", getItemsDB);
+itemRouter.get("/allDB", getItems);
 
 //put methods
 itemRouter.post("/", upload.any("image"), postItems);
